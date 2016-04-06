@@ -1,0 +1,7 @@
+# Abhijit's DotFiles.
+
+## Usage
+
+1. Have GNU Stow install.
+2. Clone this repro to $HOME/dotfiles
+3. `stow vim|bash|bin|whatever`
