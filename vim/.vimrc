@@ -62,7 +62,7 @@ au BufRead,BufNewFile *.js set expandtab ts=2 sw=2 sts=2 filetype=javascript
 au BufRead,BufNewFile *.es6 set expandtab ts=2 sw=2 sts=2 filetype=javascript
 au BufRead,BufNewFile *.json set expandtab ts=2 sw=2 sts=2 filetype=json
 au BufRead,BufNewFile *.scala set ic
-"autocmd FileType make set noexpandtab
+autocmd FileType make set noexpandtab
 
 map <C-n> :NERDTreeToggle<CR>
 
@@ -77,13 +77,10 @@ let g:go_highlight_build_constraints = 1
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pylint']
 let g:syntastic_check_on_open = 0
+let g:syntastic_scala_checkers = ['fsc']
 
-let xml_use_xhtml = 1
-
-let g:ycm_key_list_select_completion = ["<c-tab>", "<down>"]
-let g:ycm_key_list_previous_completion = ["<c-s-tab>", "<up>"]
-let g:SuperTabDefaultCompletionType = "<c-tab>"
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|build|opensrc)|(\.(swp|ico|git|svn))$'
 let g:ctrlp_cmd = 'CtrlPMixed'
+
 let g:neocomplete#enable_at_startup = 1
 
