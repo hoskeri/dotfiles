@@ -1,0 +1,5 @@
+#!/bin/bash
+trap 'stty sane' EXIT
+stty intr undef
+stty -echo
+$@
