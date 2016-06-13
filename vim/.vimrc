@@ -62,8 +62,13 @@ au BufRead,BufNewFile *.yml set ts=2 sw=2 filetype=ansible
 au BufRead,BufNewFile *.thrift set ts=2 sw=2 filetype=thrift
 au BufRead,BufNewFile *.coffee set expandtab ts=2 sw=2 filetype=coffee
 au BufRead,BufNewFile *.js set expandtab ts=2 sw=2 sts=2 filetype=javascript
-au BufRead,BufNewFile *.es6 set expandtab ts=2 sw=2 sts=2 filetype=javascript
 au BufRead,BufNewFile *.json set expandtab ts=2 sw=2 sts=2 filetype=json
+au BufRead,BufNewFile *.html set expandtab ts=2 sw=2 sts=2 filetype=html
+
+au BufRead,BufNewFile *.boot set expandtab ts=2 sw=2 sts=2 filetype=clojure
+au BufRead,BufNewFile *.clj set expandtab ts=2 sw=2 sts=2 filetype=clojure
+au BufRead,BufNewFile *.cljs set expandtab ts=2 sw=2 sts=2 filetype=clojure
+
 au BufRead,BufNewFile *.scala set ic
 autocmd FileType make set noexpandtab
 
