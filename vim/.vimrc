@@ -16,10 +16,12 @@ Plugin 'solarnz/thrift.vim'
 Plugin 'fatih/vim-go'
 Plugin 'kovisoft/paredit'
 Bundle 'guns/vim-clojure-static'
-Bundle 'guns/vim-fireplace'
 Bundle 'Shougo/neocomplete'
 Bundle 'ctrlpvim/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
+Bundle 'leafgarland/typescript-vim'
+Bundle 'Shougo/vimproc'
+Bundle 'Quramy/tsuquyomi'
 
 " End Vim plugin list
 call vundle#end()
