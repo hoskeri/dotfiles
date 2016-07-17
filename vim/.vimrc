@@ -22,6 +22,8 @@ Bundle 'scrooloose/syntastic'
 Bundle 'leafgarland/typescript-vim'
 Bundle 'Shougo/vimproc'
 Bundle 'Quramy/tsuquyomi'
+Bundle 'ElmCast/elm-vim'
+Plugin 'flazz/vim-colorschemes'
 
 " End Vim plugin list
 call vundle#end()
@@ -30,9 +32,9 @@ filetype plugin indent on
 syntax on
 set expandtab
 set autoindent
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
+set shiftwidth=2
+set softtabstop=2
+set tabstop=2
 set wildmenu
 set lazyredraw
 set smartindent
@@ -44,6 +46,8 @@ set modeline
 set ls=2
 set hlsearch
 set guioptions=-M
+set t_Co=256
+colorscheme desert256
 
 " make vim work well with file watchers.
 set backupcopy=yes
@@ -59,7 +63,11 @@ autocmd FileAppendPre * :call TrimWhiteSpace()
 autocmd FilterWritePre * :call TrimWhiteSpace()
 autocmd BufWritePre * :call TrimWhiteSpace()
 
-au BufRead,BufNewFile *.def set filetype=c
+au BufRead,BufNewFile *.def set filetype=c ts=4 sts=4 sw=4
+au BufRead,BufNewFile *.c set filetype=c ts=4 sts=4 sw=4
+au BufRead,BufNewFile *.cc set filetype=c ts=4 sts=4 sw=4
+au BufRead,BufNewFile *.py set filetype=python ts=4 sts=4 sw=4
+au BufRead,BufNewFile *.h set filetype=c ts=4 sts=4 sw=4
 au BufRead,BufNewFile *.yml set ts=2 sw=2 filetype=ansible
 au BufRead,BufNewFile *.thrift set ts=2 sw=2 filetype=thrift
 au BufRead,BufNewFile *.coffee set expandtab ts=2 sw=2 filetype=coffee
@@ -71,7 +79,9 @@ au BufRead,BufNewFile *.boot set expandtab ts=2 sw=2 sts=2 filetype=clojure
 au BufRead,BufNewFile *.clj set expandtab ts=2 sw=2 sts=2 filetype=clojure
 au BufRead,BufNewFile *.cljs set expandtab ts=2 sw=2 sts=2 filetype=clojure
 
-au BufRead,BufNewFile *.scala set ic
+au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
+au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
+
 autocmd FileType make set noexpandtab
 
 map <C-n> :NERDTreeToggle<CR>
@@ -107,7 +117,5 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_scala_checkers = ['fsc']
 
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|build|opensrc)|(\.(swp|ico|git|svn|class))$'
-let g:ctrlp_cmd = 'CtrlP'
 
 let g:neocomplete#enable_at_startup = 1
-
