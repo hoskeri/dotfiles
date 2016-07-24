@@ -41,14 +41,14 @@ set lazyredraw
 set smartindent
 set tags=tags;/
 set tagrelative
-set bg=dark
 set mouse=a
 set modeline
 set ls=2
 set hlsearch
 set guioptions=-M
 set t_Co=256
-colorscheme Chasing_Logic
+colorscheme default
+set bg=dark
 
 " make vim work well with file watchers.
 set backupcopy=yes
