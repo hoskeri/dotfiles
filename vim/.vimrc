@@ -23,6 +23,7 @@ Bundle 'leafgarland/typescript-vim'
 Bundle 'Shougo/vimproc'
 Bundle 'Quramy/tsuquyomi'
 Bundle 'ElmCast/elm-vim'
+Plugin 'rust-lang/rust.vim'
 Plugin 'flazz/vim-colorschemes'
 
 " End Vim plugin list
@@ -47,7 +48,7 @@ set ls=2
 set hlsearch
 set guioptions=-M
 set t_Co=256
-colorscheme desert256
+colorscheme Chasing_Logic
 
 " make vim work well with file watchers.
 set backupcopy=yes
