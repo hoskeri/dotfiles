@@ -85,24 +85,8 @@ au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
 
 autocmd FileType make set noexpandtab
 
-map <C-n> :NERDTreeToggle<CR>
-
-let g:tagbar_type_scala = {
-    \ 'ctagstype' : 'scala',
-    \ 'sro'       : '.',
-    \ 'kinds'     : [
-      \ 'p:packages',
-      \ 'T:types:1',
-      \ 't:traits',
-      \ 'o:objects',
-      \ 'O:case objects',
-      \ 'c:classes',
-      \ 'C:case classes',
-      \ 'm:methods',
-      \ 'V:values:1',
-      \ 'v:variables:1'
-    \ ]
-\ }
+set grepprg=ag\ --vimgrep\ $*
+set grepformat=%f:%l:%c:%m
 
 let g:go_auto_type_info = 1
 let g:go_fmt_autosave = 1
@@ -118,5 +102,4 @@ let g:syntastic_check_on_open = 0
 let g:syntastic_scala_checkers = ['fsc']
 
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|build|opensrc)|(\.(swp|ico|git|svn|class))$'
-
 let g:neocomplete#enable_at_startup = 1
