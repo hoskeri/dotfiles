@@ -1,0 +1,81 @@
+#!/usr/bin/make -f
+PREFIX := $(shell pwd)
+DISTRIBUTION := unstable
+APT_MIRROR := "http://localhost:9999/debian"
+WORKDIR := /home/abhijit/tmp/qemu-image-builder-work
+BOOTSTRAP_DIR := $(WORKDIR)/debootstrap
+DEBOOTSTRAP := /usr/sbin/debootstrap
+DEBOOTSTRAP_OPTS := --no-check-certificate --no-check-gpg --include=linux-image-amd64,openssh-server,qemu-guest-agent
+DEST := $(WORKDIR)/build
+
+build: squashfs
+	@cp -v -f \
+		$(BOOTSTRAP_DIR)/boot/vmlinuz-4.6.0-1-amd64 \
+		$(BOOTSTRAP_DIR)/boot/initrd.img-4.6.0-1-amd64 \
+			$(DEST)
+	@chmod +x $(DEST)/run
+
+squashfs: bootstrap overlay-boot launcher auth
+	@mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
+
+makedirs:
+	@mkdir -p $(DEST)
+	@mkdir -p $(WORKDIR)
+	@mkdir -p $(BOOTSTRAP_DIR)
+
+auth:
+	@$(shell echo "root:root"|chpasswd -R $(BOOTSTRAP_DIR))
+
+clean:
+	@rm -rf $(BOOTSTRAP_DIR)
+	@mkdir -p $(BOOTSTRAP_DIR)
+	@rm -f $(WORKDIR)/deboostrap.squashfs
+
+overlay-boot: overlay overlay-hook
+	@chmod +x $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
+	@rm -f $(BOOTSTRAP_DIR)/boot/initrd.img-4.6.0-1-amd64
+	@chroot $(BOOTSTRAP_DIR) update-initramfs -k 4.6.0-1-amd64 -c
+
+bootstrap: makedirs
+	@$(DEBOOTSTRAP) $(DEBOOTSTRAP_OPTS) $(DISTRIBUTION) $(BOOTSTRAP_DIR) $(APT_MIRROR)
+
+overlay-hook:
+	@cat <<- EOF > $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
+	#!/bin/sh -e
+	. /usr/share/initramfs-tools/hook-functions
+	case "$$1" in
+	    prereqs)
+				echo ""
+				exit 0
+	    ;;
+	esac
+	manual_add_modules squashfs
+	manual_add_modules overlay
+	EOF
+
+overlay:
+	@cat <<- EOF > $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/scripts/overlay
+	mountroot() {
+	    modprobe squashfs
+	    modprobe overlay
+	    mount -t squashfs /dev/vda /root
+			mkdir -p /overlay
+	    mount -t tmpfs -osize=512m none /overlay
+	    mkdir -p /overlay/workdir /overlay/upperdir
+	    mount -t overlay -olowerdir=/root,upperdir=/overlay/upperdir,workdir=/overlay/workdir live-root /root
+	}
+	EOF
+
+launcher:
+	@cat <<- EOF > $(DEST)/run
+	#!/bin/sh
+	set -eu
+	basedir=\$$(dirname \$$(readlink -f \$$0))
+	qemu-system-x86_64 -cpu host -enable-kvm -m 1024 -vga virtio -kernel \\
+		\$$basedir/vmlinuz-4.6.0-1-amd64 -initrd \\
+		\$$basedir/initrd.img-4.6.0-1-amd64 -append \\
+		'rootfstype=squashfs boot=overlay root=/dev/vda quiet' -drive \\
+		if=virtio,format=raw,file=\$$basedir/debootstrap.squashfs
+	EOF
+
+.ONESHELL: overlay overlay-hook launcher
