@@ -5,17 +5,19 @@ APT_MIRROR := "http://localhost:9999/debian"
 WORKDIR := /home/abhijit/tmp/qemu-image-builder-work
 BOOTSTRAP_DIR := $(WORKDIR)/debootstrap
 DEBOOTSTRAP := /usr/sbin/debootstrap
-DEBOOTSTRAP_OPTS := --no-check-certificate --no-check-gpg --include=linux-image-amd64,openssh-server,qemu-guest-agent
+KERNEL_VERSION := 4.7.0-1-amd64
+DEBOOTSTRAP_OPTS := --no-check-certificate --no-check-gpg --include=linux-image-${KERNEL_VERSION},openssh-server,qemu-guest-agent
 DEST := $(WORKDIR)/build
 
-build: squashfs
+build: clean squashfs
 	@cp -v -f \
-		$(BOOTSTRAP_DIR)/boot/vmlinuz-4.6.0-1-amd64 \
-		$(BOOTSTRAP_DIR)/boot/initrd.img-4.6.0-1-amd64 \
+		$(BOOTSTRAP_DIR)/boot/vmlinuz-${KERNEL_VERSION} \
+		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
 			$(DEST)
 	@chmod +x $(DEST)/run
+	@rm -rf ${BOOTSTRAP_DIR}
 
-squashfs: bootstrap overlay-boot launcher auth
+squashfs: bootstrap overlay-boot launcher ident
 	@mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
 
 makedirs:
@@ -23,8 +25,9 @@ makedirs:
 	@mkdir -p $(WORKDIR)
 	@mkdir -p $(BOOTSTRAP_DIR)
 
-auth:
+ident:
 	@$(shell echo "root:root"|chpasswd -R $(BOOTSTRAP_DIR))
+	@$(shell echo debian > $(BOOTSTRAP_DIR)/etc/hostname)
 
 clean:
 	@rm -rf $(BOOTSTRAP_DIR)
@@ -33,8 +36,8 @@ clean:
 
 overlay-boot: overlay overlay-hook
 	@chmod +x $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
-	@rm -f $(BOOTSTRAP_DIR)/boot/initrd.img-4.6.0-1-amd64
-	@chroot $(BOOTSTRAP_DIR) update-initramfs -k 4.6.0-1-amd64 -c
+	@rm -f $(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION}
+	@chroot $(BOOTSTRAP_DIR) update-initramfs -k ${KERNEL_VERSION} -c
 
 bootstrap: makedirs
 	@$(DEBOOTSTRAP) $(DEBOOTSTRAP_OPTS) $(DISTRIBUTION) $(BOOTSTRAP_DIR) $(APT_MIRROR)
@@ -72,10 +75,11 @@ launcher:
 	set -eu
 	basedir=\$$(dirname \$$(readlink -f \$$0))
 	qemu-system-x86_64 -cpu host -enable-kvm -m 1024 -vga virtio -kernel \\
-		\$$basedir/vmlinuz-4.6.0-1-amd64 -initrd \\
-		\$$basedir/initrd.img-4.6.0-1-amd64 -append \\
+		\$$basedir/vmlinuz-${KERNEL_VERSION} -initrd \\
+		\$$basedir/initrd.img-${KERNEL_VERSION} -append \\
 		'rootfstype=squashfs boot=overlay root=/dev/vda quiet' -drive \\
-		if=virtio,format=raw,file=\$$basedir/debootstrap.squashfs
+		if=virtio,format=raw,file=\$$basedir/debootstrap.squashfs -net \\
+		bridge,br=br0 -net nic,model=virtio
 	EOF
 
 .ONESHELL: overlay overlay-hook launcher
