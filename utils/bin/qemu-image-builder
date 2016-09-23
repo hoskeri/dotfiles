@@ -2,7 +2,7 @@
 PREFIX := $(shell pwd)
 DISTRIBUTION := unstable
 APT_MIRROR := "http://localhost:9999/debian"
-WORKDIR := /home/abhijit/tmp/qemu-image-builder-work
+WORKDIR := $HOME/tmp/qemu-image-builder-work
 BOOTSTRAP_DIR := $(WORKDIR)/debootstrap
 DEBOOTSTRAP := /usr/sbin/debootstrap
 KERNEL_VERSION := 4.7.0-1-amd64
