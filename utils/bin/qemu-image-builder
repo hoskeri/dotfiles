@@ -2,12 +2,18 @@
 PREFIX := $(shell pwd)
 DISTRIBUTION := unstable
 APT_MIRROR := "http://localhost:9999/debian"
-WORKDIR := $HOME/tmp/qemu-image-builder-work
-BOOTSTRAP_DIR := $(WORKDIR)/debootstrap
-DEBOOTSTRAP := /usr/sbin/debootstrap
+WORKDIR := ${HOME}/tmp/qemu-image-builder-work
+BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
+DEBOOTSTRAP := sudo /usr/sbin/debootstrap
 KERNEL_VERSION := 4.7.0-1-amd64
-DEBOOTSTRAP_OPTS := --no-check-certificate --no-check-gpg --include=linux-image-${KERNEL_VERSION},openssh-server,qemu-guest-agent
+EXTRA_PACKAGES := openssh-server,qemu-guest-agent,linux-perf-4.7
+DEBOOTSTRAP_OPTS := --no-check-certificate --no-check-gpg --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
+BOOTIMAGE_SIZE := 1073741824
+GPT_SIZE := 1048576
+BOOTIMAGE_FS_SIZE := $(shell expr $(BOOTIMAGE_SIZE) - $(GPT_SIZE))
+
 DEST := $(WORKDIR)/build
+SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
 
 build: clean squashfs
 	@cp -v -f \
@@ -15,10 +21,15 @@ build: clean squashfs
 		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
 			$(DEST)
 	@chmod +x $(DEST)/run
-	@rm -rf ${BOOTSTRAP_DIR}
+	@umount $(BOOTSTRAP_DIR) 2>/dev/null
 
 squashfs: bootstrap overlay-boot launcher ident
 	@mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
+
+bootimage: bootstrap ident
+	@truncate -s $(BOOTIMAGE_SIZE) $(DEST)/debootstrap.disk
+	@sgdisk -G -N 1 $(DEST)/debootstrap.disk
+	@mkfs.ext4 -F -d $(BOOTSTRAP_DIR) -E offset=$(GPT_SIZE) $(DEST)/debootstrap.disk $(BOOTIMAGE_FS_SIZE)
 
 makedirs:
 	@mkdir -p $(DEST)
@@ -26,12 +37,18 @@ makedirs:
 	@mkdir -p $(BOOTSTRAP_DIR)
 
 ident:
-	@$(shell echo "root:root"|chpasswd -R $(BOOTSTRAP_DIR))
-	@$(shell echo debian > $(BOOTSTRAP_DIR)/etc/hostname)
+	@$(shell echo "root:root"|chpasswd -R ${BOOTSTRAP_DIR})
+	@$(shell echo debian > ${BOOTSTRAP_DIR}/etc/hostname)
+	@$(shell echo -e "auto ens3\niface ens3 inet dhcp\n"
+			> ${BOOTSTRAP_DIR}/etc/network/interfaces.d/ens3.interface)
+	@$(shell install -d -m 0700 ${BOOTSTRAP_DIR}/root/.ssh)
+	@$(shell cat ${SSH_AUTHKEYS} > ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys)
+	@$(shell chmod 0600 ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys)
 
 clean:
-	@rm -rf $(BOOTSTRAP_DIR)
-	@mkdir -p $(BOOTSTRAP_DIR)
+	@umount $(BOOTSTRAP_DIR)/proc 2>/dev/null
+	@umount $(BOOTSTRAP_DIR)/sys 2>/dev/null
+	@umount $(BOOTSTRAP_DIR) 2>/dev/null
 	@rm -f $(WORKDIR)/deboostrap.squashfs
 
 overlay-boot: overlay overlay-hook
@@ -40,6 +57,7 @@ overlay-boot: overlay overlay-hook
 	@chroot $(BOOTSTRAP_DIR) update-initramfs -k ${KERNEL_VERSION} -c
 
 bootstrap: makedirs
+	@mount -t tmpfs none $(BOOTSTRAP_DIR)
 	@$(DEBOOTSTRAP) $(DEBOOTSTRAP_OPTS) $(DISTRIBUTION) $(BOOTSTRAP_DIR) $(APT_MIRROR)
 
 overlay-hook:
