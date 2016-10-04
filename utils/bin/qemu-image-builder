@@ -1,10 +1,11 @@
 #!/usr/bin/make -f
+ROOTCMD := sudo
 PREFIX := $(shell pwd)
 DISTRIBUTION := unstable
 APT_MIRROR := "http://localhost:9999/debian"
 WORKDIR := ${HOME}/tmp/qemu-image-builder-work
 BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
-DEBOOTSTRAP := sudo /usr/sbin/debootstrap
+DEBOOTSTRAP := ${ROOTCMD} /usr/sbin/debootstrap
 KERNEL_VERSION := 4.7.0-1-amd64
 EXTRA_PACKAGES := openssh-server,qemu-guest-agent,linux-perf-4.7
 DEBOOTSTRAP_OPTS := --no-check-certificate --no-check-gpg --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
@@ -21,10 +22,11 @@ build: clean squashfs
 		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
 			$(DEST)
 	@chmod +x $(DEST)/run
-	@umount $(BOOTSTRAP_DIR) 2>/dev/null
+	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
 
 squashfs: bootstrap overlay-boot launcher ident
-	@mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
+	@$(ROOTCMD) mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
+	@chown $(shell id -u):$(shell -id -g) $(DEST)/debootstrap.squashfs
 
 bootimage: bootstrap ident
 	@truncate -s $(BOOTIMAGE_SIZE) $(DEST)/debootstrap.disk
@@ -37,31 +39,30 @@ makedirs:
 	@mkdir -p $(BOOTSTRAP_DIR)
 
 ident:
-	@$(shell echo "root:root"|chpasswd -R ${BOOTSTRAP_DIR})
-	@$(shell echo debian > ${BOOTSTRAP_DIR}/etc/hostname)
-	@$(shell echo -e "auto ens3\niface ens3 inet dhcp\n"
-			> ${BOOTSTRAP_DIR}/etc/network/interfaces.d/ens3.interface)
-	@$(shell install -d -m 0700 ${BOOTSTRAP_DIR}/root/.ssh)
-	@$(shell cat ${SSH_AUTHKEYS} > ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys)
-	@$(shell chmod 0600 ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys)
+	@echo root:root|$(ROOTCMD) chpasswd -R ${BOOTSTRAP_DIR} >/dev/null
+	@echo debian $(ROOTCMD) tee ${BOOTSTRAP_DIR}/etc/hostname >/dev/null
+	@echo "auto ens3\niface ens3 inet dhcp\n" | $(ROOTCMD) tee ${BOOTSTRAP_DIR}/etc/network/interfaces >/dev/null
+	@$(ROOTCMD) install -d -m 0700 $(BOOTSTRAP_DIR)/root/.ssh >/dev/null
+	@cat ${SSH_AUTHKEYS} | $(ROOTCMD) tee ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys >/dev/null
+	@$(ROOTCMD) chmod 0600 ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys >/dev/null
 
 clean:
-	@umount $(BOOTSTRAP_DIR)/proc 2>/dev/null
-	@umount $(BOOTSTRAP_DIR)/sys 2>/dev/null
-	@umount $(BOOTSTRAP_DIR) 2>/dev/null
+	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/proc 2>/dev/null
+	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/sys 2>/dev/null
+	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
 	@rm -f $(WORKDIR)/deboostrap.squashfs
 
 overlay-boot: overlay overlay-hook
-	@chmod +x $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
-	@rm -f $(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION}
-	@chroot $(BOOTSTRAP_DIR) update-initramfs -k ${KERNEL_VERSION} -c
+	@$(ROOTCMD) chmod +x $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
+	@$(ROOTCMD) rm -f $(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION}
+	@$(ROOTCMD) chroot $(BOOTSTRAP_DIR) update-initramfs -k ${KERNEL_VERSION} -c
 
 bootstrap: makedirs
-	@mount -t tmpfs none $(BOOTSTRAP_DIR)
+	@$(ROOTCMD) mount -t tmpfs none $(BOOTSTRAP_DIR)
 	@$(DEBOOTSTRAP) $(DEBOOTSTRAP_OPTS) $(DISTRIBUTION) $(BOOTSTRAP_DIR) $(APT_MIRROR)
 
 overlay-hook:
-	@cat <<- EOF > $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
+	@cat <<- EOF|$(ROOTCMD) tee $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook >/dev/null
 	#!/bin/sh -e
 	. /usr/share/initramfs-tools/hook-functions
 	case "$$1" in
@@ -75,7 +76,7 @@ overlay-hook:
 	EOF
 
 overlay:
-	@cat <<- EOF > $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/scripts/overlay
+	@cat <<- EOF|$(ROOTCMD) tee $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/scripts/overlay >/dev/null
 	mountroot() {
 	    modprobe squashfs
 	    modprobe overlay
