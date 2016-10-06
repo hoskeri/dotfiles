@@ -9,9 +9,12 @@ DEBOOTSTRAP := ${ROOTCMD} /usr/sbin/debootstrap
 KERNEL_VERSION := 4.7.0-1-amd64
 EXTRA_PACKAGES := openssh-server,qemu-guest-agent,linux-perf-4.7
 DEBOOTSTRAP_OPTS := --no-check-certificate --no-check-gpg --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
-BOOTIMAGE_SIZE := 1073741824
+BOOTIMAGE_SIZE := 10737418240
 GPT_SIZE := 1048576
-BOOTIMAGE_FS_SIZE := $(shell expr $(BOOTIMAGE_SIZE) - $(GPT_SIZE))
+EFI_SYSTEM_PART_SIZE := $(shell expr 512 \* 1024 \* 1024)
+EFI_SYSTEM_PART_SECTORS := $(shell expr $(EFI_SYSTEM_PART_SIZE) \/ 512)
+BOOTIMAGE_FS_SIZE := $(shell expr $(BOOTIMAGE_SIZE) - $(GPT_SIZE) - $(EFI_SYSTEM_PART_SIZE))
+BOOTIMAGE_FS_OFFSET := $(shell expr $(GPT_SIZE) + $(EFI_SYSTEM_PART_SIZE))
 
 DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
@@ -28,10 +31,15 @@ squashfs: bootstrap overlay-boot launcher ident
 	@$(ROOTCMD) mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
 	@chown $(shell id -u):$(shell -id -g) $(DEST)/debootstrap.squashfs
 
-bootimage: bootstrap ident
+bootimage:
+	@rm -f $(DEST)/debootstrap.disk
 	@truncate -s $(BOOTIMAGE_SIZE) $(DEST)/debootstrap.disk
-	@sgdisk -G -N 1 $(DEST)/debootstrap.disk
-	@mkfs.ext4 -F -d $(BOOTSTRAP_DIR) -E offset=$(GPT_SIZE) $(DEST)/debootstrap.disk $(BOOTIMAGE_FS_SIZE)
+	@sgdisk -g -G $(DEST)/debootstrap.disk 2>/dev/null
+	@sgdisk -n 1:2048:$(EFI_SYSTEM_PART_SECTORS)  $(DEST)/debootstrap.disk 2>/dev/null
+	@sgdisk -A 1:set:0  $(DEST)/debootstrap.disk 2>/dev/null
+	@sgdisk -t 1:ef00  $(DEST)/debootstrap.disk 2>/dev/null
+	@sgdisk -n 2:$(shell expr $(EFI_SYSTEM_PART_SECTORS) + 1): $(DEST)/debootstrap.disk 2>/dev/null
+	#@mkfs.ext4 -F -d $(BOOTSTRAP_DIR) -E offset=$(BOOTIMAGE_FS_OFFSET) $(DEST)/debootstrap.disk $(BOOTIMAGE_FS_SIZE)
 
 makedirs:
 	@mkdir -p $(DEST)
