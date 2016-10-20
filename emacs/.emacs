@@ -10,3 +10,4 @@
 
 (add-to-list 'auto-mode-alist '("\\.def\\'" . c-mode))
 (add-to-list 'auto-mode-alist '("\\.def\\'" . c-mode))
+(set-variable 'backup nil)

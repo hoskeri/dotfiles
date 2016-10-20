@@ -1,0 +1,34 @@
+#!/usr/bin/python -i
+"""
+eclsh:
+    ensime config parser
+"""
+import sexpdata
+import pprint
+import sys
+import user
+
+class EnsimeProject():
+    def __init__(self, d=None):
+        self._d = d or []
+        self.subprojects = []
+        def fixk(k): return k.value().strip(':').replace('-', '_')
+
+        for i in xrange(0, len(self._d), 2):
+            k = fixk(self._d[i])
+            v = self._d[i+1]
+            setattr(self, k, v)
+
+        self.subprojects = map(lambda x: self.__class__(x), self.subprojects)
+
+if __name__ == "__main__":
+    with open(".ensime") as f:
+        d = list(sexpdata.load(f))
+        e = EnsimeProject(d)
+
+    cmd = 'subprojects'
+    try: cmd = sys.argv[1]
+    except IndexError: pass
+
+    if cmd == 'subprojects':
+        pprint.pprint(map(lambda p: p.name, e.subprojects))
