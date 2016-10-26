@@ -1,4 +1,4 @@
-#!/usr/bin/python -i
+#!/usr/bin/python
 """
 eclsh:
     ensime config parser
@@ -7,6 +7,7 @@ import sexpdata
 import pprint
 import sys
 import user
+import itertools
 
 class EnsimeProject():
     def __init__(self, d=None):
@@ -29,7 +30,8 @@ class EnsimeProject():
         self.depends_on_modules = fixup_refs(self.depends_on_modules)
 
     def _cmd_classpath(self):
-        return [self.target] + self.compile_deps
+        return ':'.join(set([self.target] + self.compile_deps \
+                            + map(lambda x: x.target, self.depends_on_modules)))
 
     def _cmd_info(self):
         return { "name": self.name }
