@@ -1,5 +1,7 @@
 #!/bin/bash
 set -eu
 query=$1
-curl -s "http://search.maven.org/solrsearch/select?q=${query}&rows=32&wt=json"|jq -r '.response.docs'|jq -r '.[]|["https://repo1.maven.org/maven2", (.g|gsub("\\."; "/")), .a, .latestVersion, (.a + "-" + .latestVersion)]|join("/")'
-
+outfile=$(mktemp /tmp/mvnsearch.XXXXXXX)
+trap "rm -f $outfile" EXIT
+curl -s "http://search.maven.org/solrsearch/select?q=${query}&rows=32&wt=json" > $outfile
+jq -r '.response.docs[]|[[(["https://repo1.maven.org/maven2", (.g|gsub("\\."; "/")), .a, .latestVersion, (.a + "-" + .latestVersion)]|join("/"))], .ec, [".sha1", ".md5", ""]]|combinations|join("")' $outfile
