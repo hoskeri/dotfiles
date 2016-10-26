@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eux
+trap 'rm -f /tmp/atom.deb' EXIT
+wget -q -O /tmp/atom.deb https://atom.io/download/deb?channel=beta
+sudo dpkg -E -i /tmp/atom.deb

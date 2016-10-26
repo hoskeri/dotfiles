@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eux
+dir=$(mktemp -d)
+url='https://go.microsoft.com/fwlink/?LinkID=760868'
+trap 'rm -rf $dir' EXIT
+
+cd $dir
+wget --content-disposition -q "$url"
+sudo dpkg -E -i code*deb
