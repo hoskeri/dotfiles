@@ -96,3 +96,5 @@ object Main {
   }
 }
 END
+
+git add -A .

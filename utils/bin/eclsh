@@ -3,6 +3,7 @@
 eclsh:
     ensime config parser
 """
+from __future__ import print_function
 import sexpdata
 import pprint
 import sys
@@ -52,9 +53,9 @@ if __name__ == "__main__":
     try:
         e = e.subprojects[project]
     except KeyError:
-        pprint.pprint(e.subprojects.keys())
+        print(e.subprojects.keys())
 
     try:
-        pprint.pprint(getattr(e, '_cmd_' + cmd)())
+        print(getattr(e, '_cmd_' + cmd)())
     except AttributeError:
-        pprint.pprint('unknown command')
+        print('unknown command')
