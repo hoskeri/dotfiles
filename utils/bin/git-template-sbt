@@ -21,7 +21,8 @@ lazy val alldeps = Seq(
 	"com.twitter" %% "finagle-core" % "6.34.0",
   "com.twitter" %% "finagle-http" % "6.34.0",
   "com.twitter" %% "finagle-thrift" % "6.34.0",
-  "org.apache.thrift" % "libthrift" % "0.9.1"
+  "org.apache.thrift" % "libthrift" % "0.9.1",
+  "com.twitter" % "scrooge-runtime" % "1.0.3"
 )
 
 lazy val root = (project in file("."))
@@ -45,8 +46,9 @@ sbt.Version=0.13.11
 END
 
 cat <<END > ${DESTDIR}/project/plugins.sbt
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
+addSbtPlugin("com.twitter" % "scrooge-sbt-plugin" % "3.14.1")
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.0.1")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
 END
 
 cat <<END > ${DESTDIR}/.gitignore
@@ -71,18 +73,18 @@ mkdir -p ${DESTDIR}/src/{main,test}/{java,scala,resources}/
 cat <<END > ${DESTDIR}/src/main/resources/logback.xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+  <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <pattern>%d{ISO8601,UTC} %-5level %logger{36} %msg%n</pattern>
       <immediateFlush>false</immediateFlush>
     </encoder>
   </appender>
   <logger name="${PROJECT_ORG}.${PROJECT_NAME}" level="debug" additivity="false">
-    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="STDERR"/>
   </logger>
   <logger name="org.apache.zookeeper.ClientCnxn" level="WARN" />
   <root level="debug">
-    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="STDERR"/>
   </root>
 </configuration>
 END
