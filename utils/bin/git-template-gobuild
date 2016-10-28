@@ -1,0 +1,41 @@
+#!/bin/bash
+set -eu
+
+PROJECT_NAME=$1
+PROJECT_ORG="hoskeri.net"
+
+test -d .git
+
+DESTDIR=$(pwd)
+
+cat <<END > ${DESTDIR}/.gitignore
+.*sw*
+*.o
+*.a
+pkg
+bin
+vendor/
+END
+
+mkdir -p ${DESTDIR}/{vendor,src,pkg,bin}
+cat <<END > ${DESTDIR}/vendor/install-deps
+#!/bin/bash
+set -eux
+export GOPATH=$(dirname $(readlink -f $0))
+rm -rf ${GOPATH}/src
+
+#go get -d -u github.com/labstack/echo
+
+find ${GOPATH}/src -type d -name .git |xargs rm -rf
+END
+
+mkdir -p ${DESTDIR}/src/${PROJECT_ORG}/${PROJECT_NAME}
+cat <<END > ${DESTDIR}/src/${PROJECT_ORG}/${PROJECT_NAME}/server.go
+package main
+
+import "fmt"
+
+func main() {
+  fmt.Println("hello, world")
+}
+END
