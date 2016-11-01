@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eu
-query=$1
+query=${1:-}
+test -z $query && echo "usage: $(basename $0) query" && exit 1
 outfile=$(mktemp /tmp/mvnsearch.XXXXXXX)
 trap "rm -f $outfile" EXIT
 curl -s "http://search.maven.org/solrsearch/select?q=${query}&rows=32&wt=json" > $outfile
