@@ -25,6 +25,7 @@ Bundle 'Quramy/tsuquyomi'
 Bundle 'ElmCast/elm-vim'
 Plugin 'rust-lang/rust.vim'
 Plugin 'flazz/vim-colorschemes'
+Plugin 'yosssi/vim-ace'
 
 " End Vim plugin list
 call vundle#end()

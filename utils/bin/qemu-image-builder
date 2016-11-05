@@ -127,8 +127,8 @@ launcher:
 
 isolinuxcfg:
 	@cat <<- EOF > ${ISOIMAGE_ROOT}/syslinux/isolinux.cfg
-	default HXPlatform
-	label HXPlatform
+	default Linux
+	label Linux
 	  kernel /vmlinuz-${KERNEL_VERSION}
 	  append initrd=/initrd.img-${KERNEL_VERSION} ro quiet boot=overlay
 	EOF

@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+cd $(git root)
+make -q --no-print-directory
