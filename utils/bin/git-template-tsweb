@@ -1,0 +1,100 @@
+#!/bin/bash
+set -eu
+
+PROJECT_NAME=$1
+PROJECT_ORG="hoskeri.net"
+
+test -d .git
+
+DESTDIR=$(pwd)
+
+mkdir -p ${DESTDIR}/{src,dist}
+
+cat <<END > ${DESTDIR}/.gitignore
+.*sw*
+node_modules
+dist/js
+dist/css
+dist/images
+dist/fonts
+src/*.js
+END
+
+cat <<END > ${DESTDIR}/.npmrc
+global = false
+loglevel = silent
+END
+
+cat <<END > ${DESTDIR}/package.json
+{
+  "name": "${PROJECT_NAME}",
+  "version": "0.0.0",
+  "description": "__FIXME__",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abhijit Hoskeri <abhijithoskeri@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/history": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@types/react-router": "latest",
+    "history": "latest",
+    "octicons": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-router": "latest"
+  }
+}
+END
+
+cat <<END > ${DESTDIR}/webpack.config.js
+'use strict';
+
+module.exports = {
+  entry: './src/index.tsx',
+  output: {
+      filename: 'dist/js/main.js'
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.css', '.sass', '.scss', '.js']
+  },
+  module: {
+    loaders: [
+      { test: /\.tsx?$/, loader: 'ts-loader?silent=true' }
+    ]
+  }
+}
+END
+
+cat <<END > ${DESTDIR}/tsconfig.json
+{
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "sourceMap": false,
+        "jsx": "react"
+    }
+}
+END
+
+cat <<END > ${DESTDIR}/src/index.tsx
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+
+ReactDOM.render(<h1>hello, world</h1>, document.getElementById("app"));
+END
+
+cat <<END > ${DESTDIR}/dist/index.html
+<html>
+  <head>
+    <title>Live: ${PROJECT_NAME}</title>
+    <script src="http://localhost:35729/livereload.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
+END
