@@ -45,7 +45,11 @@ cat <<END > ${DESTDIR}/package.json
     "octicons": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-router": "latest"
+    "react-router": "latest",
+    "typescript": "2.0.x",
+    "ts-loader": "latest",
+    "webpack": "beta",
+    "webpack-dev-server": "beta"
   }
 }
 END
