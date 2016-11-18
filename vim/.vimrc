@@ -105,4 +105,7 @@ let g:syntastic_scala_checkers = ['fsc']
 
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|build|opensrc)|(\.(swp|ico|git|svn|class))$'
 let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+let g:ctrlp_regexp = 1
+let g:ctrlp_lazy_update = 1
+let g:ctrlp_use_caching = 1
 let g:neocomplete#enable_at_startup = 1
