@@ -1,0 +1,28 @@
+#!/bin/bash
+set -eu
+
+# create a user account
+APPNAME=$1
+ENVIRON=$2
+GIT_URL=$3
+
+APPGROUP=www-data
+HOMEDIR=/home/webapps/$APPNAME
+USERNAME=webapp-$APPNAME
+
+ADDUSER_FLAGS="
+  --gecos=Webapp,$NAME
+  --no-create-home
+  --disabled-login
+  --firstuid 35000
+  --lastuid 40000
+  --ingroup $APPGROUP
+  --home ${HOMEDIR}
+  webapp-$NAME"
+
+sudo adduser $ADDUSER_FLAGS
+install -d -m 700 -u $USERNAME -g $GROUPNAME $HOMEDIR
+
+echo $GIT_URL > $HOMEDIR/.webapp-conf-giturl
+echo $ENVIRON > $HOMEDIR/.webapp-conf-environ
+ssh-keygen -t rsa -P '' -C '' $HOMEDIR/.webapp-conf-key

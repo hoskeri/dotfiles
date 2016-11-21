@@ -1,0 +1,2 @@
+#!/bin/sh -eu
+find $HOME -maxdepth 1 -mindepth 1 -name '.*'|xargs -n1 du -t 10M -sh |sort -hr|cut -f2,1
