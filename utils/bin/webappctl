@@ -17,7 +17,7 @@ ADDUSER_FLAGS="
   --firstuid 35000
   --lastuid 40000
   --ingroup $APPGROUP
-  --home ${HOMEDIR}
+  --home $HOMEDIR
   webapp-$APPNAME"
 
 sudo adduser $ADDUSER_FLAGS

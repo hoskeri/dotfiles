@@ -16,6 +16,8 @@ SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
 ISOIMAGE_ROOT := $(DEST)/isoroot
 SQUASHFS_IMAGE := $(DEST)/debootstrap.squashfs
 
+ISOIMAGE_FILE := $(PREFIX)/debootstrap.iso
+
 build: clean squashfs
 	@cp -v -f \
 		$(BOOTSTRAP_DIR)/boot/vmlinuz-${KERNEL_VERSION} \
@@ -33,7 +35,7 @@ isoimage: build isolinuxcfg
 		$(DEST)/initrd.img-${KERNEL_VERSION} \
 			$(ISOIMAGE_ROOT)
 	@cp --link $(SQUASHFS_IMAGE) $(ISOIMAGE_ROOT)/live/root.squashfs
-	@genisoimage -quiet -r -o $(DEST)/debootstrap.iso \
+	@genisoimage -quiet -R -r -o $(ISOIMAGE_FILE) \
 		-b syslinux/isolinux.bin \
 		-c syslinux/boot.cat \
 		-no-emul-boot -boot-load-size 4 \
@@ -42,7 +44,7 @@ isoimage: build isolinuxcfg
 
 squashfs: bootstrap overlay-boot launcher ident
 	@$(ROOTCMD) mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
-	@chown $(shell id -u):$(shell id -g) $(SQUASHFS_IMAGE)
+	@$(ROOTCMD) chown $(shell id -u):$(shell id -g) $(SQUASHFS_IMAGE)
 
 makedirs:
 	@mkdir -p $(DEST)
@@ -100,7 +102,7 @@ overlay:
 				mkdir -p /cdrom
 				modprobe iso9660
 				modprobe loop
-				mount -t iso9660 /dev/sr0 /cdrom
+				mount -t iso9660 -o ro /dev/sr0 /cdrom
 				losetup /dev/loop0 /cdrom/live/root.squashfs
 				SQ_DEV=/dev/loop0
 			fi
