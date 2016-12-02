@@ -8,7 +8,7 @@ BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
 DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
 KERNEL_VERSION := 4.8.0-1-amd64
 EXTRA_PACKAGES := systemd-sysv,ifupdown
-DEBOOTSTRAP_OPTS := --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
+DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
 
 DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
@@ -19,14 +19,14 @@ SQUASHFS_IMAGE := $(DEST)/debootstrap.squashfs
 ISOIMAGE_FILE := $(PREFIX)/debootstrap.iso
 
 build: clean squashfs
-	@cp -v -f \
+	@cp -f \
 		$(BOOTSTRAP_DIR)/boot/vmlinuz-${KERNEL_VERSION} \
 		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
 			$(DEST)
-	@chmod +x $(DEST)/run
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
 
 isoimage: build isolinuxcfg
+	@echo " [ISO] ${ISOIMAGE_FILE}"
 	@cp -f /usr/lib/ISOLINUX/isolinux.bin \
 		     /usr/lib/syslinux/modules/bios/ldlinux.c32 \
 				 $(ISOIMAGE_ROOT)/syslinux/
@@ -39,12 +39,13 @@ isoimage: build isolinuxcfg
 		-b syslinux/isolinux.bin \
 		-c syslinux/boot.cat \
 		-no-emul-boot -boot-load-size 4 \
-		-boot-info-table $(ISOIMAGE_ROOT)
+		-boot-info-table $(ISOIMAGE_ROOT) 2>/dev/null >/dev/null
 	@rm -rf $(ISOIMAGE_ROOT)
 
 squashfs: bootstrap overlay-boot launcher ident
-	@$(ROOTCMD) mksquashfs $(BOOTSTRAP_DIR) $(DEST)/debootstrap.squashfs -no-progress -noappend
-	@$(ROOTCMD) chown $(shell id -u):$(shell id -g) $(SQUASHFS_IMAGE)
+	@echo " [SQUASHFS] ${SQUASHFS_IMAGE}"
+	@${ROOTCMD} mksquashfs ${BOOTSTRAP_DIR} ${SQUASHFS_IMAGE} -no-progress -noappend 2>/dev/null >/dev/null
+	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${SQUASHFS_IMAGE}
 
 makedirs:
 	@mkdir -p $(DEST)
@@ -65,7 +66,7 @@ clean:
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/proc 2>/dev/null
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/sys 2>/dev/null
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
-	@rm -f $(WORKDIR)/deboostrap.squashfs
+	@rm -rf $(WORKDIR)/build
 
 overlay-boot: overlay overlay-hook
 	@$(ROOTCMD) chmod +x $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook

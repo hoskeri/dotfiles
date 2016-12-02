@@ -4,3 +4,4 @@ all:
 	stow tmux
 	stow emacs
 	stow sbt
+	stow gradle
