@@ -9,24 +9,14 @@ DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
 KERNEL_VERSION := 4.8.0-1-amd64
 EXTRA_PACKAGES := systemd-sysv,ifupdown
 DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
-
 DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
-
 ISOIMAGE_ROOT := $(DEST)/isoroot
 SQUASHFS_IMAGE := $(DEST)/debootstrap.squashfs
-
 ISOIMAGE_FILE := $(PREFIX)/debootstrap.iso
 
-build: clean squashfs
-	@cp -f \
-		$(BOOTSTRAP_DIR)/boot/vmlinuz-${KERNEL_VERSION} \
-		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
-			$(DEST)
-	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
-
 isoimage: build isolinuxcfg
-	@echo " [ISO] ${ISOIMAGE_FILE}"
+	@echo " [ISO]    \t\t${ISOIMAGE_FILE}"
 	@cp -f /usr/lib/ISOLINUX/isolinux.bin \
 		     /usr/lib/syslinux/modules/bios/ldlinux.c32 \
 				 $(ISOIMAGE_ROOT)/syslinux/
@@ -42,8 +32,15 @@ isoimage: build isolinuxcfg
 		-boot-info-table $(ISOIMAGE_ROOT) 2>/dev/null >/dev/null
 	@rm -rf $(ISOIMAGE_ROOT)
 
-squashfs: bootstrap overlay-boot launcher ident
-	@echo " [SQUASHFS] ${SQUASHFS_IMAGE}"
+build: clean squashfs
+	@cp -f \
+		$(BOOTSTRAP_DIR)/boot/vmlinuz-${KERNEL_VERSION} \
+		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
+			$(DEST)
+	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
+
+squashfs: bootstrap overlay-boot ident
+	@echo " [SQUASHFS]\t\t${SQUASHFS_IMAGE}"
 	@${ROOTCMD} mksquashfs ${BOOTSTRAP_DIR} ${SQUASHFS_IMAGE} -no-progress -noappend 2>/dev/null >/dev/null
 	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${SQUASHFS_IMAGE}
 
@@ -55,6 +52,7 @@ makedirs:
 	@mkdir -p $(ISOIMAGE_ROOT)/live/
 
 ident:
+	@echo " [CONFIG]\t\tnetwork, auth, hostname"
 	@echo root:root|$(ROOTCMD) chpasswd -R ${BOOTSTRAP_DIR} >/dev/null
 	@echo debian $(ROOTCMD) tee ${BOOTSTRAP_DIR}/etc/hostname >/dev/null
 	@echo "auto ens3\niface ens3 inet dhcp\n" | $(ROOTCMD) tee ${BOOTSTRAP_DIR}/etc/network/interfaces >/dev/null
@@ -63,17 +61,20 @@ ident:
 	@$(ROOTCMD) chmod 0600 ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys >/dev/null
 
 clean:
+	@echo " [CLEAN]\t\t${WORKDIR}"
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/proc 2>/dev/null
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/sys 2>/dev/null
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
 	@rm -rf $(WORKDIR)/build
 
 overlay-boot: overlay overlay-hook
+	@echo " [OVERLAY]\t\tinitramfs"
 	@$(ROOTCMD) chmod +x $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
 	@$(ROOTCMD) rm -f $(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION}
-	@$(ROOTCMD) chroot $(BOOTSTRAP_DIR) update-initramfs -k ${KERNEL_VERSION} -c
+	@$(ROOTCMD) chroot $(BOOTSTRAP_DIR) update-initramfs -k ${KERNEL_VERSION} -c 2>/dev/null >/dev/null
 
 bootstrap: makedirs
+	@echo " [BOOTSTRAP]\t\t${BOOTSTRAP_DIR}"
 	@$(ROOTCMD) mount -t tmpfs none $(BOOTSTRAP_DIR)
 	@$(DEBOOTSTRAP) $(DEBOOTSTRAP_OPTS) $(DISTRIBUTION) $(BOOTSTRAP_DIR) $(APT_MIRROR)
 
@@ -115,19 +116,6 @@ overlay:
 	}
 	EOF
 
-launcher:
-	@cat <<- EOF > $(DEST)/run
-	#!/bin/sh
-	set -eu
-	basedir=\$$(dirname \$$(readlink -f \$$0))
-	qemu-system-x86_64 -cpu host -enable-kvm -m 1024 -vga virtio -kernel \\
-		\$$basedir/vmlinuz-${KERNEL_VERSION} -initrd \\
-		\$$basedir/initrd.img-${KERNEL_VERSION} -append \\
-		'rootfstype=squashfs boot=overlay root=/dev/vda quiet' -drive \\
-		if=virtio,format=raw,file=\$$basedir/debootstrap.squashfs -net \\
-		bridge,br=br0 -net nic,model=virtio
-	EOF
-
 isolinuxcfg:
 	@cat <<- EOF > ${ISOIMAGE_ROOT}/syslinux/isolinux.cfg
 	default Linux
@@ -136,4 +124,4 @@ isolinuxcfg:
 	  append initrd=/initrd.img-${KERNEL_VERSION} ro quiet boot=overlay
 	EOF
 
-.ONESHELL: overlay overlay-hook launcher isolinuxcfg
+.ONESHELL: overlay overlay-hook isolinuxcfg
