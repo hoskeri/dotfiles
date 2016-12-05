@@ -17,5 +17,13 @@ go get -u github.com/motemen/gore
 go get -u github.com/github/hub
 go get -u github.com/kardianos/govendor
 go get -u github.com/omeid/go-livereload/cmd/livereload
+go get -u github.com/alecthomas/gometalinter
+go get -u github.com/kisielk/errcheck
+go get -u github.com/jstemmer/gotags
+go get -u github.com/klauspost/asmfmt
+go get -u github.com/fatih/motion
+go get -u github.com/zmb3/gogetdoc
+go get -u github.com/josharian/impl
+
 go get -u github.com/samuel/go-thrift/generator
 ln -sf $GO_BIN/generator $GO_BIN/gothrift-gen
