@@ -10,6 +10,13 @@ DESTDIR=$(pwd)
 
 mkdir -p ${DESTDIR}/{src,dist}
 
+cat <<END > ${DESTDIR}/run
+#!/bin/sh
+set -eu
+webpack-dev-server --quiet --content-base dist --history-api-fallback
+END
+chmod +x ${DESTDIR}/run
+
 cat <<END > ${DESTDIR}/.gitignore
 .*sw*
 node_modules

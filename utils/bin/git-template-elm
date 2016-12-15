@@ -1,0 +1,136 @@
+#!/bin/bash
+set -eu
+
+PROJECT_NAME=$1
+PROJECT_ORG="hoskeri.net"
+
+test -d .git
+
+DESTDIR=$(pwd)
+
+mkdir -p ${DESTDIR}/{src,dist,templates}
+
+cat <<END > ${DESTDIR}/.gitignore
+*.sw*
+elm-stuff
+index.html
+main.js
+dist/
+END
+
+cat <<END > ${DESTDIR}/Makefile
+# elm live make file.
+
+PROJECT_NAME := \${PROJECT_NAME}
+APPDOMAIN := \${PROJECT_ORG}
+
+ELM := elm-make
+CP := cp --update
+MKDIR := mkdir
+PREFIX := \$(PWD)
+
+DESTDIR := \$(PREFIX)/dist
+ELMFLAGS := --debug --report=json
+
+SOURCES := \
+	src/Main.elm
+
+STYLESHEETS := \
+	src/style.css
+
+TEMPLATES := \
+	templates/index.html
+
+build:
+	@\$(MKDIR) -p dist
+	@\$(CP) \$(TEMPLATES) \$(STYLESHEETS) \$(DESTDIR)
+	@\$(ELM) \$(ELMFLAGS) \$(SOURCES) --output=\$(DESTDIR)/main.js
+
+clean:
+	@rm -r -f \$(DESTDIR)
+
+watch: build
+	@elm-live --dir=\$(DESTDIR) --pushstate \$(ELMFLAGS) --output=\$(DESTDIR)/main.js \$(SOURCES)
+END
+
+cat <<END > ${DESTDIR}/elm-package.json
+{
+    "version": "1.0.0",
+    "summary": "${PROJECT_NAME}",
+    "repository": "https://github.com/user/project.git",
+    "license": "BSD3",
+    "source-directories": [
+        "src"
+    ],
+    "exposed-modules": [],
+    "dependencies": {
+        "elm-lang/core": "5.0.0 <= v < 6.0.0",
+        "elm-lang/html": "2.0.0 <= v < 3.0.0"
+    },
+    "elm-version": "0.18.0 <= v < 0.19.0"
+}
+END
+
+cat <<END > ${DESTDIR}/src/Main.elm
+module Main exposing (..)
+
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Array exposing (..)
+
+type alias Cell = Int
+
+cell: Cell -> Html msg
+cell num =
+    div [ class "cell-container" ]
+      [ div [ class "cell" ]
+        [ text (if (num == 0) then "_" else (toString (2 ^ num))) ]
+      ]
+
+type alias Model =
+  { score: Int
+  , pieces: Array Cell
+  }
+
+main: Html msg
+main = div [] [ cell 1 ]
+END
+
+cat <<END > ${DESTDIR}/src/style.css
+.cell-container {
+  display: inline-block;
+  width: 8em;
+  height: 8em;
+  padding: 0.5em;
+}
+
+.cell {
+  background-color: gray;
+  border-radius: 0.5em;
+  display: block;
+  margin: auto;
+  line-height: 4em;
+  text-align: center;
+  font-size: 2em;
+  color: white;
+  font-family: sans-serif;
+  font-weight: bold;
+}
+END
+
+cat <<END > ${DESTDIR}/templates/index.html
+<!doctype html>
+<html>
+  <head>
+    <title>${PROJECT_NAME}</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="main"></div>
+    <script src="main.js"></script>
+    <script>
+      Elm.Main.embed(document.getElementById("main"));
+    </script>
+  </body>
+</html>
+END
