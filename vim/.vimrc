@@ -109,3 +109,5 @@ let g:ctrlp_regexp = 1
 let g:ctrlp_lazy_update = 1
 let g:ctrlp_use_caching = 1
 let g:neocomplete#enable_at_startup = 1
+
+let g:scala_scaladoc_indent = 1

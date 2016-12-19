@@ -30,7 +30,7 @@ MKDIR := mkdir
 PREFIX := \$(PWD)
 
 DESTDIR := \$(PREFIX)/dist
-ELMFLAGS := --debug --report=json
+ELMFLAGS := --report=json
 
 SOURCES := \
 	src/Main.elm
@@ -41,16 +41,18 @@ STYLESHEETS := \
 TEMPLATES := \
 	templates/index.html
 
-build:
+build-static:
 	@\$(MKDIR) -p dist
 	@\$(CP) \$(TEMPLATES) \$(STYLESHEETS) \$(DESTDIR)
+
+build:
 	@\$(ELM) \$(ELMFLAGS) \$(SOURCES) --output=\$(DESTDIR)/main.js
 
 clean:
 	@rm -r -f \$(DESTDIR)
 
-watch: build
-	@elm-live --dir=\$(DESTDIR) --pushstate \$(ELMFLAGS) --output=\$(DESTDIR)/main.js \$(SOURCES)
+watch: build-static
+	@elm-live --dir=\$(DESTDIR) --pushstate \$(ELMFLAGS) --debug --output=\$(DESTDIR)/main.js \$(SOURCES)
 END
 
 cat <<END > ${DESTDIR}/elm-package.json
