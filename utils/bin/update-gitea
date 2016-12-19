@@ -1,0 +1,3 @@
+#!/bin/sh -eux
+curl -s -k -o $HOME/bin/gitea https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
+chmod +x $HOME/bin/gitea

@@ -1,62 +1,25 @@
 #!/bin/bash
-set -eu
+set -eux
 
 # create a user account
 APPNAME=$(echo $1|tr -C -d  '[a-z0-9]')
-ENVIRON=$2
-GIT_URL=$3
 
 APPGROUP=www-data
 HOMEDIR=/home/webapps/$APPNAME
 USERNAME=webapp-$APPNAME
 
 ADDUSER_FLAGS="
-  --gecos=Webapp,$APPNAME
+  --gecos="Webapp,$APPNAME"
   --no-create-home
-  --disabled-login
+  --disabled-password
   --firstuid 35000
   --lastuid 40000
   --ingroup $APPGROUP
   --home $HOMEDIR
+  --shell /usr/bin/git-shell
   webapp-$APPNAME"
 
-sudo adduser $ADDUSER_FLAGS
+getent passwd webapp-appt || sudo adduser $ADDUSER_FLAGS
 sudo install -d -m 700 -o $USERNAME -g $APPGROUP $HOMEDIR
-
-echo $GIT_URL | sudo tee $HOMEDIR/.webapp-conf-giturl
-echo $ENVIRON | sudo tee $HOMEDIR/.webapp-conf-environ
-sudo ssh-keygen -t rsa -P '' -C '' -f $HOMEDIR/.webapp-conf-key
-
-cat <<END | sudo tee $HOMEDIR/.webapp-conf-nginxconf
-server {
-  listen 80;
-  server_name $APPNAME.hoskeri.net;
-  return 301 https://\$host\$request_uri;
-}
-
-server {
-  listen 80;
-  server_name www.$APPNAME.hoskeri.net;
-  return 301 https://$APPNAME.hoskeri.net\$request_uri;
-}
-
-server {
-    listen 443 ssl http2;
-
-    server_name $APPNAME.hoskeri.net;
-    root /tmp/webapp-static-$APPNAME/;
-
-    ssl_certificate     $HOMEDIR/.webapp-conf-ssl-cert;
-    ssl_certificate_key $HOMEDIR/.webapp-conf-ssl-key;
-
-    add_header Strict-Transport-Security max-age=2592000;
-
-    location /api {
-      proxy_pass http://unix:/tmp/webapp-sock-$APPNAME/webapp.sock;
-    }
-
-    location / {
-      try_files \$uri \$uri/ =404;
-    }
-}
-END
+sudo su - -s /bin/sh -c 'git init --bare repo.git' $USERNAME
+sudo su - -s /bin/bash $USERNAME
