@@ -83,7 +83,8 @@ au BufRead,BufNewFile *.clj set expandtab ts=2 sw=2 sts=2 filetype=clojure
 au BufRead,BufNewFile *.cljs set expandtab ts=2 sw=2 sts=2 filetype=clojure
 
 au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
-au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
+
+au BufRead,BufNewFile SConstruct set filetype=python
 
 autocmd FileType make set noexpandtab
 

@@ -77,47 +77,34 @@ cat <<END > ${DESTDIR}/src/Main.elm
 module Main exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
-import Array exposing (..)
-
-type alias Cell = Int
-
-cell: Cell -> Html msg
-cell num =
-    div [ class "cell-container" ]
-      [ div [ class "cell" ]
-        [ text (if (num == 0) then "_" else (toString (2 ^ num))) ]
-      ]
 
 type alias Model =
-  { score: Int
-  , pieces: Array Cell
+  { name: String
+  , score: Int
   }
 
-main: Html msg
-main = div [] [ cell 1 ]
+type Msg =
+  Up | Down | Left | Right | Reset
+
+init: (Model, Cmd Msg)
+init = ({name = "${PROJECT_NAME}", score = 0}, Cmd.none)
+
+update: Msg -> Model -> (Model, Cmd Msg)
+update msg model = (model, Cmd.none)
+
+view: Model -> Html Msg
+view model = div [] [ text "Hello, World" ]
+
+main: Program Never Model Msg
+main = Html.program
+  { init = init
+  , update = update
+  , view = view
+  , subscriptions = \_ -> Sub.none
+  }
 END
 
 cat <<END > ${DESTDIR}/src/style.css
-.cell-container {
-  display: inline-block;
-  width: 8em;
-  height: 8em;
-  padding: 0.5em;
-}
-
-.cell {
-  background-color: gray;
-  border-radius: 0.5em;
-  display: block;
-  margin: auto;
-  line-height: 4em;
-  text-align: center;
-  font-size: 2em;
-  color: white;
-  font-family: sans-serif;
-  font-weight: bold;
-}
 END
 
 cat <<END > ${DESTDIR}/templates/index.html
