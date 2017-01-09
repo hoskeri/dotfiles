@@ -1,8 +1,11 @@
 #!/bin/bash
-set -eux
+export SHELLOPTS
+set -eu
 
 # create a user account
 APPNAME=$(echo $1|tr -C -d  '[a-z0-9]')
+
+test -n "$APPNAME"
 
 APPGROUP=www-data
 HOMEDIR=/home/webapps/$APPNAME

@@ -53,7 +53,7 @@ cat <<END > ${DESTDIR}/package.json
     "react": "latest",
     "react-dom": "latest",
     "react-router": "latest",
-    "typescript": "2.0.x",
+    "typescript": "2.1.x",
     "ts-loader": "latest",
     "webpack": "beta",
     "webpack-dev-server": "beta"
