@@ -1,0 +1,9 @@
+[user]
+	name = Abhijit Hoskeri
+	email = abhijithoskeri@gmail.com
+[push]
+	default = matching
+[pull]
+	rebase = true
+[init]
+	templatedir = /home/abhijit/.git-templates/base

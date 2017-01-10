@@ -7,9 +7,35 @@ GITEA_USER=git
 GITEA_GROUP=git
 tmpfile=$(mktemp $DESTDIR/giteaXXXXX)
 chattr -i $DESTDIR/gitea
-curl -s -k -o $tmpfile https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
+curl -s -o $tmpfile https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
 chmod +x $tmpfile
 
 mv $tmpfile $DESTDIR/gitea
 chown ${GITEA_USER}:${GITEA_GROUP} $DESTDIR/gitea
 chattr +i $DESTDIR/gitea
+
+cat <<END > /etc/systemd/system/multi-user.target.wants/git.service
+[Unit]
+Description=git service.
+After=network.target
+Requires=network.target local-fs.target
+
+[Service]
+ExecStart=/home/git/gitea web
+WorkingDirectory=~
+User=git
+Group=git
+LimitNOFILE=1048576
+LimitNPROC=1048576
+LimitCORE=0
+ProtectSystem=yes
+MemoryMax=128M
+TasksMax=32
+MemorySwapMax=128M
+PrivateDevices=true
+
+[Install]
+WantedBy=multi-user.target
+END
+systemctl daemon-reload
+systemctl restart git

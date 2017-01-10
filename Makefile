@@ -5,3 +5,4 @@ all:
 	stow emacs
 	stow sbt
 	stow gradle
+	stow git

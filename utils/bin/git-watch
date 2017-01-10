@@ -1,0 +1,14 @@
+#!/bin/bash
+set -eu
+filelist=$(mktemp /tmp/git-watch-filelistXXXXXX)
+max_files=128
+while true
+do
+  git ls-files --full-name > $filelist
+  if [ "$(wc -l $filelist|cut -d' ' -f1)" -gt $max_files ]
+  then
+    echo "error: git-watch: too many files (max $max_files)" >&2
+    exit 1
+  fi
+  entr -d "$@" < $filelist
+done
