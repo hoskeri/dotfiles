@@ -2,6 +2,6 @@
 
 ## Usage
 
-1. Have GNU Stow installed.
-2. Clone this repro to $HOME/dotfiles
-3. `stow vim|bash|bin|whatever`
+1. have GNU stow installed.
+2. clone this repro to $HOME/dotfiles
+3. make
