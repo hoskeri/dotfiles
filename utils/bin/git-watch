@@ -1,10 +1,17 @@
 #!/bin/bash
 set -eu
 filelist=$(mktemp /tmp/git-watch-filelistXXXXXX)
+ignfile=$(mktemp /tmp/git-watch-ignXXXXXXX)
+trap "rm -f $filelist $ignfile" EXIT
 max_files=128
+
+cd $(git root)
+
+test -f .watchignore && cat .watchignore >> $ignfile
+
 while true
 do
-  git ls-files --full-name > $filelist
+  git ls-files --full-name |grep -v -s -f $ignfile > $filelist
   if [ "$(wc -l $filelist|cut -d' ' -f1)" -gt $max_files ]
   then
     echo "error: git-watch: too many files (max $max_files)" >&2
