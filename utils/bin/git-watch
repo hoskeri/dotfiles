@@ -6,8 +6,10 @@ trap "rm -f $filelist $ignfile" EXIT
 max_files=128
 
 cd $(git root)
+target="$@"
 
 test -f .watchignore && cat .watchignore >> $ignfile
+test -e .watchscript && target=./.watchscript
 
 while true
 do
@@ -17,5 +19,5 @@ do
     echo "error: git-watch: too many files (max $max_files)" >&2
     exit 1
   fi
-  entr -d "$@" < $filelist
+  entr -d "$target" < $filelist
 done
