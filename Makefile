@@ -6,3 +6,4 @@ all:
 	@stow sbt
 	@stow gradle
 	@stow git
+	@sudo stow -t / system

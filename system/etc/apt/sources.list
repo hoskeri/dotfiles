@@ -1,0 +1,7 @@
+deb http://http.us.debian.org/debian testing main contrib non-free
+deb http://http.us.debian.org/debian unstable main contrib non-free
+deb http://http.us.debian.org/debian experimental main contrib non-free
+deb-src http://http.us.debian.org/debian testing main contrib non-free
+deb-src http://http.us.debian.org/debian unstable main contrib non-free
+deb-src http://http.us.debian.org/debian experimental main contrib non-free
+deb http://apt.dockerproject.org/repo debian-stretch main testing

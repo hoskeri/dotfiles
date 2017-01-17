@@ -9,11 +9,15 @@ import pprint
 import sys
 import user
 import itertools
+import traceback
 
 class EnsimeProject():
     def __init__(self, d=None):
         d = d or []
         self.subprojects = []
+        self.compile_deps = []
+        self.depends_on_modules = []
+        self.target = ''
         def fixk(k): return k.value().strip(':').replace('-', '_')
 
         for i in xrange(0, len(d), 2):
@@ -27,12 +31,12 @@ class EnsimeProject():
 
     def wire_deps(self, parents):
         def fixup_refs(refs):
-            return map(lambda x: parents[x.strip(':')], refs)
+            return map(lambda x: parents.get(x.strip(':')), refs)
         self.depends_on_modules = fixup_refs(self.depends_on_modules)
 
     def _cmd_classpath(self):
-        return ':'.join(set([self.target] + self.compile_deps \
-                            + map(lambda x: x.target, self.depends_on_modules)))
+        return ':'.join([self.target] + self.compile_deps \
+                            + map(lambda x: x.target, self.depends_on_modules))
 
     def _cmd_info(self):
         return { "name": self.name }

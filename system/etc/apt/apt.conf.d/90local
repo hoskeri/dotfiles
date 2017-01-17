@@ -1,0 +1,4 @@
+Acquire::GzipIndexes "true";
+DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*"; };
+APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb"; };
+Apt::AutoRemove::SuggestsImportant "false";

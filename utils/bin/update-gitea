@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 
 [ "$(id -u)" != "0" ] && ( echo "please run as root" && exit 1 )
 
