@@ -99,7 +99,7 @@ overlay:
 	    modprobe squashfs
 	    modprobe overlay
 			SQ_DEV=/dev/vda
-			if blkid /dev/sr0 2>&1 2>/dev/null
+			if blkid /dev/sr0 >/dev/null 2>/dev/null
 			then
 				mkdir -p /cdrom
 				modprobe iso9660
