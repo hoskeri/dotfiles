@@ -28,4 +28,4 @@ go get -u github.com/josharian/impl
 go get -u github.com/samuel/go-thrift/generator
 mv -f $GO_BIN/generator $GO_BIN/gothrift-gen
 
-strip $GO_BIN/*
+strip $GO_BIN/* >/dev/null
