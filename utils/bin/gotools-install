@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eux
+set -eu
 export GOPATH=$HOME/.gotools-install
 export GO_BIN=$GOPATH/bin
 go get -u golang.org/x/tools/.../
@@ -28,4 +28,4 @@ go get -u github.com/josharian/impl
 go get -u github.com/samuel/go-thrift/generator
 mv -f $GO_BIN/generator $GO_BIN/gothrift-gen
 
-strip $GO_BIN/* >/dev/null
+strip $GO_BIN/*

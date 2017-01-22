@@ -1,8 +1,17 @@
 #!/bin/bash
 set -eu
+export SHELLOPTS
 filelist=$(mktemp /tmp/git-watch-filelistXXXXXX)
 ignfile=$(mktemp /tmp/git-watch-ignXXXXXXX)
-trap "rm -f $filelist $ignfile" EXIT
+bgpid=$$
+
+if [ -e .watchbgscript ]
+then
+  ./.watchbgscript &
+  bgpid=$(jobs -p)
+fi
+
+trap "rm -f $filelist $ignfile; kill $bgpid" EXIT
 max_files=128
 
 cd $(git root)
@@ -10,6 +19,8 @@ target="$@"
 
 test -f .watchignore && cat .watchignore >> $ignfile
 test -e .watchscript && target=./.watchscript
+
+test -z "$target" && echo "usage: git-watch command" && exit 1
 
 while true
 do

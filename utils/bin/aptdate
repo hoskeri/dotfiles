@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eux
+set -eu
 sudo apt-get update
 sudo apt-get dist-upgrade -y
 sudo apt-get upgrade -y -t experimental --with-new-pkgs || sudo apt-get upgrade -y -t experimental
