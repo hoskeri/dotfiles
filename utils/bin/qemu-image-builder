@@ -7,7 +7,7 @@ WORKDIR := ${HOME}/tmp/qemu-image-builder-work
 BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
 DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
 KERNEL_VERSION := 4.9.0-1-amd64
-EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools
+EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,linux-perf-4.9,dhclient,vim-tiny
 DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
 DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
@@ -31,6 +31,7 @@ isoimage: build isolinuxcfg
 		-no-emul-boot -boot-load-size 4 \
 		-boot-info-table $(ISOIMAGE_ROOT) 2>/dev/null >/dev/null
 	@rm -rf $(ISOIMAGE_ROOT)
+	@rm -rf $(DEST) $(BOOTSTRAP_DIR)
 
 build: clean squashfs
 	@cp -f \
