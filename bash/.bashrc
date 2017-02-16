@@ -82,9 +82,14 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-if [ -f ~/.bash_paths ]; then
-  . ~/.bash_paths
-fi
+source /etc/profile.d/vte.sh
+
+export PROMPT_DIRTRIM=2
+shopt -s globstar
+
+export RVC_READLINE=libreadline.so.6
+export PYTHONSTARTUP=$HOME/.pythonrc.py
+export PATH=~/bin:$PATH
 
 export GOPATH=$HOME/Code/gopath
 
