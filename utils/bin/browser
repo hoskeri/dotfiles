@@ -4,4 +4,4 @@ exec 2>&1
 exec >/dev/null
 BROWSER_PROFILE=$(mktemp -d /tmp/tmp.BROWSERPROFILE.XXXXXXXX)
 trap "rm -rf $BROWSER_PROFILE" exit
-/usr/bin/epiphany-browser -a --netbank-mode --profile $BROWSER_PROFILE "$@" 2>/dev/null >/dev/null
+/usr/bin/epiphany-browser -a --netbank-mode --profile $BROWSER_PROFILE "$@"

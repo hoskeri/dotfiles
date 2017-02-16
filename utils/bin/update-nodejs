@@ -1,0 +1,18 @@
+#!/bin/bash
+set -eu
+baseurl="https://nodejs.org/dist/latest"
+workdir=$HOME/.nodejs-cache
+installdir=$HOME/.nodejs
+
+mkdir -p $workdir
+
+curl -s -L -o $workdir/checksums "$baseurl/SHASUMS256.txt"
+archive=$(grep 'linux-x64.tar.xz' $workdir/checksums|cut -d' ' -f3)
+
+wget -q -c -O $workdir/$archive $baseurl/$archive
+
+rm -rf $installdir
+mkdir $installdir
+tar -C $installdir -Jxf $workdir/$archive --strip-components=1
+
+ln -s $installdir/bin/node $installdir/bin/nodejs
