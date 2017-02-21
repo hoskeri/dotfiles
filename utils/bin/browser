@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
-exec 2>&1
+exec 2>/dev/null
 exec >/dev/null
 BROWSER_PROFILE=$(mktemp -d /tmp/tmp.BROWSERPROFILE.XXXXXXXX)
 trap "rm -rf $BROWSER_PROFILE" exit
-/usr/bin/epiphany-browser -a --netbank-mode --profile $BROWSER_PROFILE "$@"
+/usr/bin/epiphany-browser -a --netbank-mode --profile $BROWSER_PROFILE "$1"

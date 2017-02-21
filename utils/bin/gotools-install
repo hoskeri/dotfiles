@@ -20,6 +20,8 @@ go get -u github.com/klauspost/asmfmt
 go get -u github.com/fatih/motion
 go get -u github.com/zmb3/gogetdoc
 go get -u github.com/josharian/impl
+go get -u gopkg.in/niemeyer/godeb.v1/cmd/godeb
+
 #go get -u github.com/alecthomas/gometalinter
 
 go get -u github.com/samuel/go-thrift/generator

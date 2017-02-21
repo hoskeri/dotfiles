@@ -7,3 +7,5 @@
 	rebase = true
 [init]
 	templatedir = /home/abhijit/.git-templates/base
+[http "https://gopkg.in"]
+	followRedirects = true
