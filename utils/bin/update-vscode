@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -eu
 dir=$HOME/.update-vscode-cache
 mkdir -p $dir
 url='https://go.microsoft.com/fwlink/?LinkID=760868'

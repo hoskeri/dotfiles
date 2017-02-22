@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eu
 baseurl="https://nodejs.org/dist/latest"
-workdir=$HOME/.nodejs-cache
+workdir=$HOME/.update-nodejs-cache
 installdir=$HOME/.nodejs
 
 mkdir -p $workdir
