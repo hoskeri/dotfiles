@@ -89,7 +89,6 @@ shopt -s globstar
 
 export RVC_READLINE=libreadline.so.6
 export PYTHONSTARTUP=$HOME/.pythonrc.py
-export PATH=~/bin:$PATH
 
 export GOPATH=$HOME/Code/gopath
 
@@ -97,7 +96,6 @@ export PATH="$HOME/Code/gopath/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.gotools-install/bin:$PATH"
 export PATH=/usr/sbin/:$PATH
-export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.nodejs/bin:$PATH"
 
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1

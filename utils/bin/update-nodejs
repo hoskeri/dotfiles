@@ -9,6 +9,7 @@ mkdir -p $workdir
 curl -s -L -o $workdir/checksums "$baseurl/SHASUMS256.txt"
 archive=$(grep 'linux-x64.tar.xz' $workdir/checksums|cut -d' ' -f3)
 
+echo "installing $archive"
 wget -q -c -O $workdir/$archive $baseurl/$archive
 
 rm -rf $installdir
