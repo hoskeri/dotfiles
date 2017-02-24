@@ -3,11 +3,11 @@ ROOTCMD := sudo
 PREFIX := $(shell pwd)
 DISTRIBUTION := debian/unstable
 APT_MIRROR := "http://localhost:9999/debian"
-WORKDIR := ${HOME}/tmp/qemu-image-builder-work
+WORKDIR := ${HOME}/.qemu-image-builder/work
 BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
 DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
-KERNEL_VERSION := 4.9.0-1-amd64
-EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,linux-perf-4.9,dhclient,vim-tiny
+KERNEL_VERSION := 4.9.0-2-amd64
+EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,linux-perf-4.9,isc-dhcp-client,vim-tiny
 DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
 DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
@@ -53,10 +53,11 @@ makedirs:
 	@mkdir -p $(ISOIMAGE_ROOT)/live/
 
 ident:
-	@echo " [CONFIG]\t\tnetwork, auth, hostname"
+	@echo " [CONFIG]\t\tprovisioning"
 	@echo root:root|$(ROOTCMD) chpasswd -R ${BOOTSTRAP_DIR} >/dev/null
 	@echo debian $(ROOTCMD) tee ${BOOTSTRAP_DIR}/etc/hostname >/dev/null
 	@echo "auto ens3\niface ens3 inet dhcp\n" | $(ROOTCMD) tee ${BOOTSTRAP_DIR}/etc/network/interfaces >/dev/null
+	@echo "deb http://httpredir.debian.org/debian unstable main contrib non-free" | $(ROOTCMD) tee ${BOOTSTRAP_DIR}/etc/apt/sources.list >/dev/null
 	@$(ROOTCMD) install -d -m 0700 $(BOOTSTRAP_DIR)/root/.ssh >/dev/null
 	@cat ${SSH_AUTHKEYS} | $(ROOTCMD) tee ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys >/dev/null
 	@$(ROOTCMD) chmod 0600 ${BOOTSTRAP_DIR}/root/.ssh/authorized_keys >/dev/null
@@ -122,7 +123,7 @@ isolinuxcfg:
 	default Linux
 	label Linux
 	  kernel /vmlinuz-${KERNEL_VERSION}
-	  append initrd=/initrd.img-${KERNEL_VERSION} ro quiet boot=overlay
+	  append initrd=/initrd.img-${KERNEL_VERSION} ro quiet boot=overlay console=ttyS0
 	EOF
 
 .ONESHELL: overlay overlay-hook isolinuxcfg
