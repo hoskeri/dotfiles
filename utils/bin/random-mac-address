@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import random
+import sys
 
 def random_mac():
     r = map(lambda x: random.randrange(0, 256), range(0, 6))
@@ -12,4 +13,6 @@ def mac_printable(r):
     return ":".join(map(lambda x: hex(x).replace('0x', '').rjust(2, '0'), r))
 
 if __name__ == "__main__":
+    try: seed = random.seed(hash(sys.argv[1]))
+    except IndexError: pass
     print(mac_printable(random_mac()))
