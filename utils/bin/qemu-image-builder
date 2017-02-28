@@ -7,12 +7,13 @@ WORKDIR := ${HOME}/.qemu-image-builder/work
 BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
 DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
 KERNEL_VERSION := 4.9.0-2-amd64
-EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,linux-perf-4.9,vim-tiny,udhcpc,arping,inetutils-ping
+EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,linux-perf-4.9,vim-tiny,udhcpc,inetutils-ping
 DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
 DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
 ISOIMAGE_ROOT := $(DEST)/isoroot
 SQUASHFS_IMAGE := $(DEST)/debootstrap.squashfs
+EXT4FS_IMAGE := $(DEST)/debootstrap.raw
 ISOIMAGE_FILE := $(WORKDIR)/debootstrap.iso
 
 isoimage: build isolinuxcfg
@@ -33,7 +34,7 @@ isoimage: build isolinuxcfg
 	@rm -rf $(ISOIMAGE_ROOT)
 	@rm -rf $(DEST) $(BOOTSTRAP_DIR)
 
-build: clean squashfs
+build: clean squashfs ext4fs
 	@cp -f \
 		$(BOOTSTRAP_DIR)/boot/vmlinuz-${KERNEL_VERSION} \
 		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
@@ -44,6 +45,12 @@ squashfs: bootstrap overlay-boot ident
 	@echo " [SQUASHFS]\t\t${SQUASHFS_IMAGE}"
 	@${ROOTCMD} mksquashfs ${BOOTSTRAP_DIR} ${SQUASHFS_IMAGE} -no-progress -noappend 2>/dev/null >/dev/null
 	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${SQUASHFS_IMAGE}
+
+ext4fs: bootstrap overlay-boot ident
+	@echo " [EXT4FS]\t\t${EXT4FS_IMAGE}"
+	@${ROOTCMD} truncate -s 2g ${EXT4FS_IMAGE}
+	@${ROOTCMD} mke2fs -t ext4 -D -F -E resize=33554432 -d ${BOOTSTRAP_DIR} ${EXT4FS_IMAGE} 524288 2>/dev/null >/dev/null
+	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${EXT4FS_IMAGE}
 
 makedirs:
 	@mkdir -p $(DEST)
