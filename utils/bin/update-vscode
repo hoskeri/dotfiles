@@ -6,4 +6,4 @@ url='https://go.microsoft.com/fwlink/?LinkID=760868'
 
 cd $dir
 wget -c --content-disposition -q "$url"
-sudo dpkg -E -i code*deb
+sudo dpkg -G -E -i code*deb

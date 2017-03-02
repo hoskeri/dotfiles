@@ -11,3 +11,5 @@
 	followRedirects = true
 [notes]
 	reWriteRef = refs/notes/commits
+[alias]
+	amend = commit -a --amend --no-edit
