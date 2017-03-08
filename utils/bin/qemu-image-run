@@ -1,8 +1,18 @@
 #!/bin/sh -eu
+
+base=$HOME/.qemu-image-builder/work/build/debootstrap.qcow2
+diskname=/tmp/vm1.qcow2
+
+rm -f $diskname
+qemu-img create -q -f qcow2 -b $base $diskname
+
 exec qemu-system-x86_64 \
+  -vga qxl \
   -enable-kvm -cpu host \
-  -nographic \
   -net nic,model=virtio,macaddr=$(random-mac-address) \
   -net bridge,br=br0 \
   -m 512 \
-  -cdrom $HOME/.qemu-image-builder/work/debootstrap.iso
+  -kernel /boot/vmlinuz-4.9.0-2-amd64 \
+  -initrd /boot/initrd.img-4.9.0-2-amd64 \
+  -append 'root=LABEL=ROOTFS rw quiet' \
+  -drive file=$diskname,format=qcow2,if=virtio,cache=directsync

@@ -11,53 +11,25 @@ EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,linux-perf-4.9,vim-tiny,
 DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
 DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
-ISOIMAGE_ROOT := $(DEST)/isoroot
-SQUASHFS_IMAGE := $(DEST)/debootstrap.squashfs
+FINAL_IMAGE := $(DEST)/debootstrap.qcow2
 EXT4FS_IMAGE := $(DEST)/debootstrap.raw
-ISOIMAGE_FILE := $(WORKDIR)/debootstrap.iso
 
-isoimage: build isolinuxcfg
-	@echo " [ISO]    \t\t${ISOIMAGE_FILE}"
-	@cp -f /usr/lib/ISOLINUX/isolinux.bin \
-		     /usr/lib/syslinux/modules/bios/ldlinux.c32 \
-				 $(ISOIMAGE_ROOT)/syslinux/
-	@cp --link \
-		$(DEST)/vmlinuz-${KERNEL_VERSION} \
-		$(DEST)/initrd.img-${KERNEL_VERSION} \
-			$(ISOIMAGE_ROOT)
-	@cp --link $(SQUASHFS_IMAGE) $(ISOIMAGE_ROOT)/live/root.squashfs
-	@genisoimage -quiet -R -r -o $(ISOIMAGE_FILE) \
-		-b syslinux/isolinux.bin \
-		-c syslinux/boot.cat \
-		-no-emul-boot -boot-load-size 4 \
-		-boot-info-table $(ISOIMAGE_ROOT) 2>/dev/null >/dev/null
-	@rm -rf $(ISOIMAGE_ROOT)
-	@rm -rf $(DEST) $(BOOTSTRAP_DIR)
+build: ext4fs clean
 
-build: clean squashfs ext4fs
-	@cp -f \
-		$(BOOTSTRAP_DIR)/boot/vmlinuz-${KERNEL_VERSION} \
-		$(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION} \
-			$(DEST)
-	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
-
-squashfs: bootstrap overlay-boot ident
-	@echo " [SQUASHFS]\t\t${SQUASHFS_IMAGE}"
-	@${ROOTCMD} mksquashfs ${BOOTSTRAP_DIR} ${SQUASHFS_IMAGE} -no-progress -noappend 2>/dev/null >/dev/null
-	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${SQUASHFS_IMAGE}
-
-ext4fs: bootstrap overlay-boot ident
-	@echo " [EXT4FS]\t\t${EXT4FS_IMAGE}"
-	@${ROOTCMD} truncate -s 2g ${EXT4FS_IMAGE}
-	@${ROOTCMD} mke2fs -t ext4 -D -F -E resize=33554432 -d ${BOOTSTRAP_DIR} ${EXT4FS_IMAGE} 524288 2>/dev/null >/dev/null
+ext4fs: makedirs bootstrap ident
+	@echo " [IMAGE]\t\t${FINAL_IMAGE}"
+	@${ROOTCMD} rm -f ${EXT4FS_IMAGE}
+	@${ROOTCMD} truncate -s 8g ${EXT4FS_IMAGE}
+	@${ROOTCMD} sgdisk -Z -G -n 1:2048:1026048 -t 1:ef00 -N 2 -t 2:8304 ${EXT4FS_IMAGE} 2>/dev/null >/dev/null
+	@${ROOTCMD} mke2fs -L ROOTFS -t ext4 -D -F -E offset=526385152 -d ${BOOTSTRAP_DIR} ${EXT4FS_IMAGE} 1968635 2>/dev/null >/dev/null
 	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${EXT4FS_IMAGE}
+	@qemu-img convert -q -c -f raw -O qcow2 -T directsync -t directsync ${EXT4FS_IMAGE} ${FINAL_IMAGE}
+	@${ROOTCMD} rm -f ${EXT4FS_IMAGE}
 
 makedirs:
 	@mkdir -p $(DEST)
 	@mkdir -p $(WORKDIR)
 	@mkdir -p $(BOOTSTRAP_DIR)
-	@mkdir -p $(ISOIMAGE_ROOT)/syslinux
-	@mkdir -p $(ISOIMAGE_ROOT)/live/
 
 ident:
 	@echo " [CONFIG]\t\tprovisioning"
@@ -76,61 +48,7 @@ clean:
 	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
 	@rm -rf $(WORKDIR)/build
 
-overlay-boot: overlay overlay-hook
-	@echo " [OVERLAY]\t\tinitramfs"
-	@$(ROOTCMD) chmod +x $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook
-	@$(ROOTCMD) rm -f $(BOOTSTRAP_DIR)/boot/initrd.img-${KERNEL_VERSION}
-	@$(ROOTCMD) chroot $(BOOTSTRAP_DIR) update-initramfs -k ${KERNEL_VERSION} -c 2>/dev/null >/dev/null
-
 bootstrap: makedirs
 	@echo " [BOOTSTRAP]\t\t${BOOTSTRAP_DIR}"
 	@$(ROOTCMD) mount -t tmpfs none $(BOOTSTRAP_DIR)
 	@$(DEBOOTSTRAP) $(DEBOOTSTRAP_OPTS) $(DISTRIBUTION) $(BOOTSTRAP_DIR) $(APT_MIRROR)
-
-overlay-hook:
-	@cat <<- EOF|$(ROOTCMD) tee $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/hooks/overlay-hook >/dev/null
-	#!/bin/sh -e
-	. /usr/share/initramfs-tools/hook-functions
-	case "$$1" in
-	    prereqs)
-				echo ""
-				exit 0
-	    ;;
-	esac
-	manual_add_modules iso9660
-	manual_add_modules squashfs
-	manual_add_modules overlay
-	EOF
-
-overlay:
-	@cat <<- EOF|$(ROOTCMD) tee $(BOOTSTRAP_DIR)/usr/share/initramfs-tools/scripts/overlay >/dev/null
-	mountroot() {
-	    modprobe squashfs
-	    modprobe overlay
-			SQ_DEV=/dev/vda
-			if blkid /dev/sr0 >/dev/null 2>/dev/null
-			then
-				mkdir -p /cdrom
-				modprobe iso9660
-				modprobe loop
-				mount -t iso9660 -o ro /dev/sr0 /cdrom
-				losetup /dev/loop0 /cdrom/live/root.squashfs
-				SQ_DEV=/dev/loop0
-			fi
-	    mount -t squashfs \$$SQ_DEV /root
-			mkdir -p /overlay
-	    mount -t tmpfs -osize=512m none /overlay
-	    mkdir -p /overlay/workdir /overlay/upperdir
-	    mount -t overlay -olowerdir=/root,upperdir=/overlay/upperdir,workdir=/overlay/workdir live-root /root
-	}
-	EOF
-
-isolinuxcfg:
-	@cat <<- EOF > ${ISOIMAGE_ROOT}/syslinux/isolinux.cfg
-	default Linux
-	label Linux
-	  kernel /vmlinuz-${KERNEL_VERSION}
-	  append initrd=/initrd.img-${KERNEL_VERSION} ro quiet boot=overlay console=ttyS0
-	EOF
-
-.ONESHELL: overlay overlay-hook isolinuxcfg
