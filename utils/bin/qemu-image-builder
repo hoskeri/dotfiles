@@ -13,17 +13,20 @@ DEST := $(WORKDIR)/build
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
 FINAL_IMAGE := $(DEST)/debootstrap.qcow2
 EXT4FS_IMAGE := $(DEST)/debootstrap.raw
+EFI_IMAGE := $(DEST)/debootstrap.efi
 
-build: ext4fs clean
+build: image clean
 
-ext4fs: makedirs bootstrap ident
+image: makedirs bootstrap ident
 	@echo " [IMAGE]\t\t${FINAL_IMAGE}"
 	@${ROOTCMD} rm -f ${EXT4FS_IMAGE}
 	@${ROOTCMD} truncate -s 8g ${EXT4FS_IMAGE}
 	@${ROOTCMD} sgdisk -Z -G -n 1:2048:1026048 -t 1:ef00 -N 2 -t 2:8304 ${EXT4FS_IMAGE} 2>/dev/null >/dev/null
+	@${ROOTCMD} truncate -s 1g ${EFI_IMAGE}
+	@${ROOTCMD} mkfs.fat -F32 -nEFI ${EFI_IMAGE} 2>/dev/null >/dev/null
 	@${ROOTCMD} mke2fs -L ROOTFS -t ext4 -D -F -E offset=526385152 -d ${BOOTSTRAP_DIR} ${EXT4FS_IMAGE} 1968635 2>/dev/null >/dev/null
-	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${EXT4FS_IMAGE}
-	@qemu-img convert -q -c -f raw -O qcow2 -T directsync -t directsync ${EXT4FS_IMAGE} ${FINAL_IMAGE}
+	@${ROOTCMD} qemu-img convert -q -c -f raw -O qcow2 -T directsync -t directsync ${EXT4FS_IMAGE} ${FINAL_IMAGE}
+	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${FINAL_IMAGE}
 	@${ROOTCMD} rm -f ${EXT4FS_IMAGE}
 
 makedirs:
@@ -43,9 +46,7 @@ ident:
 
 clean:
 	@echo " [CLEAN]\t\t${WORKDIR}"
-	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/proc 2>/dev/null
-	@$(ROOTCMD) umount $(BOOTSTRAP_DIR)/sys 2>/dev/null
-	@$(ROOTCMD) umount $(BOOTSTRAP_DIR) 2>/dev/null
+	@$(ROOTCMD) umount -R $(BOOTSTRAP_DIR) 2>/dev/null
 	@rm -rf $(WORKDIR)/build
 
 bootstrap: makedirs
