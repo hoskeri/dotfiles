@@ -5,16 +5,19 @@
 DESTDIR=/home/git
 GITEA_USER=git
 GITEA_GROUP=git
-tmpfile=$(mktemp $DESTDIR/giteaXXXXX)
+tmpfile=$(mktemp $DESTDIR/gitea-tmpXXXXX)
+
+trap "rm -f $tmpfile" EXIT
+
 test -f $DESTDIR/gitea && chattr -i $DESTDIR/gitea
-curl -s -o $tmpfile https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
+curl -o $tmpfile https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
 chmod +x $tmpfile
 
 mv $tmpfile $DESTDIR/gitea
 chown ${GITEA_USER}:${GITEA_GROUP} $DESTDIR/gitea
 chattr +i $DESTDIR/gitea
 
-cat <<END > /etc/systemd/system/multi-user.target.wants/git.service
+cat <<END > $DESTDIR/git.service
 [Unit]
 Description=git service.
 After=network.target
@@ -37,5 +40,5 @@ PrivateDevices=true
 [Install]
 WantedBy=multi-user.target
 END
-systemctl daemon-reload
+systemctl enable /home/git/git.service
 systemctl restart git
