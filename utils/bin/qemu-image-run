@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-base=$HOME/.qemu-image-builder/work/build/debootstrap.qcow2
+base=$HOME/.qemu-image-builder/work/images/debootstrap.qcow2
 diskname=/tmp/vm1.qcow2
 
 rm -f $diskname
@@ -10,7 +10,7 @@ exec qemu-system-x86_64 \
   -vga qxl \
   -enable-kvm -cpu host \
   -net nic,model=virtio,macaddr=$(random-mac-address) \
-  -net bridge,br=br0 \
+  -net bridge,br=natbr0 \
   -m 512 \
   -kernel /boot/vmlinuz-4.9.0-2-amd64 \
   -initrd /boot/initrd.img-4.9.0-2-amd64 \

@@ -9,7 +9,7 @@ DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
 KERNEL_VERSION := 4.9.0-2-amd64
 EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,linux-perf-4.9,vim-tiny,udhcpc,inetutils-ping
 DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}
-DEST := $(WORKDIR)/build
+DEST := $(WORKDIR)/images
 SSH_AUTHKEYS := ${HOME}/.ssh/id_rsa.pub
 FINAL_IMAGE := $(DEST)/debootstrap.qcow2
 EXT4FS_IMAGE := $(DEST)/debootstrap.raw
@@ -27,6 +27,7 @@ image: makedirs bootstrap ident
 	@${ROOTCMD} mke2fs -L ROOTFS -t ext4 -D -F -E offset=526385152 -d ${BOOTSTRAP_DIR} ${EXT4FS_IMAGE} 1968635 2>/dev/null >/dev/null
 	@${ROOTCMD} qemu-img convert -q -c -f raw -O qcow2 -T directsync -t directsync ${EXT4FS_IMAGE} ${FINAL_IMAGE}
 	@${ROOTCMD} chown $(shell id -u):$(shell id -g) ${FINAL_IMAGE}
+	@${ROOTCMD} chmod 444 ${FINAL_IMAGE}
 	@${ROOTCMD} rm -f ${EXT4FS_IMAGE}
 
 makedirs:
