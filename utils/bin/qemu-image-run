@@ -1,18 +1,13 @@
 #!/bin/sh -eu
 
-base=$HOME/.qemu-image-builder/work/images/debootstrap.qcow2
-diskname=/tmp/vm1.qcow2
+workdir=$HOME/.qemu-image-builder/vms
+vm=$workdir/${1:-}
+diskname=$vm/snapshot.qcow2
+base=$vm/base.qcow2
 
-rm -f $diskname
-qemu-img create -q -f qcow2 -b $base $diskname
+test -z "${1:-}" && ( echo "no vm given!" && exit 1 )
+test -d $vm || ( echo "$vm not found!" && exit 1 )
+test -f $vm/vm.config || ( echo "$vm config not found!" && exit 1 )
+test -f $diskname || qemu-img create -q -f qcow2 -b $base $diskname
 
-exec qemu-system-x86_64 \
-  -vga qxl \
-  -enable-kvm -cpu host \
-  -net nic,model=virtio,macaddr=$(random-mac-address) \
-  -net bridge,br=natbr0 \
-  -m 512 \
-  -kernel /boot/vmlinuz-4.9.0-2-amd64 \
-  -initrd /boot/initrd.img-4.9.0-2-amd64 \
-  -append 'root=LABEL=ROOTFS rw quiet' \
-  -drive file=$diskname,format=qcow2,if=virtio,cache=directsync
+exec qemu-system-x86_64 -readconfig $vm/vm.config
