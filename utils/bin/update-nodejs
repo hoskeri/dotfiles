@@ -2,7 +2,7 @@
 set -eu
 baseurl="https://nodejs.org/dist/latest"
 workdir=$HOME/.update-nodejs-cache
-installdir=$HOME/.nodejs
+installdir=$HOME/.update-nodejs-cache/install
 
 mkdir -p $workdir
 
@@ -16,4 +16,7 @@ rm -rf $installdir
 mkdir $installdir
 tar -C $installdir -Jxf $workdir/$archive --strip-components=1
 
+test -d $HOME/.nodejs && rm -rf $HOME/.nodejs
+
 ln -s $installdir/bin/node $installdir/bin/nodejs
+ln -sf $installdir $HOME/.nodejs

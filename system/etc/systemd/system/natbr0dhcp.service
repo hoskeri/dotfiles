@@ -10,4 +10,4 @@ ExecStart=/usr/sbin/dnsmasq -C /etc/natbr0dhcp.conf
 ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
-WantedBy=multiuser.target
+WantedBy=multi-user.target
