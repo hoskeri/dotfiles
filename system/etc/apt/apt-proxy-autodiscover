@@ -1,0 +1,72 @@
+#!/bin/sh -eu
+cache="/tmp/apt-proxy-autodiscover.cache"
+targethost="${1:-http.us.debian.org}"
+
+test_proxy() {
+  set +e
+  curl -f -D /dev/stdout -o /dev/null -s -x "$1" "$targethost"|grep -q 'Via:.* 1.1 squid-deb-proxy'
+  retval=$?
+  set -e
+  return $retval
+}
+
+hostname_entry() {
+  echo -n "$1" | tee $cache
+  echo
+  return 0
+}
+
+get_defaultgw() {
+  ip route list|grep '^default via '|cut -d' ' -f3
+}
+
+try_fixed_hostname() {
+  h=${1:-localhost}
+  if test_proxy "http://$h:8000"
+  then
+    hostname_entry "http://$h:8000"
+    return 0
+  else
+    return 1
+  fi
+}
+
+try_cached() {
+  if [ -f $cache ]
+  then
+    candidate=`cat $cache`
+    if test_proxy "$candidate"
+    then
+      echo $candidate
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
+try_defaultgw() {
+  defaultgw=`get_defaultgw`
+  if [ -n "$defaultgw" ]
+  then
+    if test_proxy "http://$defaultgw:8000"
+    then
+      hostname_entry "http://$defaultgw:8000"
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
+
+set +e
+try_cached && exit 0
+try_fixed_hostname squid-deb-proxy && exit 0
+try_fixed_hostname && exit 0
+try_defaultgw && exit 0
+rm -f $cache

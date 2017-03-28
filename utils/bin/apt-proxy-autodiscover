@@ -1,2 +1,0 @@
-#!/bin/bash
-defaultfw=$(ip route get default)
