@@ -1,22 +1,54 @@
 #!/bin/bash
-set -eu
+set -eux
+export SHELLOPTS
 baseurl="https://nodejs.org/dist/latest"
 workdir=$HOME/.update-nodejs-cache
 installdir=$HOME/.update-nodejs-cache/install
+debdir=$workdir/deb
 
 mkdir -p $workdir
 
 curl -s -L -o $workdir/checksums "$baseurl/SHASUMS256.txt"
 archive=$(grep 'linux-x64.tar.xz' $workdir/checksums|cut -d' ' -f3)
+version="$(echo $archive|egrep -o '([[:digit:]]+\.?){3}')-1"
+arch=amd64
+pkgfname="${debdir}/nodejs-local_${version}_amd64.deb"
+
+if [ -f $pkgfname ]; then
+  sudo dpkg -G -E -i $pkgfname
+  exit 0
+fi
+
+# new installation/version. proceed.
+
+rm -rf $debdir $installdir $workdir/*.tgz $workdir/checksums
 
 echo "installing $archive"
 wget -q -c -O $workdir/$archive $baseurl/$archive
 
+mkdir -p $installdir/usr $debdir
+fakeroot tar -C $installdir/usr -Jxf $workdir/$archive --strip-components=1
+fakeroot mkdir -p ${installdir}/usr/share/doc/nodejs-local
+fakeroot mv \
+  ${installdir}/usr/LICENSE \
+  ${installdir}/usr/README.md \
+  ${installdir}/usr/CHANGELOG.md \
+      ${installdir}/usr/share/doc/nodejs-local
+fakeroot ln -s /usr/bin/node ${installdir}/usr/bin/nodejs
+
+fakeroot mkdir $installdir/DEBIAN
+cat <<END |fakeroot tee $installdir/DEBIAN/control >/dev/null
+Package: nodejs-local
+Conflicts: nodejs, nodejs-dev, nodejs-legacy
+Version: ${version}
+Architecture: amd64
+Maintainer: Abhijit Hoskeri <abhijithoskeri@icloud.com>
+Description: Local build of the nodejs package
+  from the prebuilt binaries on nodejs.org
+END
+
 rm -rf $installdir
-mkdir $installdir
-tar -C $installdir -Jxf $workdir/$archive --strip-components=1
+rm -f ~/.nodejs
 
-test -d $HOME/.nodejs && rm -rf $HOME/.nodejs
-
-ln -s $installdir/bin/node $installdir/bin/nodejs
-ln -sf $installdir $HOME/.nodejs
+fakeroot dpkg-deb -b $installdir $debdir/
+sudo dpkg -G -E -i $pkgfname

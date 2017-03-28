@@ -9,7 +9,8 @@ APT_MIRROR := http://localhost:9999/${ORIGIN}
 WORKDIR := ${HOME}/.qemu-image-builder/work
 
 DEST := ${HOME}/.qemu-image-builder/images
-METADATA := ${DEST}/metadata
+GET_RELEASE_CMD := curl -f -s -o /dev/stdout ${APT_MIRROR}/dists/${CODENAME}/InRelease|sha256sum|cut -d' ' -f1
+METADATA := ${DEST}/metadata.vars
 
 BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
 DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
@@ -27,10 +28,12 @@ FINAL_IMAGE := ${DEST}/debootstrap.qcow2
 build: image clean
 
 metadata-pre:
-	@curl -f -s -o ${WORKDIR}/metadata/release-pre ${APT_MIRROR}/dists/${CODENAME}/InRelease
+	@truncate -s0 ${METADATA}
+	@echo "RELEASE_PRE :=" $(shell $(GET_RELEASE_CMD)) >> ${METADATA}
 
 metadata-post:
-	@curl -f -s -o ${WORKDIR}/metadata/release-post ${APT_MIRROR}/dists/${CODENAME}/InRelease
+	@echo "RELEASE_POST := " $(shell $(GET_RELEASE_CMD)) >> ${METADATA}
+	@stat -L --printf 'DISK_USER := %u\nDISK_INODE := %i\nDISK_MTIME := %Y\nDISK_DEVICE := %D\nDISK_FSIZE := %s\n' ${FINAL_IMAGE} >> ${METADATA}
 
 image: makedirs metadata-pre bootstrap provisioning metadata-post
 	@echo " [IMAGE]\t\t${FINAL_IMAGE}"
@@ -50,7 +53,6 @@ makedirs:
 		$(DEST)                \
 		$(WORKDIR)             \
 		$(BOOTSTRAP_DIR)       \
-		$(METADATA)
 
 provisioning:
 	@echo " [CONFIG]\t\tprovisioning"
