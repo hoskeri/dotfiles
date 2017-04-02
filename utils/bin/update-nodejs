@@ -47,8 +47,9 @@ Description: Local build of the nodejs package
   from the prebuilt binaries on nodejs.org
 END
 
+fakeroot dpkg-deb -b $installdir $debdir/
+
 rm -rf $installdir
 rm -f ~/.nodejs
 
-fakeroot dpkg-deb -b $installdir $debdir/
 sudo dpkg -G -E -i $pkgfname
