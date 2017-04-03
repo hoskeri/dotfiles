@@ -51,6 +51,8 @@ set guioptions=-M
 set t_Co=256
 colorscheme default
 set bg=dark
+" required by vim-go 'show_type_info'
+set noshowmode
 
 " make vim work well with file watchers.
 set backupcopy=yes
