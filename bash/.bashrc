@@ -90,6 +90,7 @@ shopt -s globstar
 export RVC_READLINE=libreadline.so.6
 export PYTHONSTARTUP=$HOME/.pythonrc.py
 
+export GOROOT=/usr/lib/go-1.8
 export GOPATH=$HOME/Code/gopath
 
 export PATH="$HOME/Code/gopath/bin:$PATH"
