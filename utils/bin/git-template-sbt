@@ -8,8 +8,10 @@ DESTDIR=$(pwd)
 test -d .git
 
 cat<<END > ${DESTDIR}/build.sbt
+lazy val finagleVersion = "6.43.0"
+lazy val scroogeVersion = "4.15.0"
 lazy val alldeps = Seq(
-  "org.scalatest" %% "scalatest" % "2.2.6" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
   "org.apache.curator" % "curator-test" % "3.2.0" % "test",
   "org.apache.curator" % "curator-framework" % "3.2.0",
   "org.apache.curator" % "curator-client" % "3.2.0",
@@ -17,11 +19,11 @@ lazy val alldeps = Seq(
   "org.slf4j" % "log4j-over-slf4j" % "1.7.21",
   "org.slf4j" % "slf4j-api" % "1.7.21",
   "com.github.scopt" %% "scopt" % "3.5.0",
-  "org.apache.thrift" % "libthrift" % "0.9.1",
-	"com.twitter" %% "finagle-core" % "6.34.0",
-  "com.twitter" %% "finagle-http" % "6.34.0",
-  "com.twitter" %% "finagle-thrift" % "6.34.0",
-  "com.twitter" %% "scrooge-runtime" % "4.5.0"
+  "org.apache.thrift" % "libthrift" % "0.9.3",
+  "com.twitter" %% "finagle-core" % finagleVersion,
+  "com.twitter" %% "finagle-http" % finagleVersion,
+  "com.twitter" %% "finagle-thrift" % finagleVersion exclude("com.twitter", "libthrift"),
+  "com.twitter" %% "scrooge-core" % scroogeVersion exclude("com.twitter", "libthrift")
 )
 
 lazy val root = (project in file("."))
@@ -45,7 +47,7 @@ sbt.Version=0.13.13
 END
 
 cat <<END > ${DESTDIR}/project/plugins.sbt
-addSbtPlugin("com.twitter" % "scrooge-sbt-plugin" % "3.14.1")
+addSbtPlugin("com.twitter" % "scrooge-sbt-plugin" % "4.15.0")
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.0.1")
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
 END
@@ -86,6 +88,14 @@ cat <<END > ${DESTDIR}/src/main/resources/logback.xml
     <appender-ref ref="STDERR"/>
   </root>
 </configuration>
+END
+
+cat <<END > ${DESTDIR}/src/main/thrift/main.thrift
+#@ namespace scala ${PROJECT_ORG}.${PROJECT_NAME}.thriftscala
+
+service ${PROJECT_NAME} {
+  string Ping(1: string name)
+}
 END
 
 cat <<END > ${DESTDIR}/src/main/scala/Main.scala
