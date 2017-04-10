@@ -1,9 +1,14 @@
 #!/bin/sh
 set -eu
+. /etc/environment
+
 export GOPATH=$HOME/.gotools-install
 export GO_BIN=$GOPATH/bin
+export PATH="$GO_BIN:$PATH"
 
-echo 'export GOPATH=$(pwd)' > $GOPATH/.envrc
+mkdir -p $GOPATH
+
+echo 'export GOPATH=$(pwd)\n' > $GOPATH/.envrc
 
 go get -u github.com/nsf/gocode
 go get -u github.com/rogpeppe/godef
@@ -23,9 +28,9 @@ go get -u github.com/klauspost/asmfmt
 go get -u github.com/fatih/motion
 go get -u github.com/zmb3/gogetdoc
 go get -u github.com/josharian/impl
-go get -u gopkg.in/niemeyer/godeb.v1/cmd/godeb
 
-#go get -u github.com/alecthomas/gometalinter
+go get -u github.com/alecthomas/gometalinter
+gometalinter --install >/dev/null
 
 go get -u github.com/samuel/go-thrift/generator
 mv -f $GO_BIN/generator $GO_BIN/gothrift-gen
