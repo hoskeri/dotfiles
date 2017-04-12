@@ -4,7 +4,7 @@ targethost="${1:-http.us.debian.org}"
 
 test_proxy() {
   set +e
-  curl -f -D /dev/stdout -o /dev/null -s -x "$1" "$targethost"|grep -q 'Via:.* 1.1 squid-deb-proxy'
+  curl -m 10 -f -D /dev/stdout -o /dev/null -s -x "$1" "$targethost"|grep -q 'Via:.* 1.1 squid-deb-proxy'
   retval=$?
   set -e
   return $retval
@@ -47,6 +47,10 @@ try_cached() {
   fi
 }
 
+get_avahi() {
+  avahi-browse -d local -t -r -f -p _apt_proxy._tcp|grep ^=|grep IPv4|cut -d\; -f8|head -n1
+}
+
 try_defaultgw() {
   defaultgw=`get_defaultgw`
   if [ -n "$defaultgw" ]
@@ -63,10 +67,27 @@ try_defaultgw() {
   fi
 }
 
+try_avahi() {
+  avahi=`get_avahi`
+  if [ -n "$avahi" ]
+  then
+    if test_proxy "http://$avahi:8000"
+    then
+      hostname_entry "http://$avahi:8000"
+      return 0
+    else
+      return 1
+    fi
+  else
+    return 1
+  fi
+}
+
 
 set +e
 try_cached && exit 0
 try_fixed_hostname squid-deb-proxy && exit 0
 try_fixed_hostname && exit 0
 try_defaultgw && exit 0
+try_avahi && exit 0
 rm -f $cache
