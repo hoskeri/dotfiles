@@ -25,7 +25,7 @@ EXT4FS_IMAGE := ${WORKDIR}/debootstrap.raw
 EFI_IMAGE := ${WORKDIR}/debootstrap.efi
 FINAL_IMAGE := ${DEST}/debootstrap.qcow2
 
-build: image clean
+build: metadata-pre image metadata-post clean
 
 metadata-pre:
 	@truncate -s0 ${METADATA}
@@ -35,9 +35,9 @@ metadata-post:
 	@echo "RELEASE_POST := " $(shell $(GET_RELEASE_CMD)) >> ${METADATA}
 	@stat -L --printf 'DISK_USER := %u\nDISK_INODE := %i\nDISK_MTIME := %Y\nDISK_DEVICE := %D\nDISK_FSIZE := %s\n' ${FINAL_IMAGE} >> ${METADATA}
 
-image: makedirs metadata-pre bootstrap provisioning metadata-post
+image: makedirs bootstrap provisioning
 	@echo " [IMAGE]\t\t${FINAL_IMAGE}"
-	@${ROOTCMD} rm -f ${EXT4FS_IMAGE}
+	@${ROOTCMD} rm -f ${EXT4FS_IMAGE} ${FINAL_IMAGE}
 	@${ROOTCMD} truncate -s 8g ${EXT4FS_IMAGE}
 	@${ROOTCMD} sgdisk -Z -G -n 1:2048:1026048 -t 1:ef00 -N 2 -t 2:8304 ${EXT4FS_IMAGE} 2>/dev/null >/dev/null
 	@${ROOTCMD} truncate -s 1g ${EFI_IMAGE}
@@ -52,7 +52,7 @@ makedirs:
 	@mkdir -p \
 		$(DEST)                \
 		$(WORKDIR)             \
-		$(BOOTSTRAP_DIR)       \
+		$(BOOTSTRAP_DIR)
 
 provisioning:
 	@echo " [CONFIG]\t\tprovisioning"
@@ -74,5 +74,5 @@ bootstrap: makedirs
 	@$(ROOTCMD) mount -t tmpfs none $(BOOTSTRAP_DIR)
 	@$(DEBOOTSTRAP) $(DEBOOTSTRAP_OPTS) $(DISTRIBUTION) $(BOOTSTRAP_DIR) $(APT_MIRROR)
 
-.PHONY: clean image bootstrap provisioning makedirs build
-.NOTPARALLEL: clean image bootstrap provisioning makedirs build
+.NOTPARALLEL: clean image bootstrap provisioning makedirs build metadata-pre metadata-post
+.PHONY: clean image bootstrap provisioning makedirs build metadata-pre metadata-post

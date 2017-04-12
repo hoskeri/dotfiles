@@ -1,3 +1,3 @@
 #!/bin/sh -eu
-getent hosts squid-deb-proxy >/dev/null
-exec curl -x "http://squid-deb-proxy:8000" $@
+proxy=$(/etc/apt/apt-proxy-autodiscover)
+exec curl -x "$proxy" "$@"
