@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -eu
 export SHELLOPTS
 baseurl="https://nodejs.org/dist/latest"
 workdir=$HOME/.update-nodejs-cache
@@ -21,7 +21,7 @@ fi
 
 # new installation/version. proceed.
 
-rm -rf $debdir $installdir $workdir/*.tgz $workdir/checksums
+rm -rf $debdir $installdir $workdir/*.tar.xz $workdir/checksums
 
 echo "installing $archive"
 wget -q -c -O $workdir/$archive $baseurl/$archive
