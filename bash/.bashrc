@@ -96,8 +96,6 @@ export GOPATH=$HOME/Code/gopath
 export PATH="$HOME/Code/gopath/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.gotools-install/bin:$PATH"
-export PATH=/usr/sbin:$PATH
-export PATH="$HOME/.nodejs/bin:$PATH"
 
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
