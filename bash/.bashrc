@@ -7,7 +7,7 @@ esac
 
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
-HISTFILESIZE=2000
+HISTFILESIZE=200000
 
 shopt -s histappend
 shopt -s checkwinsize
@@ -85,8 +85,6 @@ fi
 source /etc/profile.d/vte.sh
 
 export PROMPT_DIRTRIM=2
-shopt -s globstar
-
 export RVC_READLINE=libreadline.so.6
 export PYTHONSTARTUP=$HOME/.pythonrc.py
 
