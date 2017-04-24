@@ -99,4 +99,4 @@ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
 source <(direnv hook bash)
 
-test -f $HOME/.bashrc.local && source $HOME/.bashrc.local
+test -f "$HOME/.bashrc.local" && source "$HOME/.bashrc.local"

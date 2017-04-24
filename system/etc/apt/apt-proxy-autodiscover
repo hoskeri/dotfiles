@@ -11,7 +11,7 @@ test_proxy() {
 }
 
 hostname_entry() {
-  echo -n "$1" | tee $cache
+  echo "$1" | tee $cache
   echo
   return 0
 }
@@ -34,10 +34,10 @@ try_fixed_hostname() {
 try_cached() {
   if [ -f $cache ]
   then
-    candidate=`cat $cache`
+    candidate=$(cat $cache)
     if test_proxy "$candidate"
     then
-      echo $candidate
+      echo "$candidate"
       return 0
     else
       return 1
@@ -52,7 +52,7 @@ get_avahi() {
 }
 
 try_defaultgw() {
-  defaultgw=`get_defaultgw`
+  defaultgw=$(get_defaultgw)
   if [ -n "$defaultgw" ]
   then
     if test_proxy "http://$defaultgw:8000"
@@ -68,7 +68,7 @@ try_defaultgw() {
 }
 
 try_avahi() {
-  avahi=`get_avahi`
+  avahi=$(get_avahi)
   if [ -n "$avahi" ]
   then
     if test_proxy "http://$avahi:8000"
