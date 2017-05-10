@@ -10,7 +10,7 @@ tmpfile=$(mktemp $DESTDIR/gitea-tmpXXXXX)
 trap "rm -f $tmpfile" EXIT
 
 test -f $DESTDIR/gitea && chattr -i $DESTDIR/gitea
-curl -o $tmpfile https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
+curl -f -o $tmpfile https://dl.gitea.io/gitea/master/gitea-master-linux-amd64
 chmod +x $tmpfile
 
 mv $tmpfile $DESTDIR/gitea
