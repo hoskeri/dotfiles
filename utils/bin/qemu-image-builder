@@ -15,7 +15,7 @@ METADATA := ${DEST}/metadata.vars
 BOOTSTRAP_DIR := ${WORKDIR}/debootstrap
 DEBOOTSTRAP := ${ROOTCMD} /usr/bin/cdebootstrap
 
-KERNEL_VERSION := 4.9.0-2-amd64
+KERNEL_VERSION := 4.9.0-3-amd64
 EXTRA_PACKAGES := systemd-sysv,ifupdown,initramfs-tools,vim-tiny,udhcpc,inetutils-ping,openssh-server,openssh-client
 
 DEBOOTSTRAP_OPTS := -q --allow-unauthenticated -f minimal --include=linux-image-${KERNEL_VERSION},${EXTRA_PACKAGES}

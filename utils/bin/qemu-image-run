@@ -1,30 +1,33 @@
 #!/bin/sh -eu
 
-workdir=$HOME/.qemu-image-builder/vms
-vm=$workdir/${1:-}
-diskname=$vm/snapshot.qcow2
-base=$vm/base.qcow2
-macaddr=$vm/macaddr
-uuid=$vm/uuid
+workdir="$HOME/.qemu-image-builder/vms"
+vm="$workdir/${1:-}"
+diskname="$vm/snapshot.qcow2"
+base="$vm/base.qcow2"
+macaddr_filename="$vm/macaddr"
+uuid_filename="$vm/uuid"
 
 test -z "${1:-}" && ( echo "no vm given!" && exit 1 )
-test -d $vm || ( echo "$vm not found!" && exit 1 )
-test -f $macaddr || ( echo "$macaddr not found!" && exit 1 )
-test -f $uuid || ( echo "$uuid not found!" && exit 1 )
-test -f $diskname || qemu-img create -q -f qcow2 -b $base $diskname
+test -d "$vm" || ( echo "$vm not found!" && exit 1 )
+test -f "$macaddr_filename" || ( echo "$macaddr not found!" && exit 1 )
+test -f "$uuid_filename" || ( echo "$uuid not found!" && exit 1 )
+test -f "$diskname" || qemu-img create -q -f qcow2 -b "$base" "$diskname"
 
-systemd-run --user --no-block --unit=qemu-image-run-$(cat $uuid) \
+macaddr=$(cat "$macaddr_filename")
+uuid=$(cat "$uuid_filename")
+
+systemd-run --user --no-block --unit="qemu-image-run-$uuid" \
   qemu-system-x86_64 \
     -vga qxl \
-    -name $vm \
+    -name "$vm" \
     -enable-kvm -cpu host \
-    -uuid $(cat $uuid) \
-    -net nic,model=virtio,macaddr=$(cat $macaddr) \
+    -uuid "$uuid" \
+    -net nic,model=virtio,macaddr="$macaddr" \
     -net bridge,br=natbr0 \
     -m 512 \
-    -kernel /boot/vmlinuz-4.9.0-2-amd64 \
-    -initrd /boot/initrd.img-4.9.0-2-amd64 \
+    -kernel /boot/vmlinuz-4.9.0-3-amd64 \
+    -initrd /boot/initrd.img-4.9.0-3-amd64 \
     -append 'root=LABEL=ROOTFS rw quiet' \
-    -drive file=$diskname,format=qcow2,if=virtio,cache=directsync \
+    -drive file="$diskname",format=qcow2,if=virtio,cache=directsync \
     -nographic \
     -spice unix,addr="$vm/spice.sock",disable-ticketing
