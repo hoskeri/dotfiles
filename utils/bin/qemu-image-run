@@ -16,18 +16,17 @@ test -f "$diskname" || qemu-img create -q -f qcow2 -b "$base" "$diskname"
 macaddr=$(cat "$macaddr_filename")
 uuid=$(cat "$uuid_filename")
 
-systemd-run --user --no-block --unit="qemu-image-run-$uuid" \
-  qemu-system-x86_64 \
-    -vga qxl \
-    -name "$vm" \
-    -enable-kvm -cpu host \
-    -uuid "$uuid" \
-    -net nic,model=virtio,macaddr="$macaddr" \
-    -net bridge,br=natbr0 \
-    -m 512 \
-    -kernel /boot/vmlinuz-4.9.0-3-amd64 \
-    -initrd /boot/initrd.img-4.9.0-3-amd64 \
-    -append 'root=LABEL=ROOTFS rw quiet' \
-    -drive file="$diskname",format=qcow2,if=virtio,cache=directsync \
-    -nographic \
-    -spice unix,addr="$vm/spice.sock",disable-ticketing
+qemu-system-x86_64 \
+  -vga qxl \
+  -name "$vm" \
+  -enable-kvm -cpu host \
+  -uuid "$uuid" \
+  -net nic,model=virtio,macaddr="$macaddr" \
+  -net bridge,br=natbr0 \
+  -m 512 \
+  -kernel /boot/vmlinuz-4.9.0-3-amd64 \
+  -initrd /boot/initrd.img-4.9.0-3-amd64 \
+  -append 'root=LABEL=ROOTFS rw quiet' \
+  -drive file="$diskname",format=qcow2,if=virtio,cache=directsync \
+  -nographic \
+  -spice unix,addr="$vm/spice.sock",disable-ticketing
