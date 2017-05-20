@@ -7,7 +7,7 @@ DESTDIR=$(pwd)
 
 test -d .git
 
-cat<<END > :"${DESTDIR}/build.sbt"
+cat<<END > "${DESTDIR}/build.sbt"
 lazy val finagleVersion = "6.43.0"
 lazy val scroogeVersion = "4.15.0"
 lazy val alldeps = Seq(
@@ -30,7 +30,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "${PROJECT_NAME}",
     organization := "${PROJECT_ORG}",
-    scalaVersion := "2.11.8",
+    scalaVersion := "2.12.1",
     fork in Test := true,
     fork in run  := true,
     autoCompilerPlugins := true,
@@ -55,6 +55,7 @@ END
 cat <<END > "${DESTDIR}/.gitignore"
 *.class
 *.log
+*.sw*
 .cache
 .history
 .lib/
@@ -68,9 +69,12 @@ project/plugins/project/
 .worksheet
 .ensime_cache/
 .ensime
+.project
+.settings
+.classpath
 END
 
-mkdir -p "${DESTDIR}/src/{main,test}/{java,scala,resources}/"
+mkdir -p ${DESTDIR}/src/{main,test}/{java,scala,resources,thrift}/
 cat <<END > "${DESTDIR}/src/main/resources/logback.xml"
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
@@ -90,7 +94,7 @@ cat <<END > "${DESTDIR}/src/main/resources/logback.xml"
 </configuration>
 END
 
-cat <<END > "${DESTDIR}/src/main/thrift/main.thrift"
+cat <<END > ${DESTDIR}/src/main/thrift/main.thrift
 #@ namespace scala ${PROJECT_ORG}.${PROJECT_NAME}.thriftscala
 
 service ${PROJECT_NAME} {
