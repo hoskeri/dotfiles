@@ -29,6 +29,7 @@ go get -u github.com/josharian/impl
 go get -u bitbucket.org/liamstask/goose/cmd/goose
 go get -u github.com/golang/lint/golint
 go get -u github.com/kisielk/errcheck
+go get -u github.com/ericchiang/pup
 
 go get -u github.com/alecthomas/gometalinter
 gometalinter --install -u >/dev/null
