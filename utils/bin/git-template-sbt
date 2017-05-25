@@ -10,14 +10,16 @@ test -d .git
 cat<<END > "${DESTDIR}/build.sbt"
 lazy val finagleVersion = "6.43.0"
 lazy val scroogeVersion = "4.15.0"
+lazy val slf4jVersion = "1.7.25"
+lazy val curatorVersion = "3.3.0"
 lazy val alldeps = Seq(
-  "org.scalatest" %% "scalatest" % "3.0.1" % "test",
-  "org.apache.curator" % "curator-test" % "3.2.0" % "test",
-  "org.apache.curator" % "curator-framework" % "3.2.0",
-  "org.apache.curator" % "curator-client" % "3.2.0",
-  "ch.qos.logback" % "logback-classic" % "1.1.7",
-  "org.slf4j" % "log4j-over-slf4j" % "1.7.21",
-  "org.slf4j" % "slf4j-api" % "1.7.21",
+  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
+  "org.apache.curator" % "curator-test" % curatorVersion % "test",
+  "org.apache.curator" % "curator-framework" % curatorVersion,
+  "org.apache.curator" % "curator-client" % curatorVersion,
+  "ch.qos.logback" % "logback-classic" % "1.2.2",
+  "org.slf4j" % "log4j-over-slf4j" % slf4jVersion,
+  "org.slf4j" % "slf4j-api" % slf4jVersion,
   "com.github.scopt" %% "scopt" % "3.5.0",
   "org.apache.thrift" % "libthrift" % "0.9.3",
   "com.twitter" %% "finagle-core" % finagleVersion,
@@ -35,7 +37,7 @@ lazy val root = (project in file("."))
     fork in run  := true,
     autoCompilerPlugins := true,
     javaOptions += "-Dzookeeper.jmx.log4j.disable=true",
-    mainClass in assembly := Some("${PROJECT_ORG}.${PROJECT_NAME}.Main"),
+    mainClass in assembly := Some("${PROJECT_ORG}.${PROJECT_NAME}.dataserv.Main"),
     libraryDependencies ++= alldeps
       .map(_.excludeAll(ExclusionRule(organization = "log4j")))
   )
