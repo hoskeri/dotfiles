@@ -37,10 +37,9 @@ lazy val root = (project in file("."))
     fork in run  := true,
     autoCompilerPlugins := true,
     javaOptions += "-Dzookeeper.jmx.log4j.disable=true",
-    mainClass in assembly := Some("${PROJECT_ORG}.${PROJECT_NAME}.dataserv.Main"),
     libraryDependencies ++= alldeps
       .map(_.excludeAll(ExclusionRule(organization = "log4j")))
-  )
+  ).enablePlugins(JavaAppPackaging)
 END
 
 mkdir -p "${DESTDIR}/project"
@@ -51,7 +50,7 @@ END
 cat <<END > "${DESTDIR}/project/plugins.sbt"
 addSbtPlugin("com.twitter" % "scrooge-sbt-plugin" % "4.15.0")
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.0.1")
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")
+addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.1.6")
 END
 
 cat <<END > "${DESTDIR}/.gitignore"
@@ -80,6 +79,7 @@ mkdir -p ${DESTDIR}/src/{main,test}/{java,scala,resources,thrift}/
 cat <<END > "${DESTDIR}/src/main/resources/logback.xml"
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+  <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
   <appender name="STDERR" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <pattern>%d{ISO8601,UTC} %-5level %logger{36} %msg%n</pattern>
