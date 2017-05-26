@@ -1,0 +1,4 @@
+#!/bin/sh -eu
+f="${1:-}"
+test -z "$f" && echo "usage: fileid <path/to/file>" && exit 1
+stat -L --printf 'fileid-%u.%g.%i.%Y.%s\n' "$f"
