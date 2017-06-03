@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -eux
 export SHELLOPTS
 baseurl="https://nodejs.org/dist/latest"
 workdir=$HOME/.update-nodejs-cache
