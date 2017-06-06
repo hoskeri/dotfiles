@@ -1,4 +1,4 @@
 #!/bin/bash
 set -eu
 test -e /usr/bin/docker || exit 0
-docker images -q -f dangling=true|xargs -r -n1 docker rmi -f
+docker system prune -f
