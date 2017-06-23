@@ -36,6 +36,7 @@ MemoryMax=128M
 TasksMax=32
 MemorySwapMax=128M
 PrivateDevices=true
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
