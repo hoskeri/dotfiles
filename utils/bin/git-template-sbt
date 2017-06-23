@@ -44,7 +44,7 @@ END
 
 mkdir -p "${DESTDIR}/project"
 cat <<END > "${DESTDIR}/project/build.properties"
-sbt.Version=0.13.15
+sbt.version=0.13.15
 END
 
 cat <<END > "${DESTDIR}/project/plugins.sbt"
