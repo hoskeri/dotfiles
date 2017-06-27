@@ -2,22 +2,21 @@
 set -eu
 
 PROJECT_NAME=$1
-PROJECT_ORG="hoskeri.net"
 
 test -d .git
 
 DESTDIR=$(pwd)
 
-mkdir -p ${DESTDIR}/{src,dist}
+mkdir -p "${DESTDIR}/{src,dist}"
 
-cat <<END > ${DESTDIR}/run
+cat <<END > "${DESTDIR}/run"
 #!/bin/sh
 set -eu
 webpack-dev-server --quiet --content-base dist --history-api-fallback
 END
-chmod +x ${DESTDIR}/run
+chmod +x "${DESTDIR}/run"
 
-cat <<END > ${DESTDIR}/.gitignore
+cat <<END > "${DESTDIR}/.gitignore"
 .*sw*
 node_modules
 dist/js
@@ -27,12 +26,12 @@ dist/fonts
 src/*.js
 END
 
-cat <<END > ${DESTDIR}/.npmrc
+cat <<END > "${DESTDIR}/.npmrc"
 global = false
 loglevel = silent
 END
 
-cat <<END > ${DESTDIR}/package.json
+cat <<END > "${DESTDIR}/package.json"
 {
   "name": "${PROJECT_NAME}",
   "version": "0.0.0",
@@ -53,7 +52,7 @@ cat <<END > ${DESTDIR}/package.json
     "react": "latest",
     "react-dom": "latest",
     "react-router": "latest",
-    "typescript": "2.1.x",
+    "typescript": "2.4.x",
     "ts-loader": "latest",
     "webpack": "beta",
     "webpack-dev-server": "beta"
@@ -61,7 +60,7 @@ cat <<END > ${DESTDIR}/package.json
 }
 END
 
-cat <<END > ${DESTDIR}/webpack.config.js
+cat <<END > "${DESTDIR}/webpack.config.js"
 'use strict';
 
 module.exports = {
@@ -80,7 +79,7 @@ module.exports = {
 }
 END
 
-cat <<END > ${DESTDIR}/tsconfig.json
+cat <<END > "${DESTDIR}/tsconfig.json"
 {
     "compilerOptions": {
         "noImplicitAny": false,
@@ -90,14 +89,14 @@ cat <<END > ${DESTDIR}/tsconfig.json
 }
 END
 
-cat <<END > ${DESTDIR}/src/index.tsx
+cat <<END > "${DESTDIR}/src/index.tsx"
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
 ReactDOM.render(<h1>hello, world</h1>, document.getElementById("app"));
 END
 
-cat <<END > ${DESTDIR}/dist/index.html
+cat <<END > "${DESTDIR}/dist/index.html"
 <html>
   <head>
     <title>Live: ${PROJECT_NAME}</title>
