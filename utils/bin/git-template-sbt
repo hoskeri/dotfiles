@@ -8,8 +8,8 @@ DESTDIR=$(pwd)
 test -d .git
 
 cat<<END > "${DESTDIR}/build.sbt"
-lazy val finagleVersion = "6.43.0"
-lazy val scroogeVersion = "4.15.0"
+lazy val finagleVersion = "6.45.0"
+lazy val scroogeVersion = "4.18.0"
 lazy val slf4jVersion = "1.7.25"
 lazy val curatorVersion = "3.3.0"
 lazy val alldeps = Seq(
@@ -17,10 +17,10 @@ lazy val alldeps = Seq(
   "org.apache.curator" % "curator-test" % curatorVersion % "test",
   "org.apache.curator" % "curator-framework" % curatorVersion,
   "org.apache.curator" % "curator-client" % curatorVersion,
-  "ch.qos.logback" % "logback-classic" % "1.2.2",
+  "ch.qos.logback" % "logback-classic" % "1.2.3",
   "org.slf4j" % "log4j-over-slf4j" % slf4jVersion,
   "org.slf4j" % "slf4j-api" % slf4jVersion,
-  "com.github.scopt" %% "scopt" % "3.5.0",
+  "com.github.scopt" %% "scopt" % "3.6.0",
   "org.apache.thrift" % "libthrift" % "0.9.3",
   "com.twitter" %% "finagle-core" % finagleVersion,
   "com.twitter" %% "finagle-http" % finagleVersion,
