@@ -1,2 +1,0 @@
-#!/bin/sh -eu
-wget --mirror -nH --cut-dirs=1 -i /dev/stdin

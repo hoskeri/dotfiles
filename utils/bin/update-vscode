@@ -1,9 +1,0 @@
-#!/bin/bash
-set -eu
-dir=$HOME/.update-vscode-cache
-mkdir -p $dir
-url='https://go.microsoft.com/fwlink/?LinkID=760868'
-
-cd $dir
-wget -c --content-disposition -q "$url"
-sudo dpkg -G -E -i code*deb
