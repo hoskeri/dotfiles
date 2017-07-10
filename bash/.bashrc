@@ -5,6 +5,8 @@ case $- in
       *) return;;
 esac
 
+export TERM=xterm
+
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=200000
