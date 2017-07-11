@@ -11,6 +11,8 @@ HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=200000
 
+force_color_prompt=yes
+
 shopt -s histappend
 shopt -s checkwinsize
 shopt -s globstar
