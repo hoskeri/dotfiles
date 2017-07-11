@@ -1,0 +1,5 @@
+#!/bin/bash -eux
+mkdir -p $HOME/.update-elm-cache
+cd $HOME/.update-elm-cache
+wget --mirror -c https://dl.bintray.com/elmlang/elm-platform/0.18.0/linux-x64.tar.gz
+tar -C ~/bin/ --strip-components=1 -zxvf $HOME/.update-elm-cache/dl.bintray.com/elmlang/elm-platform/0.18.0/linux-x64.tar.gz
