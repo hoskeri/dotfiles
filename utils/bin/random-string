@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+import base64, random, itertools
+
+def rs():
+    while True: yield random.randint(0, 255)
+
+print(base64.urlsafe_b64encode(bytes(itertools.islice(rs(), 64))).decode())
