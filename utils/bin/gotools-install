@@ -1,14 +1,15 @@
-#!/bin/sh
+#!/bin/bash
 set -eu
 . /etc/environment
 
 export GOPATH=$HOME/.gotools-install
 export GO_BIN=$GOPATH/bin
-export PATH="$GO_BIN:$PATH"
+export PATH="$GO_BIN:$PATH:$HOME/bin"
 
-mkdir -p $GOPATH
+mkdir -p "$GOPATH"
 
-echo 'export GOPATH=$(pwd)\n' > $GOPATH/.envrc
+echo -e 'export GOPATH=$(pwd)\n' > "$GOPATH/.envrc"
+echo -e '*\n!.envrc\n!.versiens' > "$GOPATH/.gitignore"
 
 go get -u github.com/nsf/gocode
 go get -u github.com/rogpeppe/godef
@@ -35,6 +36,17 @@ go get -u github.com/alecthomas/gometalinter
 gometalinter --install -u >/dev/null
 
 go get -u github.com/samuel/go-thrift/generator
-mv -f $GO_BIN/generator $GO_BIN/gothrift-gen
+mv -f "$GO_BIN/generator" "$GO_BIN/gothrift-gen"
 
 strip $GO_BIN/*
+
+cd "$GOPATH"
+
+echo $PATH
+
+test -d .git || git init .
+find "$GOPATH/src" -type d -name '.git' -print0 |xargs --null -n1 git-repostat > "$GOPATH/.versions"
+
+git add .
+git commit -am "gotools update: $(date -Iseconds)"
+

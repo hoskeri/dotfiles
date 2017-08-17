@@ -1,0 +1,6 @@
+#!/bin/sh -eu
+export GIT_DIR=$1
+echo "---"
+echo "dir: $GIT_DIR"
+echo "url: $(git remote get-url origin)"
+echo "head: $(git rev-parse HEAD)"
