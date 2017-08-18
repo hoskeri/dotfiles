@@ -40,11 +40,7 @@ mv -f "$GO_BIN/generator" "$GO_BIN/gothrift-gen"
 
 strip $GO_BIN/*
 
-cd "$GOPATH"
-
-echo $PATH
-
-test -d .git || git init .
+test -d .git || git init -q .
 find "$GOPATH/src" -type d -name '.git' -print0 |xargs --null -n1 git-repostat > "$GOPATH/.versions"
 
 git add .

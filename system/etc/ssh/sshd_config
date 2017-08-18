@@ -1,5 +1,5 @@
 PermitRootLogin prohibit-password
-AuthorizedKeysFile	.ssh/authorized_keys
+AuthorizedKeysFile .ssh/authorized_keys
 HostbasedAuthentication no
 ChallengeResponseAuthentication no
 KerberosAuthentication no
@@ -11,4 +11,4 @@ PrintLastLog no
 UseDNS no
 Banner none
 AcceptEnv LANG LC_*
-Subsystem	sftp	/usr/lib/openssh/sftp-server
+Subsystem sftp /usr/lib/openssh/sftp-server
