@@ -90,8 +90,11 @@ source /etc/profile.d/vte.sh
 
 export PROMPT_DIRTRIM=2
 export RVC_READLINE=libreadline.so.6
+
+# python
 export PYTHONSTARTUP=$HOME/.pythonrc.py
 export PYTHONDONTWRITEBYTECODE=1
+export PYTHONHASHSEED=random
 
 export GOROOT=/usr/lib/go-1.8
 export GOPATH=$HOME/Code/gopath
@@ -101,6 +104,8 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.gotools-install/bin:$PATH"
 
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+
+export BROWSER=firefox
 
 source <(direnv hook bash)
 

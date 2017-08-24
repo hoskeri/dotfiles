@@ -1,2 +1,3 @@
 *.ucf-dist
 system/etc/dnsmasq.d/README
+*.sw*
