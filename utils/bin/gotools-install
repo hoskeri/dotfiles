@@ -9,7 +9,7 @@ export PATH="$GO_BIN:$PATH:$HOME/bin"
 mkdir -p "$GOPATH"
 
 echo -e 'export GOPATH=$(pwd)\n' > "$GOPATH/.envrc"
-echo -e '*\n!.envrc\n!.versiens' > "$GOPATH/.gitignore"
+echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
 go get -u github.com/nsf/gocode
 go get -u github.com/rogpeppe/godef
