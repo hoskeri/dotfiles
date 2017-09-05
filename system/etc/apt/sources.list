@@ -1,7 +1,11 @@
 deb http://cdn-fastly.deb.debian.org/debian testing main contrib non-free
 deb http://cdn-fastly.deb.debian.org/debian unstable main contrib non-free
 deb http://cdn-fastly.deb.debian.org/debian experimental main contrib non-free
+deb http://debug.mirrors.debian.org/debian-debug testing-debug main contrib non-free
+deb http://debug.mirrors.debian.org/debian-debug unstable-debug main contrib non-free
+deb http://debug.mirrors.debian.org/debian-debug experimental-debug main contrib non-free
 deb-src http://cdn-fastly.deb.debian.org/debian testing main contrib non-free
 deb-src http://cdn-fastly.deb.debian.org/debian unstable main contrib non-free
 deb-src http://cdn-fastly.deb.debian.org/debian experimental main contrib non-free
 deb http://apt.dockerproject.org/repo debian-stretch main testing
+deb [arch=amd64] http://dl.google.com/linux/chrome/deb stable main
