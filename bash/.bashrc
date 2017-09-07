@@ -96,7 +96,7 @@ export PYTHONSTARTUP=$HOME/.pythonrc.py
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=random
 
-export GOROOT=/usr/lib/go-1.8
+export GOROOT=/usr/lib/go-1.9
 export GOPATH=$HOME/Code/gopath
 
 export PATH="$HOME/Code/gopath/bin:$PATH"
