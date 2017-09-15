@@ -1,5 +1,5 @@
 #!/bin/sh -eu
-cache="/tmp/apt-proxy-autodiscover.cache"
+cache="/tmp/apt-proxy-autodiscover.$(id -u).cache"
 targethost="${1:-http.us.debian.org}"
 
 test_proxy() {
@@ -12,7 +12,6 @@ test_proxy() {
 
 hostname_entry() {
   echo "$1" | tee $cache
-  echo
   return 0
 }
 

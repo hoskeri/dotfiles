@@ -21,7 +21,7 @@ go get -u github.com/ddollar/forego
 go get -u github.com/motemen/gore
 go get -u github.com/github/hub
 go get -u github.com/kardianos/govendor
-go get -u github.com/omeid/go-livereload/cmd/livereload
+go get -u github.com/hoskeri/liverebuild
 go get -u github.com/jstemmer/gotags
 go get -u github.com/klauspost/asmfmt
 go get -u github.com/fatih/motion

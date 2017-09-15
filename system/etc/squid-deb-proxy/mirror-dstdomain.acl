@@ -1,7 +1,6 @@
 .debian.org
-cdn.debian.net
-http.debian.net
-.archive.ubuntu.com
-.security.ubuntu.com
-apt.dockerproject.org
+.debian.net
+.ubuntu.com
+.download.docker.com
 .dl.google.com
+.dpvctowv9b08b.cloudfront.net
