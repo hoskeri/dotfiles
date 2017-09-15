@@ -14,3 +14,5 @@
   mergeStrategy = cat_sort_uniq
 [alias]
 	amend = commit -a --amend --no-edit
+[core]
+	pager = less -F -X

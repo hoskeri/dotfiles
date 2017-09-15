@@ -90,6 +90,7 @@ source /etc/profile.d/vte.sh
 
 export PROMPT_DIRTRIM=2
 export RVC_READLINE=libreadline.so.6
+export LESS='-r'
 
 # python
 export PYTHONSTARTUP=$HOME/.pythonrc.py
