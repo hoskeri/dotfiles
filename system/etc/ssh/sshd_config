@@ -10,5 +10,6 @@ PrintMotd no
 PrintLastLog no
 UseDNS no
 Banner none
+DebianBanner no
 AcceptEnv LANG LC_*
 Subsystem sftp /usr/lib/openssh/sftp-server

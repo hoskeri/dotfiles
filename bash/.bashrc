@@ -86,10 +86,21 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-source /etc/profile.d/vte.sh
+if [ -r /etc/profile.d/vte.sh ]; then
+  source /etc/profile.d/vte.sh
+fi
+
+if [ -e /usr/bin/direnv ]; then
+  source <(direnv hook bash)
+fi
+
+if [ -f "$HOME/.bashrc.local" ]; then
+  source "$HOME/.bashrc.local"
+fi
 
 export PROMPT_DIRTRIM=2
 export RVC_READLINE=libreadline.so.6
+export PATH="$HOME/.local/bin:$PATH"
 export LESS='-r'
 
 # python
@@ -97,17 +108,22 @@ export PYTHONSTARTUP=$HOME/.pythonrc.py
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=random
 
+# golang
 export GOROOT=/usr/lib/go-1.9
-export GOPATH=$HOME/Code/gopath
 
-export PATH="$HOME/Code/gopath/bin:$PATH"
-export PATH="$HOME/.local/bin:$PATH"
+if [ -d "$HOME/Code/gopath" ]
+then
+  export GOPATH=$HOME/Code/gopath
+  export PATH="$HOME/Code/gopath/bin:$PATH"
+fi
+
 export PATH="$HOME/.gotools-install/bin:$PATH"
 
+# git
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
+# xdg
 export BROWSER=firefox
 
-source <(direnv hook bash)
-
-test -f "$HOME/.bashrc.local" && source "$HOME/.bashrc.local"
+# libvirt
+export LIBVIRT_DEFAULT_URI=qemu:///system
