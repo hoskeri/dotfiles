@@ -83,6 +83,7 @@ au BufRead,BufNewFile *.html set expandtab ts=2 sw=2 sts=2 filetype=html
 au BufRead,BufNewFile *.boot set expandtab ts=2 sw=2 sts=2 filetype=clojure
 au BufRead,BufNewFile *.clj set expandtab ts=2 sw=2 sts=2 filetype=clojure
 au BufRead,BufNewFile *.cljs set expandtab ts=2 sw=2 sts=2 filetype=clojure
+au BufRead,BufNewFile *.go set noexpandtab ts=2 sw=2 sts=2 filetype=go
 
 au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
 

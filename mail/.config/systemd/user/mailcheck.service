@@ -1,0 +1,9 @@
+[Unit]
+Description=Mailcheck Service
+
+[Service]
+ExecStart=/usr/bin/timeout 10m /usr/bin/notmuch new --quiet
+StandardOutput=null
+StandardError=null
+SyslogIdentifier=mailcheck
+

@@ -6,4 +6,5 @@ all:
 	@stow sbt
 	@stow git
 	@stow bash
+	@stow mail
 	@sudo stow -t / system
