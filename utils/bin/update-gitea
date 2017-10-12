@@ -17,7 +17,7 @@ mv "$tmpfile" "$DESTDIR/gitea"
 chown ${GITEA_USER}:${GITEA_GROUP} $DESTDIR/gitea
 chattr +i $DESTDIR/gitea
 
-cat <<END > $DESTDIR/git.service
+cat <<END > /etc/systemd/system/git.service
 [Unit]
 Description=git service.
 After=network.target
@@ -42,5 +42,5 @@ Restart=always
 WantedBy=multi-user.target
 END
 
-systemctl enable /home/git/git.service
+systemctl enable /etc/systemd/system/git.service
 systemctl restart git

@@ -13,3 +13,7 @@ Banner none
 DebianBanner no
 AcceptEnv LANG LC_*
 Subsystem sftp /usr/lib/openssh/sftp-server
+PasswordAuthentication no
+
+Match group sudo
+PasswordAuthentication yes
