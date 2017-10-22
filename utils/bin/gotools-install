@@ -34,6 +34,7 @@ go get -u github.com/ericchiang/pup
 go get -u github.com/fatih/gomodifytags
 go get -u github.com/dominikh/go-tools/cmd/keyify
 go get -u github.com/klauspost/asmfmt/cmd/asmfmt
+go get -u github.com/junegunn/fzf
 
 go get -u github.com/alecthomas/gometalinter
 gometalinter --install -u >/dev/null
