@@ -1,3 +1,4 @@
 *.ucf-dist
+*.dpkg-*
 system/etc/dnsmasq.d/README
 *.sw*

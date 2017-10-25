@@ -1,18 +1,19 @@
 [user]
-	name = Abhijit Hoskeri
-	email = abhijithoskeri@gmail.com
+  name = Abhijit Hoskeri
+  email = abhijithoskeri@gmail.com
+  useConfigOnly = true
 [push]
-	default = matching
+  default = matching
 [pull]
-	rebase = true
+  rebase = true
 [init]
-	templatedir = /home/abhijit/.git-templates/base
+  templatedir = /home/abhijit/.git-templates/base
 [http "https://gopkg.in"]
-	followRedirects = true
+  followRedirects = true
 [notes]
   rewriteMode = cat_sort_uniq
   mergeStrategy = cat_sort_uniq
 [alias]
-	amend = commit -a --amend --no-edit
+  amend = commit -a --amend --no-edit
 [core]
-	pager = less -F -X
+  pager = less -F -X
