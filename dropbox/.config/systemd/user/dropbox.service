@@ -1,0 +1,11 @@
+[Unit]
+Description=Dropbox
+
+[Service]
+ExecStart=/usr/bin/env ${HOME}/.dropbox-dist/dropboxd
+StandardOutput=null
+StandardError=null
+SyslogIdentifier=dropbox
+
+[Install]
+WantedBy=default.target

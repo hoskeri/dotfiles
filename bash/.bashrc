@@ -83,7 +83,11 @@ fi
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+  . ~/.bash_aliases
+fi
+
+if [ -f ~/.aliases ]; then
+  . ~/.aliases
 fi
 
 if [ -r /etc/profile.d/vte.sh ]; then
@@ -97,6 +101,8 @@ fi
 if [ -f "$HOME/.bashrc.local" ]; then
   source "$HOME/.bashrc.local"
 fi
+
+PATH="/sbin:/usr/sbin:$PATH"
 
 export PROMPT_DIRTRIM=2
 export RVC_READLINE=libreadline.so.6

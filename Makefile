@@ -7,4 +7,5 @@ all:
 	@stow git
 	@stow bash
 	@stow mail
+	@stow dropbox
 	@sudo stow -t / system
