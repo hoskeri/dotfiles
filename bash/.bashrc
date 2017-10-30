@@ -133,3 +133,7 @@ export BROWSER=firefox
 
 # libvirt
 export LIBVIRT_DEFAULT_URI=qemu:///system
+
+# fzf
+export FZF_DEFAULT_COMMAND='ag -l'
+export FZF_DEFAULT_OPTS=' '
