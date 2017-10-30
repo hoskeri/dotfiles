@@ -5,3 +5,8 @@ GRUB_HIDDEN_TIMEOUT=3
 GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash cgroup_enable=memory swapaccount=1 systemd.legacy_systemd_cgroup_controller=yes"
 GRUB_CMDLINE_LINUX=""
+
+if test -f /etc/default/grub.local
+then
+  . /etc/default/grub.local
+fi

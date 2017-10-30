@@ -4,7 +4,7 @@ targethost="${1:-http.us.debian.org}"
 
 test_proxy() {
   set +e
-  curl -m 10 -f -D /dev/stdout -o /dev/null -s -x "$1" "$targethost"|grep -q 'Via:.* 1.1 squid-deb-proxy'
+  curl -m 5 -f -D /dev/stdout -o /dev/null -s -x "$1" "$targethost"|grep -q 'Via:.* 1.1 squid-deb-proxy'
   retval=$?
   set -e
   return $retval
