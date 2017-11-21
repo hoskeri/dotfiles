@@ -1,5 +1,6 @@
 #!/bin/sh -eu
 cache="/tmp/apt-proxy-autodiscover.$(id -u).cache"
+disabled="/tmp/apt-proxy-autodiscover.$(id -u).disabled"
 targethost="${1:-http.us.debian.org}"
 
 test_proxy() {
@@ -11,7 +12,8 @@ test_proxy() {
 }
 
 hostname_entry() {
-  echo "$1" | tee $cache
+  echo "$1" | tee "$cache"
+  rm -f "$disabled"
   return 0
 }
 
@@ -82,11 +84,21 @@ try_avahi() {
   fi
 }
 
+try_direct() {
+  if [ -f "$disabled" ] 
+  then 
+    return 0
+  else 
+    return 1
+  fi
+}
 
 set +e
+try_direct && exit 0
 try_cached && exit 0
 try_fixed_hostname squid-deb-proxy && exit 0
 try_fixed_hostname && exit 0
 try_defaultgw && exit 0
 try_avahi && exit 0
+date '+%s' > "$disabled"
 rm -f $cache
