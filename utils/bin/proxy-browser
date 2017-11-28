@@ -1,8 +1,0 @@
-#!/bin/bash
-set -eu
-test -n "$PROXY_BROWSER_HOST"
-profile=$(mktemp -d /tmp/proxybrowserXXXXXXXX)
-CHROME=/usr/bin/google-chrome
-ssh -q -o ExitOnForwardFailure=yes -n -C -N -D localhost:12345 $PROXY_BROWSER_HOST &
-trap "rm -rf $profile && kill -9 $(jobs -p)" EXIT
-$CHROME --user-data-dir=$profile --proxy-server="socks5://localhost:12345" --incognito http://localhost 2>/dev/null
