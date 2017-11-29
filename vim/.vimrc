@@ -63,10 +63,10 @@ function TrimWhiteSpace()
   ''
 :endfunction
 
-autocmd FileWritePre * :call TrimWhiteSpace()
-autocmd FileAppendPre * :call TrimWhiteSpace()
-autocmd FilterWritePre * :call TrimWhiteSpace()
-autocmd BufWritePre * :call TrimWhiteSpace()
+autocmd FileWritePre * :silent call TrimWhiteSpace()
+autocmd FileAppendPre * :silent call TrimWhiteSpace()
+autocmd FilterWritePre * :silent call TrimWhiteSpace()
+autocmd BufWritePre * :silent call TrimWhiteSpace()
 
 au BufRead,BufNewFile *.def set filetype=c ts=4 sts=4 sw=4
 au BufRead,BufNewFile *.c set filetype=c ts=4 sts=4 sw=4
@@ -99,6 +99,7 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+au BufWritePre        *.go  :GoBuild
 
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pylint']
