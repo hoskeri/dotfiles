@@ -1,0 +1,12 @@
+#!/usr/bin/python3
+from __future__ import print_function
+import random
+import hashlib
+import sys
+import uuid
+
+if __name__ == "__main__":
+    try: seed = random.seed(sys.argv[1])
+    except IndexError: pass
+    u = uuid.UUID(int=random.getrandbits(128))
+    print(u)
