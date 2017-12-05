@@ -1,11 +1,15 @@
 #!/bin/sh -eu
 cache="/tmp/apt-proxy-autodiscover.$(id -u).cache"
-disabled="/tmp/apt-proxy-autodiscover.$(id -u).disabled"
 targethost="${1:-http.us.debian.org}"
+
+if [ -f /etc/default/apt-proxy-autodiscover ]
+then 
+   . /etc/default/apt-proxy-autodiscover 
+fi 
 
 test_proxy() {
   set +e
-  curl -m 5 -f -D /dev/stdout -o /dev/null -s -x "$1" "$targethost"|grep -q 'Via:.* 1.1 squid-deb-proxy'
+  curl -m 3 -f -D /dev/stdout -o /dev/null -s -x "$1" "$targethost"|grep -q 'Via:.* 1.1 squid-deb-proxy'
   retval=$?
   set -e
   return $retval
@@ -13,7 +17,6 @@ test_proxy() {
 
 hostname_entry() {
   echo "$1" | tee "$cache"
-  rm -f "$disabled"
   return 0
 }
 
@@ -33,9 +36,9 @@ try_fixed_hostname() {
 }
 
 try_cached() {
-  if [ -f $cache ]
+  if [ -f "$cache" ]
   then
-    candidate=$(cat $cache)
+    candidate=$(cat "$cache")
     if test_proxy "$candidate"
     then
       echo "$candidate"
@@ -85,10 +88,10 @@ try_avahi() {
 }
 
 try_direct() {
-  if [ -f "$disabled" ] 
-  then 
+  if [ "$PROXY_ENABLED" = "0" ]
+  then
     return 0
-  else 
+  else
     return 1
   fi
 }
@@ -96,9 +99,8 @@ try_direct() {
 set +e
 try_direct && exit 0
 try_cached && exit 0
-try_fixed_hostname squid-deb-proxy && exit 0
 try_fixed_hostname && exit 0
+try_fixed_hostname squid-deb-proxy && exit 0
 try_defaultgw && exit 0
 try_avahi && exit 0
-date '+%s' > "$disabled"
-rm -f $cache
+rm -f "$cache"

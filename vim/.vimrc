@@ -86,6 +86,7 @@ au BufRead,BufNewFile *.go set noexpandtab ts=2 sw=2 sts=2 filetype=go
 au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
 au BufRead,BufNewFile Makefile set filetype=make ic ts=2 sw=2 sts=2 noexpandtab
 au BufRead,BufNewFile SConstruct set filetype=python
+au BufWritePre        *.go  :GoBuild
 
 autocmd FileType make set noexpandtab
 
@@ -99,7 +100,6 @@ let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
-au BufWritePre        *.go  :GoBuild
 
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pylint']
