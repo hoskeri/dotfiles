@@ -2,6 +2,9 @@
 import sys
 import base64, random, itertools
 
+try: random.seed(sys.argv[1])
+except IndexError: pass
+
 def rs():
     while True: yield random.randint(0, 255)
 
