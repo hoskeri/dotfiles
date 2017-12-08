@@ -5,7 +5,7 @@ then
   exec sudo $(readlink -f $0)
 fi
 apt-get update
-apt-get dist-upgrade -y
+apt-get upgrade --with-new-pkgs -y || sudo apt-get upgrade -y
 apt-get upgrade -y -t experimental --with-new-pkgs || sudo apt-get upgrade -y -t experimental
 apt-get autoremove --purge -y
 apt-get clean
