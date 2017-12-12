@@ -30,6 +30,7 @@ case "$cmd" in
     tar -C "${XELM_CACHE_BIN}" --strip-components=1 -zxf \
       "${XELM_CACHE_HOME}/dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
 
+    # install elm format
     elm_format_url=$(curl -s $elm_format_releases|jq -r "$elm_latest_release_filter")
     wget -q "$elm_format_url" -c -O "${XELM_CACHE_HOME}/elm-format.tar.gz"
     tar -C "${XELM_CACHE_BIN}" -zxf "${XELM_CACHE_HOME}/elm-format.tar.gz"
@@ -46,12 +47,16 @@ case "$cmd" in
     exit 0
     ;;
 
-  new)
+  _new)
+    test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
+    "${XELM_CACHE_BIN}/elm-make" "$@"
+
+    exit 0
     ;;
 
   *)
     test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
-    test -f elm-package.json || err_exit "not an elm directory. elm-package.json not found."
+    test -f elm-package.json || err_exit "elm-package.json not found. run xelm _new to create a project here."
 
     export PATH="${XELM_CACHE_BIN}:$PATH"
 

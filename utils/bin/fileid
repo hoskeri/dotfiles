@@ -2,4 +2,4 @@
 f="${1:-}"
 test -z "$f" && echo "usage: fileid <path/to/file>" >&2 && exit 1
 test ! -f "$f" && echo "$f is not a regular file" >&2 && exit 1
-stat -L --printf 'fileid-%u.%g.%i.%Y.%s\n' "$f"
+exec stat -L --printf 'fileid-%u.%g.%i.%Y.%s\n' "$f"
