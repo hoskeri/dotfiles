@@ -37,7 +37,7 @@ go get -u github.com/klauspost/asmfmt/cmd/asmfmt
 go get -u github.com/junegunn/fzf
 
 go get -u github.com/alecthomas/gometalinter
-gometalinter --install -u >/dev/null
+gometalinter --install -u >/dev/null 2>/dev/null
 
 go get -u github.com/samuel/go-thrift/generator
 mv -f "$GO_BIN/generator" "$GO_BIN/gothrift-gen"

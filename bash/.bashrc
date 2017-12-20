@@ -123,6 +123,12 @@ then
   export PATH="$HOME/Code/gopath/bin:$PATH"
 fi
 
+if [ -d "$HOME/src/gopath" ]
+then
+  export GOPATH=$HOME/src/gopath
+  export PATH="$HOME/src/gopath/bin:$PATH"
+fi
+
 export PATH="$HOME/.gotools-install/bin:$PATH"
 
 # git
