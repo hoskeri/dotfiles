@@ -2,6 +2,8 @@
 cache="/tmp/apt-proxy-autodiscover.$(id -u).cache"
 targethost="${1:-http.us.debian.org}"
 
+PROXY_ENABLED=1
+
 if [ -f /etc/default/apt-proxy-autodiscover ]
 then 
    . /etc/default/apt-proxy-autodiscover 
