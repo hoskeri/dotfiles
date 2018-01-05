@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 export GIT_DIR="${1-:}"
-( test -z "$GIT_DIR" ) || ( echo "usage: $0 path/to/.git" && exit 1 )
+( test -n "$GIT_DIR" ) || ( echo "usage: $0 path/to/.git" && exit 1 )
 ( test -d "$GIT_DIR" ) || ( echo "$GIT_DIR is not a git directory" && exit 1 )
 echo "---"
 echo "dir: $GIT_DIR"
