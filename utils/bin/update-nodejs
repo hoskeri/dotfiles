@@ -1,43 +1,44 @@
 #!/bin/bash
 set -eu
 export SHELLOPTS
+
 baseurl="https://nodejs.org/dist/latest"
 workdir=$HOME/.update-nodejs-cache
 installdir=$HOME/.update-nodejs-cache/install
 debdir=$workdir/deb
 
-mkdir -p $workdir
+mkdir -p "$workdir"
 
-curl -s -L -o $workdir/checksums "$baseurl/SHASUMS256.txt"
-archive=$(grep 'linux-x64.tar.xz' $workdir/checksums|cut -d' ' -f3)
-version="$(echo $archive|egrep -o '([[:digit:]]+\.?){3}')-1"
-arch=amd64
+curl -s -L -o "$workdir/checksums" "$baseurl/SHASUMS256.txt"
+archive=$(grep 'linux-x64.tar.xz' "$workdir/checksums"|cut -d' ' -f3)
+version="$(echo "$archive"|grep -E -o '([[:digit:]]+\.?){3}')-1"
 pkgfname="${debdir}/nodejs-local_${version}_amd64.deb"
 
-if [ -f $pkgfname ]; then
-  sudo dpkg -G -E -i $pkgfname
+if [ -f "$pkgfname" ]; then
+  sudo dpkg -G -E -i "$pkgfname"
   exit 0
 fi
 
 # new installation/version. proceed.
 
-rm -rf $debdir $installdir $workdir/*.tar.xz $workdir/checksums
+rm -rf "$debdir" "$installdir" "$workdir/*.tar.xz" "$workdir/checksums"
 
 echo "installing $archive"
-wget -q -c -O $workdir/$archive $baseurl/$archive
+wget -q -c -O "$workdir/$archive" "$baseurl/$archive"
 
-mkdir -p $installdir/usr $debdir
-fakeroot tar -C $installdir/usr -Jxf $workdir/$archive --strip-components=1
-fakeroot mkdir -p ${installdir}/usr/share/doc/nodejs-local
+mkdir -p "$installdir/usr" "$debdir"
+fakeroot tar -C "$installdir/usr" -Jxf "$workdir/$archive" --strip-components=1
+fakeroot mkdir -p "$installdir/usr/share/doc/nodejs-local"
 fakeroot mv \
-  ${installdir}/usr/LICENSE \
-  ${installdir}/usr/README.md \
-  ${installdir}/usr/CHANGELOG.md \
-      ${installdir}/usr/share/doc/nodejs-local
-fakeroot ln -s /usr/bin/node ${installdir}/usr/bin/nodejs
+  "$installdir/usr/LICENSE" \
+  "$installdir/usr/README.md" \
+  "$installdir/usr/CHANGELOG.md" \
+  "$installdir/usr/share/doc/nodejs-local"
 
-fakeroot mkdir $installdir/DEBIAN
-cat <<END |fakeroot tee $installdir/DEBIAN/control >/dev/null
+fakeroot ln -s /usr/bin/node "$installdir/usr/bin/nodejs"
+
+fakeroot mkdir "$installdir/DEBIAN"
+cat <<END |fakeroot tee "$installdir/DEBIAN/control" >/dev/null
 Package: nodejs-local
 Conflicts: nodejs, nodejs-dev, nodejs-legacy
 Version: ${version}
@@ -47,9 +48,8 @@ Description: Local build of the nodejs package
   from the prebuilt binaries on nodejs.org
 END
 
-fakeroot dpkg-deb -b $installdir $debdir/
+fakeroot dpkg-deb -b "$installdir" "$debdir/"
 
-rm -rf $installdir
-rm -f ~/.nodejs
+rm -rf "$installdir" ~/.nodejs "$workdir/$archive"
 
-sudo dpkg -G -E -i $pkgfname
+sudo dpkg -G -E -i "$pkgfname"

@@ -16,6 +16,7 @@ done
 
 iptables -t filter -A INPUT -i lo -j ACCEPT
 iptables -t filter -A INPUT -i natbr0 -j ACCEPT
+iptables -t filter -A INPUT -i zerobr0 -j ACCEPT
 iptables -t filter -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -t filter -A INPUT -p tcp --dport 22 -j ACCEPT
 iptables -t filter -A INPUT -p tcp --dport 80 -j ACCEPT
@@ -24,3 +25,4 @@ iptables -t filter -P INPUT DROP
 
 iptables -t nat -I POSTROUTING -o + -j MASQUERADE
 iptables -t filter -I FORWARD -i natbr0 -j ACCEPT
+iptables -t filter -I FORWARD -i zerobr0 -j ACCEPT
