@@ -117,6 +117,11 @@ export PYTHONHASHSEED=random
 # golang
 export GOROOT=/usr/lib/go-1.9
 
+if [ -d "$GOROOT" ]
+then
+  export PATH="$GOROOT/bin:$PATH"
+fi
+
 if [ -d "$HOME/Code/gopath" ]
 then
   export GOPATH=$HOME/Code/gopath
