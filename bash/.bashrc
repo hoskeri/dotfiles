@@ -115,7 +115,7 @@ export PYTHONDONTWRITEBYTECODE=1
 export PYTHONHASHSEED=random
 
 # golang
-export GOROOT=/usr/lib/go-1.9
+export GOROOT=/usr/lib/go-1.10
 
 if [ -d "$GOROOT" ]
 then
