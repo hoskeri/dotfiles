@@ -6,6 +6,7 @@ ExecStart=/usr/bin/env ${HOME}/.dropbox-dist/dropboxd
 StandardOutput=null
 StandardError=null
 SyslogIdentifier=dropbox
+Restart=always
 
 [Install]
 WantedBy=default.target

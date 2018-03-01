@@ -9,4 +9,4 @@ all:
 	@$(STOW) bash
 	@$(STOW) mail
 	@$(STOW) dropbox
-	@$(STOW) -t / system
+	@sudo $(STOW) -t / system
