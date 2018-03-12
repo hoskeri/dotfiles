@@ -11,7 +11,7 @@ mkdir -p "$workdir"
 
 curl -s -L -o "$workdir/checksums" "$baseurl/SHASUMS256.txt"
 archive=$(grep 'linux-x64.tar.xz' "$workdir/checksums"|cut -d' ' -f3)
-version="$(echo "$archive"|grep -E -o '([[:digit:]]+\.?){3}')-1"
+version="$(echo "$archive"|grep -E -o '([[:digit:]]+\.?){3}')-2"
 pkgfname="${debdir}/nodejs-local_${version}_amd64.deb"
 
 if [ -f "$pkgfname" ]; then
@@ -29,6 +29,8 @@ wget -q -c -O "$workdir/$archive" "$baseurl/$archive"
 mkdir -p "$installdir/usr" "$debdir"
 fakeroot tar -C "$installdir/usr" -Jxf "$workdir/$archive" --strip-components=1
 fakeroot mkdir -p "$installdir/usr/share/doc/nodejs-local"
+fakeroot cp -a "$installdir/usr/lib/node_modules/npm/man/" "$installdir/usr/share"
+fakeroot rm -rf "$installdir/usr/lib/node_modules/npm/man"
 fakeroot mv \
   "$installdir/usr/LICENSE" \
   "$installdir/usr/README.md" \
@@ -50,6 +52,6 @@ END
 
 fakeroot dpkg-deb -b "$installdir" "$debdir/"
 
-rm -rf "$installdir" ~/.nodejs "$workdir/$archive"
+rm -rf "$installdir" ~/.nodejs "${workdir:?}/${archive:?}"
 
 sudo dpkg -G -E -i "$pkgfname"
