@@ -1,9 +1,9 @@
 deb http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free
 deb http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free
 deb http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free
-deb http://debug.mirrors.debian.org/debian-debug testing-debug main contrib non-free
-deb http://debug.mirrors.debian.org/debian-debug unstable-debug main contrib non-free
-deb http://debug.mirrors.debian.org/debian-debug experimental-debug main contrib non-free
+deb http://dpvctowv9b08b.cloudfront.net/debian-debug testing-debug main contrib non-free
+deb http://dpvctowv9b08b.cloudfront.net/debian-debug unstable-debug main contrib non-free
+deb http://dpvctowv9b08b.cloudfront.net/debian-debug experimental-debug main contrib non-free
 deb-src http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free
 deb-src http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free
 deb-src http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free
