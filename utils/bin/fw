@@ -12,6 +12,9 @@ for table in filter nat mangle raw security
 do
   iptables -F -t "$table"
   iptables -X -t "$table"
+
+  ip6tables -F -t "$table"
+  ip6tables -X -t "$table"
 done
 
 iptables -t filter -A INPUT -i lo -j ACCEPT
@@ -26,3 +29,10 @@ iptables -t filter -P INPUT DROP
 iptables -t nat -I POSTROUTING -o + -j MASQUERADE
 iptables -t filter -I FORWARD -i natbr0 -j ACCEPT
 iptables -t filter -I FORWARD -i zerobr0 -j ACCEPT
+
+ip6tables -t filter -P INPUT DROP
+ip6tables -t filter -P FORWARD DROP
+ip6tables -t filter -A INPUT -i lo -j ACCEPT
+ip6tables -t filter -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+ip6tables -t filter -A INPUT -p tcp --dport 22 -j ACCEPT
+ip6tables -t filter -A INPUT -p tcp --dport 2222 -j ACCEPT

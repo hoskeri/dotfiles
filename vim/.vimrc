@@ -17,7 +17,7 @@ Plugin 'fatih/vim-go'
 Plugin 'kovisoft/paredit'
 Bundle 'guns/vim-clojure-static'
 Bundle 'Shougo/neocomplete'
-Bundle 'ctrlpvim/ctrlp.vim'
+Bundle 'junegunn/fzf'
 Bundle 'scrooloose/syntastic'
 Bundle 'leafgarland/typescript-vim'
 Bundle 'Shougo/vimproc'
@@ -106,12 +106,8 @@ let g:syntastic_python_checkers = ['pylint']
 let g:syntastic_check_on_open = 0
 let g:syntastic_scala_checkers = ['fsc']
 
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist|build|opensrc)|(\.(swp|ico|git|svn|class))$'
-let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
-let g:ctrlp_regexp = 1
-let g:ctrlp_lazy_update = 1
-let g:ctrlp_use_caching = 1
-
 let g:neocomplete#enable_at_startup = 1
+
+let g:fzf_buffers_jump = 1
 
 let g:scala_scaladoc_indent = 1

@@ -12,3 +12,4 @@ try: readline.read_history_file(F)
 except IOError: pass
 
 def gb(b): return float(b) / (1024 ** 3)
+def mb(b): return float(b) / (1024 ** 2)
