@@ -1,7 +1,0 @@
-#!/bin/bash -eu
-mkdir -p "$HOME/.update-elm-cache"
-cd "$HOME/.update-elm-cache"
-version="${ELM_PLATFORM_VERSION:-0.18.0}"
-echo "using version $version"
-wget -nv --mirror -c "https://dl.bintray.com/elmlang/elm-platform/$version/linux-x64.tar.gz"
-tar -C ~/bin/ --strip-components=1 -zvxf "$HOME/.update-elm-cache/dl.bintray.com/elmlang/elm-platform/$version/linux-x64.tar.gz"

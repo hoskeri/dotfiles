@@ -1,0 +1,46 @@
+#!/bin/sh -eu
+
+ELM_PLATFORM_VERSION="${ELM_PLATFORM_VERSION:-0.18.0}"
+XELM_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}/xelm"
+XELM_CACHE_BIN="${XELM_CACHE_HOME}/bin"
+
+elm_format_releases="https://api.github.com/repos/avh4/elm-format/releases"
+elm_latest_release_filter='.[0].assets[]|.browser_download_url|select(endswith("linux-x64.tgz"))|select(contains("elm-format-0.18"))'
+
+err_exit() {
+  echo "E: $*" >&2
+  exit 1
+}
+
+cmd="${1:-}"
+
+if [ $# -gt 0 ]
+then
+  shift
+else
+  err_exit "missing command."
+fi
+
+case "${1:-}" in
+  _selfinstall)
+    mkdir -p "${XELM_CACHE_HOME}" "${XELM_CACHE_BIN}"
+    # install elm
+    cd "$XELM_CACHE_HOME"
+    wget -nv --mirror -c "https://dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
+    tar -C "${XELM_CACHE_BIN}" --strip-components=1 -zxf \
+      "${XELM_CACHE_HOME}/dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
+
+    elm_format_url=$(curl -s $elm_format_releases|jq -r "$elm_latest_release_filter")
+    wget -q "$elm_format_url" -c -O "${XELM_CACHE_HOME}/elm-format.tar.gz"
+    tar -C "${XELM_CACHE_BIN}" -zxf "${XELM_CACHE_HOME}/elm-format.tar.gz"
+
+    exit 0
+    ;;
+
+  *)
+    test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
+    test -f elm-package.json || err_exit "not an elm directory. elm-package.json not found."
+
+    "${XELM_CACHE_BIN}/elm-${cmd}" "$@"
+    ;;
+esac
