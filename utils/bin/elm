@@ -21,12 +21,12 @@ else
   err_exit "missing command."
 fi
 
-case "${1:-}" in
+case "$cmd" in
   _selfinstall)
     mkdir -p "${XELM_CACHE_HOME}" "${XELM_CACHE_BIN}"
     # install elm
     cd "$XELM_CACHE_HOME"
-    wget -nv --mirror -c "https://dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
+    wget -q -nv --mirror -c "https://dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
     tar -C "${XELM_CACHE_BIN}" --strip-components=1 -zxf \
       "${XELM_CACHE_HOME}/dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
 
@@ -37,9 +37,23 @@ case "${1:-}" in
     exit 0
     ;;
 
+  _selfreset)
+    if test -d "${XELM_CACHE_HOME}"
+    then
+      rm -rf "${XELM_CACHE_HOME}"
+    fi
+    echo "deleted the local elm cache."
+    exit 0
+    ;;
+
+  new)
+    ;;
+
   *)
     test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
     test -f elm-package.json || err_exit "not an elm directory. elm-package.json not found."
+
+    export PATH="${XELM_CACHE_BIN}:$PATH"
 
     "${XELM_CACHE_BIN}/elm-${cmd}" "$@"
     ;;
