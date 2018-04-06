@@ -1,4 +1,6 @@
-#!/bin/sh -eu
+#!/bin/bash -eu
+
+set -o pipefail
 
 ELM_PLATFORM_VERSION="${ELM_PLATFORM_VERSION:-0.18.0}"
 XELM_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}/xelm"
@@ -52,6 +54,13 @@ case "$cmd" in
     "${XELM_CACHE_BIN}/elm-make" "$@"
 
     exit 0
+    ;;
+
+  make)
+    test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
+    test -f elm-package.json || err_exit "elm-package.json not found. run xelm _new to create a project here."
+    "${XELM_CACHE_BIN}/elm-make" "$@"|sed -e '/^Success/d'
+
     ;;
 
   *)
