@@ -6,6 +6,9 @@
   default = matching
 [pull]
   rebase = true
+[rebase]
+  missingCommitsCheck = error
+  abbreviateCommands = true
 [init]
   templatedir = /home/abhijit/.git-templates/base
 [http "https://gopkg.in"]
