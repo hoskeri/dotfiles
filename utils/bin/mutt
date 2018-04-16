@@ -1,0 +1,6 @@
+#!/bin/sh -eu
+
+stty sane
+tput smkx
+cd "$HOME"
+exec dtach -A /tmp/mutt-dtach sh -c "stty intr undef; exec /usr/bin/mutt $*"
