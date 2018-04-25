@@ -36,7 +36,6 @@ done
 
 iptables -t nat -I POSTROUTING -o + -j MASQUERADE
 
-
 # ipv6 tables
 ip6tables -t filter -P INPUT DROP
 ip6tables -t filter -P FORWARD DROP
@@ -44,3 +43,10 @@ ip6tables -t filter -A INPUT -i lo -j ACCEPT
 ip6tables -t filter -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 ip6tables -t filter -A INPUT -p tcp --dport 22 -j ACCEPT
 ip6tables -t filter -A INPUT -p tcp --dport 2222 -j ACCEPT
+
+# source any local overrides
+
+if [ -r "/etc/fw.local" ]
+then
+  source "/etc/fw.local"
+fi
