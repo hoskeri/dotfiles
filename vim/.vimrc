@@ -84,6 +84,7 @@ au BufRead,BufNewFile *.clj set expandtab ts=2 sw=2 sts=2 filetype=clojure
 au BufRead,BufNewFile *.cljs set expandtab ts=2 sw=2 sts=2 filetype=clojure
 au BufRead,BufNewFile *.go set noexpandtab ts=2 sw=2 sts=2 filetype=go
 au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
+au BufRead,BufNewFile TODO set ic ts=2 sw=2 sts=2 filetype=yaml
 au BufRead,BufNewFile Makefile set filetype=make ic ts=2 sw=2 sts=2 noexpandtab
 au BufRead,BufNewFile SConstruct set filetype=python
 au BufWritePre        *.go  :GoBuild

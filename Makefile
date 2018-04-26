@@ -1,4 +1,4 @@
-STOW := /usr/bin/stow --no-folding
+STOW := /usr/bin/stow --no-folding -t $(HOME)
 all:
 	@$(STOW) utils
 	@$(STOW) vim
