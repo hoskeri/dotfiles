@@ -1,5 +1,7 @@
 #!/bin/sh -eu
 
+test -d "${HOME}/Maildir"
+
 stty sane
 tput smkx
 cd "$HOME"
