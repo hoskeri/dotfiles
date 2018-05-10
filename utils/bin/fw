@@ -34,8 +34,6 @@ do
   iptables -t filter -I FORWARD -i "${br}" -j ACCEPT
 done
 
-iptables -t nat -I POSTROUTING -o + -j MASQUERADE
-
 # ipv6 tables
 ip6tables -t filter -P INPUT DROP
 ip6tables -t filter -P FORWARD DROP
