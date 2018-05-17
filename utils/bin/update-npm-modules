@@ -1,3 +1,0 @@
-#!/bin/bash -eu
-cd "$HOME"
-npm outdated --json|jq -r 'keys|.[]'|xargs --verbose -n1 -IX --no-run-if-empty npm install X@latest

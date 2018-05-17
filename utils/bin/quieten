@@ -1,6 +1,0 @@
-#!/bin/bash -eu
-export SHELLOPTS
-pat="$1"
-[ -z "$pat" ] && exit "usage: quieten pattern cmd args..." && exit 1
-shift
-exec grep -v -E "$pat" <("$@")
