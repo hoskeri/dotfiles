@@ -142,6 +142,9 @@ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 # xdg
 export BROWSER=firefox
 
+# etcd use v3 api
+export ETCDCTL_API=3
+
 # libvirt
 export LIBVIRT_DEFAULT_URI=qemu:///system
 

@@ -2,6 +2,7 @@
 Description=Dropbox
 
 [Service]
+ConditionPathExists=${HOME}/Dropbox
 ExecStart=/usr/bin/env ${HOME}/.dropbox-dist/dropboxd
 StandardOutput=null
 StandardError=null
