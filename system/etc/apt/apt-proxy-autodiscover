@@ -1,13 +1,13 @@
 #!/bin/sh -eu
 cache="/tmp/apt-proxy-autodiscover.$(id -u).cache"
-targethost="${1:-http.us.debian.org}"
+targethost="${1:-deb.debian.org}"
 
 PROXY_ENABLED=1
 
 if [ -f /etc/default/apt-proxy-autodiscover ]
-then 
-   . /etc/default/apt-proxy-autodiscover 
-fi 
+then
+   . /etc/default/apt-proxy-autodiscover
+fi
 
 test_proxy() {
   set +e
@@ -73,22 +73,6 @@ try_defaultgw() {
   fi
 }
 
-try_avahi() {
-  avahi=$(get_avahi)
-  if [ -n "$avahi" ]
-  then
-    if test_proxy "http://$avahi:8000"
-    then
-      hostname_entry "http://$avahi:8000"
-      return 0
-    else
-      return 1
-    fi
-  else
-    return 1
-  fi
-}
-
 try_direct() {
   if [ "$PROXY_ENABLED" = "0" ]
   then
@@ -104,5 +88,4 @@ try_cached && exit 0
 try_fixed_hostname && exit 0
 try_fixed_hostname squid-deb-proxy && exit 0
 try_defaultgw && exit 0
-try_avahi && exit 0
 rm -f "$cache"

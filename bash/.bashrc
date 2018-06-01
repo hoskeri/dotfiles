@@ -1,3 +1,58 @@
+### Setup paths and general variables
+### in non-interactive shells as well.
+
+export PROMPT_DIRTRIM=2
+export RVC_READLINE=libreadline.so.6
+export LESS='-r'
+
+PATH="/sbin:/usr/sbin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# python
+export PYTHONSTARTUP="$HOME/.pythonrc.py"
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONHASHSEED=random
+
+# golang
+export GOROOT="/usr/lib/go-1.10"
+
+if [ -d "$GOROOT" ]
+then
+  export PATH="$GOROOT/bin:$PATH"
+fi
+
+if [ -d "$HOME/Code/gopath" ]
+then
+  export GOPATH="$HOME/Code/gopath"
+  export PATH="$HOME/Code/gopath/bin:$PATH"
+fi
+
+if [ -d "$HOME/src/gopath" ]
+then
+  export GOPATH="$HOME/src/gopath"
+  export PATH="$HOME/src/gopath/bin:$PATH"
+fi
+
+if [ -d "$HOME/.gotools-install/bin" ]
+then
+  export PATH="$HOME/.gotools-install/bin:$PATH"
+fi
+
+# git
+export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+
+# xdg
+export BROWSER=firefox
+
+# etcd use v3 api
+export ETCDCTL_API=3
+
+# libvirt
+export LIBVIRT_DEFAULT_URI=qemu:///system
+
+# fzf
+export FZF_DEFAULT_COMMAND='ag -l'
+export FZF_DEFAULT_OPTS=' '
 
 # If not running interactively, don't do anything
 case $- in
@@ -101,53 +156,3 @@ fi
 if [ -f "$HOME/.bashrc.local" ]; then
   source "$HOME/.bashrc.local"
 fi
-
-PATH="/sbin:/usr/sbin:$PATH"
-
-export PROMPT_DIRTRIM=2
-export RVC_READLINE=libreadline.so.6
-export PATH="$HOME/.local/bin:$PATH"
-export LESS='-r'
-
-# python
-export PYTHONSTARTUP=$HOME/.pythonrc.py
-export PYTHONDONTWRITEBYTECODE=1
-export PYTHONHASHSEED=random
-
-# golang
-export GOROOT=/usr/lib/go-1.10
-
-if [ -d "$GOROOT" ]
-then
-  export PATH="$GOROOT/bin:$PATH"
-fi
-
-if [ -d "$HOME/Code/gopath" ]
-then
-  export GOPATH=$HOME/Code/gopath
-  export PATH="$HOME/Code/gopath/bin:$PATH"
-fi
-
-if [ -d "$HOME/src/gopath" ]
-then
-  export GOPATH=$HOME/src/gopath
-  export PATH="$HOME/src/gopath/bin:$PATH"
-fi
-
-export PATH="$HOME/.gotools-install/bin:$PATH"
-
-# git
-export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
-
-# xdg
-export BROWSER=firefox
-
-# etcd use v3 api
-export ETCDCTL_API=3
-
-# libvirt
-export LIBVIRT_DEFAULT_URI=qemu:///system
-
-# fzf
-export FZF_DEFAULT_COMMAND='ag -l'
-export FZF_DEFAULT_OPTS=' '
