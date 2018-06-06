@@ -1,0 +1,22 @@
+#!/bin/bash -eu
+
+image=$(readlink -f "$1")
+test -f "$image" || err_exit "image file $image not found"
+
+diskname=$(readlink -f "$2.qcow2")
+test -f "$diskname" || qemu-img create -q -f qcow2 -b "$image" "$diskname"
+
+name=$2
+uuid=$(random-uuid "$2")
+macaddr=$(random-mac-address "$2")
+
+exec qemu-system-x86_64 \
+        -vga qxl \
+        -name "$name" \
+        -L . -bios /usr/share/qemu/OVMF.fd \
+        -accel kvm -cpu host -smp 4 \
+        -uuid "$uuid" \
+        -netdev bridge,br=natbr0,id=net0 \
+        -device virtio-net-pci,netdev=net0,mac="$macaddr" \
+        -m 2048 \
+        -drive file="$diskname",format=qcow2,if=virtio,cache=directsync
