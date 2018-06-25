@@ -19,10 +19,9 @@ Bundle 'guns/vim-clojure-static'
 Bundle 'Shougo/neocomplete'
 Bundle 'junegunn/fzf'
 Bundle 'scrooloose/syntastic'
-Bundle 'leafgarland/typescript-vim'
 Bundle 'Shougo/vimproc'
-Bundle 'Quramy/tsuquyomi'
 Bundle 'ElmCast/elm-vim'
+Bundle 'belltoy/vim-protobuf'
 Plugin 'rust-lang/rust.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'jamessan/vim-gnupg'
@@ -53,6 +52,9 @@ colorscheme default
 set bg=dark
 " required by vim-go 'show_type_info'
 set noshowmode
+
+set spelllang=en_us
+set spellfile=~/.vim/spelling.utf-8.add
 
 " make vim work well with file watchers.
 set backupcopy=yes
@@ -89,6 +91,7 @@ au BufRead,BufNewFile Makefile set filetype=make ic ts=2 sw=2 sts=2 noexpandtab
 au BufRead,BufNewFile SConstruct set filetype=python
 autocmd BufWritePost *.go call go#cmd#Build(1)
 
+autocmd BufRead,BufNewFile *.md set spell
 autocmd FileType make set noexpandtab
 
 set grepprg=ag\ --vimgrep\ $*
@@ -102,9 +105,9 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
+let g:syntastic_check_on_open = 0
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pylint']
-let g:syntastic_check_on_open = 0
 let g:syntastic_scala_checkers = ['fsc']
 
 let g:neocomplete#enable_at_startup = 1
