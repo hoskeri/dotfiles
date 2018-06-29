@@ -64,6 +64,11 @@ HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=200000
 
+if [ -f /etc/profile.d/vte-2.91.sh ]
+then
+  source /etc/profile.d/vte-2.91.sh
+fi
+
 force_color_prompt=yes
 
 shopt -s histappend

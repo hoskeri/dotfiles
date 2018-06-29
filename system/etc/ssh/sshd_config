@@ -10,7 +10,7 @@ PrintMotd no
 PrintLastLog no
 UseDNS no
 Banner none
-AcceptEnv LANG LC_*
+AcceptEnv LANG LC_* VTE_VERSION
 Subsystem sftp /usr/lib/openssh/sftp-server
 PasswordAuthentication no
 ClientAliveInterval 30
