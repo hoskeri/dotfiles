@@ -91,7 +91,6 @@ au BufRead,BufNewFile Makefile set filetype=make ic ts=2 sw=2 sts=2 noexpandtab
 au BufRead,BufNewFile SConstruct set filetype=python
 autocmd BufWritePost *.go call go#cmd#Build(1)
 
-autocmd BufRead,BufNewFile *.md set spell
 autocmd FileType make set noexpandtab
 
 set grepprg=ag\ --vimgrep\ $*
