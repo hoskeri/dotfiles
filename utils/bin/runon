@@ -1,0 +1,21 @@
+#!/bin/bash -eu
+err_exit() {
+  echo "E: $*" >&2
+  exit 1
+}
+
+remote="$1"
+shift
+
+binary="$1"
+shift
+
+test -n "$remote"
+test -f "$binary"
+
+binary_name="$(basename "$binary")"
+remotepath="/tmp/runon"
+
+ssh -q "$remote" mkdir -p "$remotepath"
+scp -q -p "$binary" "$remote:${remotepath}/${binary_name}"
+ssh -q -t "$remote" "${remotepath}/${binary_name}" "$@"

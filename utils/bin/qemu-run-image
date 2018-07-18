@@ -1,5 +1,10 @@
 #!/bin/bash -eu
 
+err_exit() {
+  >&2 echo "E: $*"
+  exit 1
+}
+
 image=$(readlink -f "$1")
 test -f "$image" || err_exit "image file $image not found"
 
