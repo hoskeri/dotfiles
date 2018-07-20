@@ -1,5 +1,6 @@
 [Unit]
 Description=Mailcheck Service
+ConditionPathExists=%h/Maildir
 
 [Service]
 ExecStart=/usr/bin/timeout 10m /usr/bin/notmuch new --quiet

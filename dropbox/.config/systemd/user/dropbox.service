@@ -1,9 +1,9 @@
 [Unit]
 Description=Dropbox
+ConditionPathExists=%h/Dropbox
 
 [Service]
-ConditionPathExists=${HOME}/Dropbox
-ExecStart=/usr/bin/env ${HOME}/.dropbox-dist/dropboxd
+ExecStart=%h/.dropbox-dist/dropboxd
 StandardOutput=null
 StandardError=null
 SyslogIdentifier=dropbox

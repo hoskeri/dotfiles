@@ -1,5 +1,6 @@
 [Unit]
 Description=Mailcheck timer.
+ConditionPathExists=%/Maildir
 
 [Timer]
 OnBootSec=5min
