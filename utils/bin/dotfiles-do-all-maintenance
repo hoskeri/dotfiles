@@ -1,0 +1,12 @@
+#!/bin/sh -eux
+
+if [ ! -d /etc/dotfiles ]
+then
+  exit 0
+fi
+
+( cd /etc/dotfiles && git pull --rebase && make )
+
+aptdate
+update-vim-plugins
+update-gotools
