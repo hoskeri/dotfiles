@@ -50,6 +50,9 @@ cd "$GOPATH"
 test -d .git || git init -q .
 find "$GOPATH/src" -type d -name '.git' -print0 |xargs --null -n1 git-repostat > "$GOPATH/.versions"
 
-git add .
-git commit -am "gotools update: $(date -Iseconds)"
+if git diff --quiet && git diff --cached --quiet
+then
+  git add .
+  git commit -am "gotools update: $(date -Iseconds)"
+fi
 

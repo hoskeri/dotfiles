@@ -5,10 +5,13 @@ vim +PluginInstall +PluginUpdate +PluginClean +qall
 
 cd "$BUNDLEDIR"
 
-echo '*\n!.versions' > "$BUNDLEDIR/.gitignore"
+printf '*\n!.versions' > "$BUNDLEDIR/.gitignore"
 
 test -d .git || git init -q .
 find "$BUNDLEDIR" -mindepth 2 -type d -name '.git' -print0 |xargs --null -n1 git-repostat > "$BUNDLEDIR/.versions"
 
-git add .
-git commit -am "vim bundle update: $(date -Iseconds)"
+if git diff --quiet && git diff --quiet --cached
+then
+  git add .
+  git commit -am "vim bundle update: $(date -Iseconds)"
+fi
