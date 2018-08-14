@@ -4,10 +4,10 @@
 set -eu
 if [ "$(id -u)" != 0 ]
 then
-  exec sudo $(readlink -f $0)
+  exec sudo "$(readlink -f "$0")"
 fi
 
-# reset the iptables firewall
+# reset the iptables state.
 for table in filter nat mangle raw security
 do
   iptables -F -t "$table"

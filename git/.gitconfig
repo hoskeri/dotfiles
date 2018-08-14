@@ -10,8 +10,10 @@
   missingCommitsCheck = error
   abbreviateCommands = true
 [init]
-  templatedir = /home/abhijit/.git-templates/base
+  templatedir = /etc/dotfiles/.git-templates/base
 [http "https://gopkg.in"]
+  followRedirects = true
+[http "https://golang.org"]
   followRedirects = true
 [notes]
   rewriteMode = cat_sort_uniq

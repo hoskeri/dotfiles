@@ -6,44 +6,46 @@ export GOPATH=$HOME/.gotools-install
 export GO_BIN=$GOPATH/bin
 export PATH="$GO_BIN:$PATH:$HOME/bin"
 
+go_get="go get -u -v "
+
 mkdir -p "$GOPATH"
 
 echo -e 'export GOPATH=$(pwd)\n' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
-go get -u github.com/nsf/gocode
-go get -u github.com/rogpeppe/godef
-go get -u github.com/lukehoban/go-outline
-go get -u sourcegraph.com/sqs/goreturns
-go get -u github.com/tpng/gopkgs
-go get -u github.com/newhook/go-symbols
-go get -u github.com/ddollar/forego
-go get -u github.com/motemen/gore
-go get -u github.com/github/hub
-go get -u github.com/kardianos/govendor
-go get -u github.com/hoskeri/liverebuild
-go get -u github.com/jstemmer/gotags
-go get -u github.com/klauspost/asmfmt
-go get -u github.com/fatih/motion
-go get -u github.com/zmb3/gogetdoc
-go get -u github.com/josharian/impl
-go get -u bitbucket.org/liamstask/goose/cmd/goose
-go get -u github.com/golang/lint/golint
-go get -u github.com/kisielk/errcheck
-go get -u github.com/ericchiang/pup
-go get -u github.com/fatih/gomodifytags
-go get -u github.com/dominikh/go-tools/cmd/keyify
-go get -u github.com/klauspost/asmfmt/cmd/asmfmt
-go get -u github.com/davidrjenni/reftools/cmd/fillstruct
-go get -u github.com/junegunn/fzf
+$go_get github.com/nsf/gocode
+$go_get github.com/rogpeppe/godef
+$go_get github.com/lukehoban/go-outline
+$go_get sourcegraph.com/sqs/goreturns
+$go_get github.com/tpng/gopkgs
+$go_get github.com/newhook/go-symbols
+$go_get github.com/ddollar/forego
+$go_get github.com/motemen/gore
+$go_get github.com/github/hub
+$go_get github.com/kardianos/govendor
+$go_get github.com/hoskeri/liverebuild
+$go_get github.com/jstemmer/gotags
+$go_get github.com/klauspost/asmfmt
+$go_get github.com/fatih/motion
+$go_get github.com/zmb3/gogetdoc
+$go_get github.com/josharian/impl
+$go_get bitbucket.org/liamstask/goose/cmd/goose
+$go_get github.com/golang/lint/golint
+$go_get github.com/kisielk/errcheck
+$go_get github.com/ericchiang/pup
+$go_get github.com/fatih/gomodifytags
+$go_get github.com/dominikh/go-tools/cmd/keyify
+$go_get github.com/klauspost/asmfmt/cmd/asmfmt
+$go_get github.com/davidrjenni/reftools/cmd/fillstruct
+$go_get github.com/junegunn/fzf
 
-go get -u github.com/alecthomas/gometalinter
+$go_get github.com/alecthomas/gometalinter
 gometalinter --install -u >/dev/null 2>/dev/null
 
-go get -u github.com/samuel/go-thrift/generator
+$go_get github.com/samuel/go-thrift/generator
 mv -f "$GO_BIN/generator" "$GO_BIN/gothrift-gen"
 
-strip $GO_BIN/*
+strip "$GO_BIN"/*
 
 cd "$GOPATH"
 
