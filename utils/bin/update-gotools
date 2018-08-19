@@ -22,14 +22,11 @@ $go_get github.com/newhook/go-symbols
 $go_get github.com/ddollar/forego
 $go_get github.com/motemen/gore
 $go_get github.com/github/hub
-$go_get github.com/kardianos/govendor
 $go_get github.com/hoskeri/liverebuild
 $go_get github.com/jstemmer/gotags
-$go_get github.com/klauspost/asmfmt
 $go_get github.com/fatih/motion
 $go_get github.com/zmb3/gogetdoc
 $go_get github.com/josharian/impl
-$go_get bitbucket.org/liamstask/goose/cmd/goose
 $go_get github.com/golang/lint/golint
 $go_get github.com/kisielk/errcheck
 $go_get github.com/ericchiang/pup
