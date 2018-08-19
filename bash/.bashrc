@@ -1,17 +1,8 @@
 ### Setup paths and general variables
 ### in non-interactive shells as well.
 
-export PROMPT_DIRTRIM=2
-export RVC_READLINE=libreadline.so.6
-export LESS='-r'
-
-PATH="/sbin:/usr/sbin:$PATH"
+PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="$HOME/.local/bin:$PATH"
-
-# python
-export PYTHONSTARTUP="$HOME/.pythonrc.py"
-export PYTHONDONTWRITEBYTECODE=1
-export PYTHONHASHSEED=random
 
 # golang
 export GOROOT="/usr/lib/go-1.10"
@@ -38,6 +29,15 @@ then
   export PATH="$HOME/.gotools-install/bin:$PATH"
 fi
 
+# python
+export PYTHONSTARTUP="$HOME/.pythonrc.py"
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONHASHSEED=random
+
+export PROMPT_DIRTRIM=2
+export RVC_READLINE=libreadline.so.6
+export LESS='-r'
+
 # git
 export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
@@ -53,6 +53,9 @@ export LIBVIRT_DEFAULT_URI=qemu:///system
 # fzf
 export FZF_DEFAULT_COMMAND='ag -l'
 export FZF_DEFAULT_OPTS=' '
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # If not running interactively, don't do anything
 case $- in
@@ -137,8 +140,6 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-# colored GCC warnings and errors
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
@@ -146,10 +147,6 @@ fi
 
 if [ -f ~/.aliases ]; then
   . ~/.aliases
-fi
-
-if [ -r /etc/profile.d/vte.sh ]; then
-  source /etc/profile.d/vte.sh
 fi
 
 if [ -e /usr/bin/direnv ]; then

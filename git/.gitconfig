@@ -10,7 +10,7 @@
   missingCommitsCheck = error
   abbreviateCommands = true
 [init]
-  templatedir = /etc/dotfiles/.git-templates/base
+  templatedir = /etc/dotfiles/git/.git-templates/base
 [http "https://gopkg.in"]
   followRedirects = true
 [http "https://golang.org"]
