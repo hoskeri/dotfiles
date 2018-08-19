@@ -2,7 +2,16 @@
 ### in non-interactive shells as well.
 
 PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="$HOME/.local/bin:$PATH"
+
+if [ -d "${HOME}/.local/bin" ]
+then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
+if [ -d "${HOME}/bin" ]
+then
+  export PATH="$HOME/bin:$PATH"
+fi
 
 # golang
 export GOROOT="/usr/lib/go-1.10"
