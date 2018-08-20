@@ -10,10 +10,10 @@ go_get="go get -u -v "
 
 mkdir -p "$GOPATH"
 
-echo -e 'export GOPATH=$(pwd)\n' > "$GOPATH/.envrc"
+echo -e 'export GOPATH=$(pwd)' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
-$go_get github.com/nsf/gocode
+$go_get github.com/mdempsky/gocode
 $go_get github.com/rogpeppe/godef
 $go_get github.com/lukehoban/go-outline
 $go_get sourcegraph.com/sqs/goreturns

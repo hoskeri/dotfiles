@@ -1,0 +1,49 @@
+#!/bin/bash -eu
+
+workdir="$(mktemp -d /tmp/run-nginx.XXXXXXX)"
+pidfile="${workdir}/pid"
+servedir="$(pwd)"
+httpport=4000
+
+trap 'rm -rf ${workdir}' EXIT ERR
+
+cat <<END > "${workdir}/nginx.conf"
+worker_processes 1;
+daemon off;
+pid ${pidfile}";
+
+events {
+	worker_connections 768;
+}
+
+http {
+	sendfile on;
+	tcp_nopush on;
+	tcp_nodelay on;
+	keepalive_timeout 65;
+	types_hash_max_size 2048;
+
+  include /etc/nginx/mime.types;
+	default_type application/octet-stream;
+
+	access_log /proc/self/fd/1 combined;
+	error_log /proc/self/fd/3;
+
+	gzip on;
+
+  server {
+	  listen "${httpport}" default_server;
+	  server_name _;
+
+	  root "${servedir}";
+  	index index.html;
+
+	  location / {
+		  try_files \$uri \$uri/ =404;
+	  }
+  }
+}
+END
+
+exec 3>&2 2>/dev/null
+/usr/sbin/nginx -g 'error_log /proc/self/fd/3;' -c "${workdir}/nginx.conf"

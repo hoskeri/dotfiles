@@ -1,0 +1,2 @@
+#!/bin/sh -eu
+exec sudo systemd-run -q -t -P -G -p --uid "$(id -u)" --gid "$(id -g)" --wait CPUQuota=10% -p MemoryHigh=500M -p WorkingDirectory="$(pwd)" --unit lazy "$@"

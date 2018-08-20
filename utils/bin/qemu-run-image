@@ -5,7 +5,16 @@ err_exit() {
   exit 1
 }
 
-image=$(readlink -f "$1")
+usage() {
+  err_exit "usage: qemu-run-image image name"
+}
+
+test -n "${1:-}" || usage
+test -f "${1:-}" || usage
+
+test -n "${2:-}" || usage
+
+image="$(readlink -f "$1")"
 test -f "$image" || err_exit "image file $image not found"
 
 diskname=$(readlink -f "$2.qcow2")
