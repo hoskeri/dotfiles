@@ -10,7 +10,7 @@ trap 'rm -rf ${workdir}' EXIT ERR
 cat <<END > "${workdir}/nginx.conf"
 worker_processes 1;
 daemon off;
-pid ${pidfile}";
+pid "${pidfile}";
 
 events {
 	worker_connections 768;
@@ -37,6 +37,12 @@ http {
 
 	  root "${servedir}";
   	index index.html;
+
+    location ~ /\. {
+      deny all;
+      access_log off;
+      log_not_found off;
+    }
 
 	  location / {
 		  try_files \$uri \$uri/ =404;
