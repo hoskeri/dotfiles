@@ -1,55 +1,55 @@
 #!/bin/bash
-set -eu
+set -eux
 . /etc/environment
 
 export GOPATH=$HOME/.gotools-install
 export GO_BIN=$GOPATH/bin
 export PATH="$GO_BIN:$PATH:$HOME/bin"
 
-go_get="go get -u -v "
-
 mkdir -p "$GOPATH"
 
 echo -e 'export GOPATH=$(pwd)' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
-$go_get github.com/mdempsky/gocode
-$go_get github.com/rogpeppe/godef
-$go_get github.com/lukehoban/go-outline
-$go_get sourcegraph.com/sqs/goreturns
-$go_get github.com/tpng/gopkgs
-$go_get github.com/newhook/go-symbols
-$go_get github.com/ddollar/forego
-$go_get github.com/motemen/gore
-$go_get github.com/github/hub
-$go_get github.com/hoskeri/liverebuild
-$go_get github.com/jstemmer/gotags
-$go_get github.com/fatih/motion
-$go_get github.com/zmb3/gogetdoc
-$go_get github.com/josharian/impl
-$go_get github.com/golang/lint/golint
-$go_get github.com/kisielk/errcheck
-$go_get github.com/ericchiang/pup
-$go_get github.com/fatih/gomodifytags
-$go_get github.com/dominikh/go-tools/cmd/keyify
-$go_get github.com/klauspost/asmfmt/cmd/asmfmt
-$go_get github.com/davidrjenni/reftools/cmd/fillstruct
-$go_get github.com/junegunn/fzf
+cat <<- END |xargs go get -u -v
+github.com/mdempsky/gocode
+github.com/rogpeppe/godef
+github.com/lukehoban/go-outline
+sourcegraph.com/sqs/goreturns
+github.com/tpng/gopkgs
+github.com/newhook/go-symbols
+github.com/ddollar/forego
+github.com/motemen/gore
+github.com/github/hub
+github.com/jstemmer/gotags
+github.com/fatih/motion
+github.com/zmb3/gogetdoc
+github.com/josharian/impl
+github.com/golang/lint/golint
+github.com/ericchiang/pup
+github.com/fatih/gomodifytags
+github.com/dominikh/go-tools/cmd/keyify
+github.com/klauspost/asmfmt/cmd/asmfmt
+github.com/davidrjenni/reftools/cmd/fillstruct
+github.com/junegunn/fzf
+github.com/hoskeri/liverebuild
+github.com/alecthomas/gometalinter
+END
 
-$go_get github.com/alecthomas/gometalinter
-gometalinter --install -u >/dev/null 2>/dev/null
-
-$go_get github.com/samuel/go-thrift/generator
-mv -f "$GO_BIN/generator" "$GO_BIN/gothrift-gen"
+gometalinter --install -u
 
 strip "$GO_BIN"/*
 
 cd "$GOPATH"
 
-test -d .git || git init -q .
+if test -d .git
+then
+  git init -q .
+fi
+
 find "$GOPATH/src" -type d -name '.git' -print0 |xargs --null -n1 git-repostat > "$GOPATH/.versions"
 
-if git diff --quiet && git diff --cached --quiet
+if [ "$(git diff)$(git diff --cached)" != "" ]
 then
   git add .
   git commit -am "gotools update: $(date -Iseconds)"
