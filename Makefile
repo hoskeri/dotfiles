@@ -10,3 +10,5 @@ all:
 	@$(STOW) mail
 	@$(STOW) dropbox
 	@sudo $(STOW) -t / system
+
+.PHONY: all

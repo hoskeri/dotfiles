@@ -89,6 +89,7 @@ au BufRead,BufNewFile *.scala set ic ts=2 sw=2 sts=2
 au BufRead,BufNewFile TODO set ic ts=2 sw=2 sts=2 filetype=yaml
 au BufRead,BufNewFile Makefile set filetype=make ic ts=2 sw=2 sts=2 noexpandtab
 au BufRead,BufNewFile SConstruct set filetype=python
+au BufRead,BufNewFile *.elm set filetype=elm nohlsearch
 autocmd BufWritePost *.go silent call go#cmd#Build(1)
 
 autocmd FileType make set noexpandtab

@@ -36,7 +36,7 @@ github.com/hoskeri/liverebuild
 github.com/alecthomas/gometalinter
 END
 
-gometalinter --install -u
+gometalinter --install
 
 strip "$GO_BIN"/*
 
