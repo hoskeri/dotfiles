@@ -97,6 +97,7 @@ set grepprg=ag\ --vimgrep\ $*
 set grepformat=%f:%l:%c:%m
 
 let g:go_auto_type_info = 1
+let g:go_gocode_propose_source = 0
 let g:go_fmt_autosave = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
