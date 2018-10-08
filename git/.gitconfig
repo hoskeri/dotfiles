@@ -22,3 +22,10 @@
   amend = commit -a --amend --no-edit
 [core]
   pager = less -F -X
+[receive]
+  denyDeletes = true
+  denyDeleteCurrent = true
+  denyCurrentBranch = true
+  denyNonFastForwards = true
+  hideRefs = true
+  updateServerInfo = true

@@ -21,16 +21,21 @@ diskname=$(readlink -f "$2.qcow2")
 test -f "$diskname" || qemu-img create -q -f qcow2 -b "$image" "$diskname"
 
 name="$2"
-spicesock="${name}.spice.sock"
+spicesock=$(readlink -f "${name}.spice.sock")
+ttysock=$(readlink -f "${name}.serial.sock")
+monitorsock=$(readlink -f "${name}.monitor.sock")
 uuid=$(random-uuid "$2")
 macaddr=$(random-mac-address "$2")
 
 exec qemu-system-x86_64 \
         -device qxl-vga,xres=1920,yres=1080 \
+        -monitor none \
+        -serial none \
+        -chardev socket,path="$monitorsock",nowait,server,id=char0 \
+        -chardev socket,path="$ttysock",nowait,server,id=char1 \
+        -monitor chardev:char0 \
+        -serial chardev:char1 \
         -device virtio-serial \
-        -chardev stdio,mux=on,id=char0 \
-        -mon chardev=char0,mode=readline \
-        -serial chardev:char0 \
         -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
         -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
         -spice addr="$spicesock",unix,disable-ticketing \
