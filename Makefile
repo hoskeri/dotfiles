@@ -9,6 +9,7 @@ all:
 	@$(STOW) bash
 	@$(STOW) mail
 	@$(STOW) dropbox
+	@$(STOW) elm
 	@sudo $(STOW) -t / system
 
 .PHONY: all
