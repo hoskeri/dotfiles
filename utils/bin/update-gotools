@@ -25,7 +25,7 @@ github.com/jstemmer/gotags
 github.com/fatih/motion
 github.com/zmb3/gogetdoc
 github.com/josharian/impl
-github.com/golang/lint/golint
+golang.org/x/lint/golint
 github.com/ericchiang/pup
 github.com/fatih/gomodifytags
 github.com/dominikh/go-tools/cmd/keyify
