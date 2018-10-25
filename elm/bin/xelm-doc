@@ -1,11 +1,20 @@
 #!/bin/bash -eu
+
 files=$(find "${HOME}/.elm/0.19.0/package" -type f -name docs.json)
-jq -r 'inputs
-  |map({filename: input_filename, name: .name, content: .})
-  |path(..|.name?) as $p
-  |{ name: getpath($p),
-     module: getpath($p[:2]).name?,
-     sig: getpath($p[:-1]).type,
-     path: $p[:-1]
-   }
-  |select(.sig?)|.module + "." + .name + "\t" + .sig' $files|fzf
+doc_cache_file="${HOME}/.xelm-doc-cache.json"
+
+if [ ! -f "${doc_cache_file}" ]
+then
+  jq 'inputs
+    |map({filename: input_filename, name: .name, content: .})
+    |path(..|.name?) as $p
+    |{ name: getpath($p),
+       module: getpath($p[:2]).name?,
+       sig: getpath($p[:-1]).type,
+       comment: getpath($p[:-1]).comment,
+       path: $p[:-1]
+     }
+    |select(.sig?)' $files > "${doc_cache_file}"
+fi
+
+jq -r '. |[ .module + "." + .name, .sig, .comment ]|@tsv' < "${doc_cache_file}"|fzf -d '\t' --with-nth 1,2 --tabstop 50

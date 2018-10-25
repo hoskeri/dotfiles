@@ -1,0 +1,15 @@
+#!/bin/bash -eu
+target="./$1"
+warning="chown recursively ${target}? (type y e s to proceed):"
+cf=""
+
+until [ "${cf}" = "yes" ]
+do
+  read -r -e -p "$warning " cf
+done
+
+set -x
+
+sudo chown --changes --recursive  \
+           --no-dereference --preserve-root \
+              "$(id -u):$(id -g)" "${target}"
