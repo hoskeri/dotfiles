@@ -17,4 +17,6 @@ then
     |select(.sig?)' $files > "${doc_cache_file}"
 fi
 
-jq -r '. |[ .module + "." + .name, .sig, .comment ]|@tsv' < "${doc_cache_file}"|fzf -d '\t' --with-nth 1,2 --tabstop 50
+jq -r '. |[ .module + "." + .name, .sig, .comment ]|@tsv'   \
+    < "${doc_cache_file}" |                                 \
+    fzf -d '\t' --with-nth 1,2 --tabstop 50
