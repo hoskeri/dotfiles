@@ -2,7 +2,12 @@
 
 test -d "${HOME}/Maildir"
 
-stty sane
-tput smkx
-cd "$HOME"
-exec dtach -A /tmp/mutt-dtach sh -c 'stty intr undef; exec /usr/bin/mutt "$@"'
+if [ $# -gt 0 ]
+then
+  exec /usr/bin/mutt "$@"
+else
+  stty sane
+  tput smkx
+  cd "$HOME"
+  exec dtach -A /tmp/mutt-dtach sh -c 'stty intr undef; exec /usr/bin/mutt "$@"'
+fi
