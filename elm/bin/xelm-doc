@@ -19,4 +19,5 @@ fi
 
 jq -r '. |[ .module + "." + .name, .sig, .comment ]|@tsv'   \
     < "${doc_cache_file}" |                                 \
-    fzf -d '\t' --with-nth 1,2 --tabstop 50
+    fzf -d '\t' --with-nth 1,2 --tabstop 50                 \
+    --preview "export fm=\$(echo -n {}|awk -F'\t' '{ print \$3 }') && printf \"\$fm\"  " --preview-window up

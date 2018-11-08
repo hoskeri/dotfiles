@@ -93,6 +93,9 @@ au BufRead,BufNewFile SConstruct set filetype=python
 au BufRead,BufNewFile *.elm set filetype=elm nohlsearch
 autocmd BufWritePost *.go silent call go#cmd#Build(1)
 
+" don't leak sensitive data.
+au BufRead,BufNewFile /dev/shm/* set nobackup nowritebackup noswapfile noundofile viminfo=
+
 autocmd FileType make set noexpandtab
 
 set grepprg=ag\ --vimgrep\ $*
