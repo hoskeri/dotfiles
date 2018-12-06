@@ -14,7 +14,7 @@ then
 fi
 
 # golang
-export GOROOT="/usr/lib/go-1.10"
+export GOROOT="/usr/lib/go-1.11"
 
 if [ -d "$GOROOT" ]
 then

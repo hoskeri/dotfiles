@@ -74,7 +74,7 @@ autocmd BufWritePre * :silent call TrimWhiteSpace()
 au BufRead,BufNewFile *.def set filetype=c ts=4 sts=4 sw=4
 au BufRead,BufNewFile *.c set filetype=c ts=4 sts=4 sw=4
 au BufRead,BufNewFile *.cc set filetype=c ts=4 sts=4 sw=4
-au BufRead,BufNewFile *.py set filetype=python ts=4 sts=4 sw=4
+au BufRead,BufNewFile *.py set filetype=python ts=2 sts=2 sw=2
 au BufRead,BufNewFile *.h set filetype=c ts=4 sts=4 sw=4
 au BufRead,BufNewFile *.yml set ts=2 sw=2 filetype=ansible
 au BufRead,BufNewFile *.thrift set ts=2 sw=2 filetype=thrift
