@@ -10,6 +10,7 @@ all:
 	@$(STOW) mail
 	@$(STOW) dropbox
 	@$(STOW) elm
+	@$(STOW) gnupg
 	@sudo $(STOW) -t / system
 
 .PHONY: all

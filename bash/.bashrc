@@ -60,7 +60,7 @@ export ETCDCTL_API=3
 export LIBVIRT_DEFAULT_URI=qemu:///system
 
 # fzf
-export FZF_DEFAULT_COMMAND='ag -l'
+export FZF_DEFAULT_COMMAND='fd -t f'
 export FZF_DEFAULT_OPTS=' '
 
 
