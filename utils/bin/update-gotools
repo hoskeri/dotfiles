@@ -12,7 +12,7 @@ echo -e 'export GOPATH=$(pwd)' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
 cat <<- END |xargs go get -u -v
-github.com/mdempsky/gocode
+github.com/stamblerre/gocode
 github.com/rogpeppe/godef
 github.com/lukehoban/go-outline
 sourcegraph.com/sqs/goreturns
