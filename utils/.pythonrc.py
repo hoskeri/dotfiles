@@ -13,3 +13,14 @@ except IOError: pass
 
 def gb(b): return float(b) / (1024 ** 3)
 def mb(b): return float(b) / (1024 ** 2)
+
+try: import numpy
+except ImportError: pass
+
+try:
+  import pprint
+  pp = pprint.pprint
+except ImportError: pass
+
+try: import json
+except ImportError: pass

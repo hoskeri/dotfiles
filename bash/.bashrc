@@ -150,6 +150,7 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
+alias py='python3 -q '
 
 if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases

@@ -3,6 +3,8 @@ target="./$1"
 warning="chown recursively ${target}? (type y e s to proceed):"
 cf=""
 
+test -w "$target"
+
 until [ "${cf}" = "yes" ]
 do
   read -r -e -p "$warning " cf

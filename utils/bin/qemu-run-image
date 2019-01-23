@@ -38,7 +38,7 @@ exec qemu-system-x86_64 \
         -device virtio-serial \
         -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
         -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
-        -spice addr="$spicesock",unix,disable-ticketing \
+        -spice addr="$spicesock",unix,disable-ticketing,gl=on \
         -name "$name" \
         -L . -bios /usr/share/qemu/OVMF.fd \
         -accel kvm -cpu host -smp 4 \
