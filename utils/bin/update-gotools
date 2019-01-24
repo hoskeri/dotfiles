@@ -36,6 +36,8 @@ github.com/hoskeri/liverebuild
 github.com/alecthomas/gometalinter
 END
 
+ln -sf "${GO_BIN}/gocode" "${GO_BIN}/gocode-gomod"
+
 gometalinter --install
 
 strip "$GO_BIN"/*
