@@ -11,4 +11,4 @@ git add -A .
 git commit --quiet -am "autocommit" >/dev/null
 git pull --rebase --quiet
 git push origin master --quiet
->&2 echo "auto push completed"
+>&2 echo "I: auto push completed."
