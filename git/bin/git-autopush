@@ -1,4 +1,11 @@
 #!/bin/sh -eu
+
+if [ "true" != "$(git config autopush.enabled)" ]
+then
+  >&2 echo "E: autopush not enabled for this repository."
+  exit 1
+fi
+
 cd "$(git root)"
 git add -A .
 git commit --quiet -am "autocommit" >/dev/null
