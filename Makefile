@@ -3,7 +3,6 @@ all:
 	@$(STOW) utils
 	@$(STOW) vim
 	@$(STOW) tmux
-	@$(STOW) emacs
 	@$(STOW) sbt
 	@$(STOW) git
 	@$(STOW) bash
