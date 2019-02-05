@@ -1,4 +1,4 @@
-#!/bin/sh -eu
+#!/bin/sh -eux
 
 if [ "true" != "$(git config autopush.enabled)" ]
 then
