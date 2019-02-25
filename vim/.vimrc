@@ -97,6 +97,7 @@ autocmd BufWritePost *.go silent call go#cmd#Build(1)
 au BufRead,BufNewFile /dev/shm/* set nobackup nowritebackup noswapfile noundofile viminfo=
 
 autocmd FileType make set noexpandtab
+autocmd FileType python set ts=2 sts=2 sw=2 expandtab
 
 set grepprg=ag\ --vimgrep\ $*
 set grepformat=%f:%l:%c:%m

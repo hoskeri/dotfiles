@@ -152,6 +152,10 @@ fi
 
 alias py='python3 -q '
 
+alias ffmpeg='ffmpeg -loglevel 8'
+alias ffprobe='ffprobe -loglevel 8'
+alias ffplay='ffplay -loglevel 8'
+
 if [ -f ~/.bash_aliases ]; then
   . ~/.bash_aliases
 fi

@@ -6,44 +6,58 @@ err_exit() {
 }
 
 usage() {
-  err_exit "usage: qemu-run-image image name"
+  err_exit "usage: qemu-run-image image "
 }
+
+cleanup() {
+  rm -rf "${workdir}"
+}
+
+trap cleanup EXIT
 
 test -n "${1:-}" || usage
 test -f "${1:-}" || usage
 
-test -n "${2:-}" || usage
+diskname="$(readlink -f "$1")"
+test -f "$diskname" || err_exit "image file $diskname not found"
 
-image="$(readlink -f "$1")"
-test -f "$image" || err_exit "image file $image not found"
+name="$1"
 
-diskname=$(readlink -f "$2.qcow2")
-test -f "$diskname" || qemu-img create -q -f qcow2 -b "$image" "$diskname"
+workdir="${XDG_RUNTIME_DIR}/qemu-run-image/$$"
+mkdir -p "${workdir}"
 
-name="$2"
-spicesock=$(readlink -f "${name}.spice.sock")
-ttysock=$(readlink -f "${name}.serial.sock")
-monitorsock=$(readlink -f "${name}.monitor.sock")
-uuid=$(random-uuid "$2")
-macaddr=$(random-mac-address "$2")
+sockdir="${workdir}/sock"
+mkdir "${sockdir}"
 
-exec qemu-system-x86_64 \
-        -device qxl-vga,xres=1920,yres=1080 \
-        -monitor none \
-        -serial none \
-        -chardev socket,path="$monitorsock",nowait,server,id=char0 \
-        -chardev socket,path="$ttysock",nowait,server,id=char1 \
-        -monitor chardev:char0 \
-        -serial chardev:char1 \
-        -device virtio-serial \
-        -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
-        -device virtserialport,chardev=vdagent,name=com.redhat.spice.0 \
-        -spice addr="$spicesock",unix,disable-ticketing,gl=on \
-        -name "$name" \
-        -L . -bios /usr/share/qemu/OVMF.fd \
-        -accel kvm -cpu host -smp 4 \
-        -uuid "$uuid" \
-        -netdev bridge,br=natbr0,id=net0 \
-        -device virtio-net-pci,netdev=net0,mac="$macaddr" \
-        -m 2048 \
-        -drive file="$diskname",format=qcow2,if=virtio,cache=directsync
+pidfile="${workdir}/qemu.pid"
+
+spicesock="${sockdir}/spice"
+ttysock="${sockdir}/sock"
+monitorsock="${sockdir}/monitor"
+qgasock="${sockdir}/ga"
+
+uuid=$(random-uuid "$1")
+macaddr=$(random-mac-address "$1")
+
+qemu-system-x86_64 \
+  -pidfile "${pidfile}" \
+  -device qxl-vga,xres=1920,yres=1080 \
+  -monitor none -serial none \
+  -chardev socket,path="$monitorsock",nowait,server,id=char0 \
+  -chardev socket,path="$ttysock",nowait,server,id=char1 \
+  -chardev socket,path="$qgasock",nowait,server,id=qga0 \
+  -monitor chardev:char0 \
+  -serial chardev:char1 \
+  -device virtio-serial \
+  -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
+  -device virtserialport,chardev=vdagent,name=com.redhat.spice.0  \
+  -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 \
+  -spice addr="$spicesock",unix,disable-ticketing \
+  -name "$name" \
+  -L . -bios /usr/share/qemu/OVMF.fd \
+  -accel kvm -cpu host -smp 4 \
+  -uuid "$uuid" \
+  -netdev bridge,br=natbr0,id=net0 \
+  -device virtio-net-pci,netdev=net0,mac="$macaddr" \
+  -m 2048 \
+  -drive file="$diskname",format=raw,if=virtio,cache=directsync
