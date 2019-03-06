@@ -14,23 +14,11 @@ then
 fi
 
 # golang
-export GOROOT="/usr/lib/go-1.11"
+export GOROOT="/usr/lib/go-1.12"
 
 if [ -d "$GOROOT" ]
 then
   export PATH="$GOROOT/bin:$PATH"
-fi
-
-if [ -d "$HOME/Code/gopath" ]
-then
-  export GOPATH="$HOME/Code/gopath"
-  export PATH="$HOME/Code/gopath/bin:$PATH"
-fi
-
-if [ -d "$HOME/src/gopath" ]
-then
-  export GOPATH="$HOME/src/gopath"
-  export PATH="$HOME/src/gopath/bin:$PATH"
 fi
 
 if [ -d "$HOME/.gotools-install/bin" ]

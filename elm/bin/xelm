@@ -2,12 +2,10 @@
 
 set -o pipefail
 
-ELM_PLATFORM_VERSION="${ELM_PLATFORM_VERSION:-0.18.0}"
+ELM_PLATFORM_VERSION="${ELM_PLATFORM_VERSION:-0.19.0}"
+ELM_FORMAT_VERSION="${ELM_FORMAT_VERSION:-0.8.1}"
 XELM_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}/xelm"
 XELM_CACHE_BIN="${XELM_CACHE_HOME}/bin"
-
-elm_format_releases="https://api.github.com/repos/avh4/elm-format/releases"
-elm_latest_release_filter='.[0].assets[]|.browser_download_url|select(endswith("linux-x64.tgz"))|select(contains("elm-format-0.18"))'
 
 err_exit() {
   echo "E: $*" >&2
@@ -28,47 +26,24 @@ case "$cmd" in
     mkdir -p "${XELM_CACHE_HOME}" "${XELM_CACHE_BIN}"
     # install elm
     cd "$XELM_CACHE_HOME"
-    wget -q -nv --mirror -c "https://dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
-    tar -C "${XELM_CACHE_BIN}" --strip-components=1 -zxf \
-      "${XELM_CACHE_HOME}/dl.bintray.com/elmlang/elm-platform/${ELM_PLATFORM_VERSION}/linux-x64.tar.gz"
+    wget -c -q "https://github.com/elm/compiler/releases/download/${ELM_PLATFORM_VERSION}/binaries-for-linux.tar.gz" -O "${XELM_CACHE_HOME}/elm-binary.tar.gz"
+    tar -C "${XELM_CACHE_BIN}" -zxf "${XELM_CACHE_HOME}/elm-binary.tar.gz"
 
     # install elm format
-    elm_format_url=$(curl -s $elm_format_releases|jq -r "$elm_latest_release_filter")
-    wget -q "$elm_format_url" -c -O "${XELM_CACHE_HOME}/elm-format.tar.gz"
+    wget -c -q "https://github.com/avh4/elm-format/releases/download/${ELM_FORMAT_VERSION}/elm-format-${ELM_FORMAT_VERSION}-linux-x64.tgz" -O "${XELM_CACHE_HOME}/elm-format.tar.gz"
     tar -C "${XELM_CACHE_BIN}" -zxf "${XELM_CACHE_HOME}/elm-format.tar.gz"
 
     exit 0
     ;;
 
-  _selfreset)
-    if test -d "${XELM_CACHE_HOME}"
-    then
-      rm -rf "${XELM_CACHE_HOME}"
-    fi
-    echo "deleted the local elm cache."
-    exit 0
-    ;;
-
-  _new)
-    test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
-    "${XELM_CACHE_BIN}/elm-make" "$@"
-
-    exit 0
-    ;;
-
-  make)
-    test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
-    test -f elm-package.json || err_exit "elm-package.json not found. run xelm _new to create a project here."
-    "${XELM_CACHE_BIN}/elm-make" "$@"|sed -e '/^Success/d'
-
+  format)
+    test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall first to download and install elm binaries"
+    "${XELM_CACHE_BIN}/elm-${cmd}" "$@"
+    exit $?
     ;;
 
   *)
-    test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall to install elm binaries."
-    test -f elm-package.json || err_exit "elm-package.json not found. run xelm _new to create a project here."
-
-    export PATH="${XELM_CACHE_BIN}:$PATH"
-
-    "${XELM_CACHE_BIN}/elm-${cmd}" "$@"
+    "${XELM_CACHE_BIN}/elm" "$@"
+    exit $?
     ;;
 esac
