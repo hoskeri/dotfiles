@@ -38,12 +38,10 @@ case "$cmd" in
 
   format)
     test -d "${XELM_CACHE_HOME}" || err_exit "run _selfinstall first to download and install elm binaries"
-    "${XELM_CACHE_BIN}/elm-${cmd}" "$@"
-    exit $?
+    exec "${XELM_CACHE_BIN}/elm-${cmd}" "$@"
     ;;
 
   *)
-    "${XELM_CACHE_BIN}/elm" "$@"
-    exit $?
+    exec "${XELM_CACHE_BIN}/elm" "$cmd" "$@"
     ;;
 esac

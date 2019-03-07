@@ -4,7 +4,15 @@ then
   >&2 echo "E: no command specified."
   exit 1
 fi
-exec sudo systemd-run -q -t -P -G --wait \
-  --uid "$(id -u)" --gid "$(id -g)" \
-  -p CPUQuota=10% -p MemoryHigh=500M -p IOWeight=50 \
-  -p WorkingDirectory="$(pwd)" --unit lazy "$@"
+uid="$(id -u)"
+gid="$(id -g)"
+
+exec sudo systemd-run \
+  --quiet --pty --pipe --collect --wait \
+  --uid "$uid" --gid "$gid" --unit lazy \
+  -E "LAZY_UNIT=1" \
+  -p WorkingDirectory="$(pwd)" \
+  -p CPUQuota=10% \
+  -p MemoryHigh=500M \
+  -p IOWeight=50 \
+  "$@"

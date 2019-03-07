@@ -10,7 +10,9 @@ usage() {
 }
 
 cleanup() {
-  rm -rf "${workdir}"
+  test -n "${workdir:-}" && \
+    test -d "${workdir:-}" && \
+      rm -rf "${workdir}"
 }
 
 trap cleanup EXIT

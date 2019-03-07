@@ -3,5 +3,5 @@ if [ $# -gt 0 ]
 then
   exec go doc "$@"
 else
-  exec /usr/bin/godoc "$@"
+  exec /usr/bin/godoc
 fi
