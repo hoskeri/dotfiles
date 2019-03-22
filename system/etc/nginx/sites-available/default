@@ -2,6 +2,14 @@ server {
 	listen 80 default_server;
 	server_name _;
 
+	location /.well-known/acme-challenge {
+    	  alias /var/run/acme/acme-challenge/;
+        }
+  
+  	location / {
+    	  return 301 https://$host$request_uri;
+  	}
+
 	access_log off;
 	log_not_found off;
 
@@ -34,19 +42,9 @@ server {
 	root /var/www/html;
 	index index.html;
 
-	location ~ /\. {
-		deny all;
-		access_log off;
-		log_not_found off;
-	}
 
-	location /doc {
-		alias /usr/share/doc;
-		autoindex on;
-	}
-
-	location / {
-		try_files $uri $uri/ =404;
+  	location / {
+    	  return 301 https://$host$request_uri;
 	}
 }
 

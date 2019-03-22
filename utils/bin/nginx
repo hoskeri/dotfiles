@@ -52,4 +52,4 @@ http {
 END
 
 exec 3>&2 2>/dev/null
-/usr/sbin/nginx -g 'error_log /proc/self/fd/3;' -c "${workdir}/nginx.conf"
+/usr/sbin/nginx -g 'error_log /proc/self/fd/3;' -c "${workdir}/nginx.conf" "$@"

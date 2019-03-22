@@ -8,6 +8,8 @@ export PATH="$GO_BIN:$PATH:$HOME/bin"
 
 mkdir -p "$GOPATH"
 
+cd "$GOPATH"
+
 echo -e 'export GOPATH=$(pwd)' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
