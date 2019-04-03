@@ -19,5 +19,5 @@ fi
 
 jq -r '. |[ .module + "." + .name, .sig, .comment ]|@tsv'   \
     < "${doc_cache_file}" |                                 \
-    fzf -d '\t' --with-nth 1,2 --tabstop 50                 \
-    --preview "export fm=\$(echo -n {}|awk -F'\t' '{ print \$3 }') && printf \"\$fm\"  " --preview-window up
+    fzf --height=10 -d '\t' --with-nth 1,2 --tabstop 50     \
+    |sed -e 's/\\n/\n/g' -e 's/^\(.*\)\t\(.*\)\t \(.*\)$/\n  \1\n    \2\n\n\3\n/g'

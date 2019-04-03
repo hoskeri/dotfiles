@@ -25,19 +25,24 @@ test -f "$diskname" || err_exit "image file $diskname not found"
 
 name="$1"
 
+# working directory
 workdir="${XDG_RUNTIME_DIR}/qemu-run-image/$$"
 mkdir -p "${workdir}"
 
+# socket directory
 sockdir="${workdir}/sock"
 mkdir "${sockdir}"
 
+# pidfile
 pidfile="${workdir}/qemu.pid"
 
+# sockets
 spicesock="${sockdir}/spice"
-ttysock="${sockdir}/sock"
+ttysock="${sockdir}/tty"
 monitorsock="${sockdir}/monitor"
 qgasock="${sockdir}/ga"
 
+# identity
 uuid=$(random-uuid "$1")
 macaddr=$(random-mac-address "$1")
 
@@ -54,7 +59,7 @@ qemu-system-x86_64 \
   -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
   -device virtserialport,chardev=vdagent,name=com.redhat.spice.0  \
   -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 \
-  -spice addr="$spicesock",unix,disable-ticketing \
+  -spice addr="$spicesock",unix,disable-ticketing,gl=on \
   -name "$name" \
   -L . -bios /usr/share/qemu/OVMF.fd \
   -accel kvm -cpu host -smp 4 \
@@ -62,4 +67,5 @@ qemu-system-x86_64 \
   -netdev bridge,br=natbr0,id=net0 \
   -device virtio-net-pci,netdev=net0,mac="$macaddr" \
   -m 2048 \
-  -drive file="$diskname",format=raw,if=virtio,cache=directsync
+  -drive file="$diskname",format=raw,if=virtio,cache=directsync \
+  -smbios type=11,value=cloud-init:ds=nocloud
