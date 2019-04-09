@@ -2,6 +2,9 @@
 set -eux
 . /etc/environment
 
+export GOROOT=/usr/lib/go-1.12
+export PATH="${GOROOT}/bin:$PATH"
+
 export GOPATH=$HOME/.gotools-install
 export GO_BIN=$GOPATH/bin
 export PATH="$GO_BIN:$PATH:$HOME/bin"

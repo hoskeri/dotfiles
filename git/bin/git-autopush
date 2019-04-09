@@ -8,7 +8,17 @@ fi
 
 cd "$(git root)"
 git add -A .
-git commit --quiet -am "autocommit" >/dev/null
+
+if [ "$(git status --porcelain)" != "" ]
+then
+  git commit --quiet -am "autocommit" >/dev/null
+fi
+
 git pull --rebase --quiet
-git push origin master --quiet
+
+if [ "$(git rev-parse master)" != "$(git rev-parse origin/master)" ]
+then
+  git push origin master --quiet
+fi
+
 >&2 echo "I: auto push completed."

@@ -113,7 +113,7 @@ let g:go_highlight_build_constraints = 1
 
 let g:syntastic_check_on_open = 0
 let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_python_checkers = ['pylint']
+let g:syntastic_python_checkers = ['pyflakes']
 let g:syntastic_scala_checkers = ['fsc']
 
 let g:neocomplete#enable_at_startup = 1
