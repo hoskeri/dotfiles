@@ -46,26 +46,41 @@ qgasock="${sockdir}/ga"
 uuid=$(random-uuid "$1")
 macaddr=$(random-mac-address "$1")
 
-qemu-system-x86_64 \
-  -pidfile "${pidfile}" \
-  -device qxl-vga,xres=1920,yres=1080 \
-  -monitor none -serial none \
-  -chardev socket,path="$monitorsock",nowait,server,id=char0 \
-  -chardev socket,path="$ttysock",nowait,server,id=char1 \
-  -chardev socket,path="$qgasock",nowait,server,id=qga0 \
-  -monitor chardev:char0 \
-  -serial chardev:char1 \
-  -device virtio-serial \
-  -chardev spicevmc,id=vdagent,debug=0,name=vdagent \
-  -device virtserialport,chardev=vdagent,name=com.redhat.spice.0  \
-  -device virtserialport,chardev=qga0,name=org.qemu.guest_agent.0 \
-  -spice addr="$spicesock",unix,disable-ticketing,gl=on \
-  -name "$name" \
-  -L . -bios /usr/share/qemu/OVMF.fd \
-  -accel kvm -cpu host -smp 4 \
-  -uuid "$uuid" \
-  -netdev bridge,br=natbr0,id=net0 \
-  -device virtio-net-pci,netdev=net0,mac="$macaddr" \
-  -m 2048 \
-  -drive file="$diskname",format=raw,if=virtio,cache=directsync \
-  -smbios type=11,value=cloud-init:ds=nocloud
+declare -a qemu_args
+
+qemu_args=(
+  -pidfile "${pidfile}"
+  -monitor none -serial none
+
+  -chardev "socket,path=$monitorsock,nowait,server,id=char0"
+  -chardev "socket,path=$ttysock,nowait,server,id=char1"
+  -chardev "socket,path=$qgasock,nowait,server,id=qga0"
+
+  -monitor chardev:char0
+  -serial chardev:char1
+  -device virtio-serial
+
+  -chardev "spicevmc,id=vdagent,debug=0,name=vdagent"
+  -device "virtserialport,chardev=vdagent,name=com.redhat.spice.0"
+  -device "virtserialport,chardev=qga0,name=org.qemu.guest_agent.0"
+
+  -device "qxl-vga,xres=1920,yres=1080"
+  -spice "addr=$spicesock,unix,disable-ticketing,gl=on"
+
+  -L . -bios /usr/share/qemu/OVMF.fd
+  -machine q35
+
+  -name "$name"
+  -uuid "$uuid"
+
+  -accel kvm -cpu host -smp 4
+  -smbios "type=11,value=cloud-init:ds=nocloud"
+  -m 2048
+
+  -netdev "bridge,br=natbr0,id=net0"
+  -device "virtio-net-pci,netdev=net0,mac=$macaddr"
+
+  -drive "file=$diskname,format=raw,if=virtio,cache=directsync"
+)
+
+qemu-system-x86_64 "${qemu_args[@]}"
