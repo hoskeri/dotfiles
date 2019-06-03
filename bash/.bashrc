@@ -14,11 +14,12 @@ then
 fi
 
 # golang
-export GOROOT="/usr/lib/go-1.12"
 
-if [ -d "$GOROOT" ]
+if [ -d "/usr/lib/go-1.12" ]
 then
-  export PATH="$GOROOT/bin:$PATH"
+  export GOROOT="/usr/lib/go-1.12"
+  export GOPATH="${HOME}/.gomod"
+  export PATH="${GOROOT}/bin:$PATH"
 fi
 
 if [ -d "$HOME/.gotools-install/bin" ]
@@ -60,7 +61,9 @@ case $- in
       *) return;;
 esac
 
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoreboth:ignoredups
+HISTIGNORE=cd:ls:history
+HISTTIMEFORMAT="  %FT%H:%M:%S%z  "
 HISTSIZE=1000
 HISTFILESIZE=200000
 
@@ -137,24 +140,32 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 fi
 
-alias py='python3 -q '
-
+alias py='python3 -q'
 alias ffmpeg='ffmpeg -loglevel 8'
 alias ffprobe='ffprobe -loglevel 8'
 alias ffplay='ffplay -loglevel 8'
-
-if [ -f ~/.bash_aliases ]; then
-  . ~/.bash_aliases
-fi
-
-if [ -f ~/.aliases ]; then
-  . ~/.aliases
-fi
 
 if [ -e /usr/bin/direnv ]; then
   source <(direnv hook bash)
 fi
 
-if [ -f "$HOME/.bashrc.local" ]; then
-  source "$HOME/.bashrc.local"
+_append_history_hook() {
+  history -r
+  history -a
+}
+
+if ! [[ "$PROMPT_COMMAND" =~ _append_history_hook ]]; then
+  PROMPT_COMMAND="_append_history_hook;$PROMPT_COMMAND"
+fi
+
+if [ -f "${HOME}/.bash_aliases" ]; then
+  source "${HOME}/.bash_aliases"
+fi
+
+if [ -f "${HOME}/.aliases" ]; then
+  source "${HOME}/.aliases"
+fi
+
+if [ -f "${HOME}/.bashrc.local" ]; then
+  source "${HOME}/.bashrc.local"
 fi
