@@ -62,9 +62,8 @@ case $- in
 esac
 
 HISTCONTROL=ignoreboth:ignoredups
-HISTIGNORE=cd:ls:history
 HISTTIMEFORMAT="  %FT%H:%M:%S%z  "
-HISTSIZE=1000
+HISTSIZE=10000
 HISTFILESIZE=200000
 
 if [ -f /etc/profile.d/vte-2.91.sh ]
@@ -150,7 +149,6 @@ if [ -e /usr/bin/direnv ]; then
 fi
 
 _append_history_hook() {
-  history -r
   history -a
 }
 
