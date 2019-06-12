@@ -14,6 +14,9 @@ Plugin 'derekwyatt/vim-scala'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'solarnz/thrift.vim'
 Plugin 'fatih/vim-go'
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'roxma/nvim-yarp'
+Plugin 'roxma/vim-hug-neovim-rpc'
 Plugin 'kovisoft/paredit'
 Plugin 'guns/vim-clojure-static'
 Plugin 'Shougo/neocomplete'
@@ -102,7 +105,7 @@ autocmd FileType python set ts=2 sts=2 sw=2 expandtab
 set grepprg=ag\ --vimgrep\ $*
 set grepformat=%f:%l:%c:%m
 
-let g:go_auto_type_info = 1
+let g:go_auto_type_info = 0
 let g:go_gocode_propose_source = 0
 let g:go_fmt_autosave = 1
 let g:go_highlight_functions = 1
@@ -111,12 +114,14 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
+" deoplete
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
+let g:deoplete#enable_at_startup = 1
+
 let g:syntastic_check_on_open = 0
 let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pyflakes']
 let g:syntastic_scala_checkers = ['fsc']
-
-let g:neocomplete#enable_at_startup = 1
 
 let g:fzf_buffers_jump = 1
 map <c-p> :FZF<cr>
