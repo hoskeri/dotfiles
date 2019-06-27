@@ -14,9 +14,13 @@ Plugin 'derekwyatt/vim-scala'
 Plugin 'pearofducks/ansible-vim'
 Plugin 'solarnz/thrift.vim'
 Plugin 'fatih/vim-go'
-Plugin 'Shougo/deoplete.nvim'
-Plugin 'roxma/nvim-yarp'
-Plugin 'roxma/vim-hug-neovim-rpc'
+if has('python3')
+  Plugin 'Shougo/deoplete.nvim'
+  Plugin 'roxma/nvim-yarp'
+  Plugin 'roxma/vim-hug-neovim-rpc'
+else
+  Plugin 'Shougo/neocomplete.vim'
+end
 Plugin 'kovisoft/paredit'
 Plugin 'guns/vim-clojure-static'
 Plugin 'Shougo/neocomplete'
@@ -115,8 +119,12 @@ let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
 " deoplete
-call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
-let g:deoplete#enable_at_startup = 1
+if has('python3')
+  call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
+  let g:deoplete#enable_at_startup = 1
+else
+  let g:neocomplete#enable_at_startup = 1
+end
 
 let g:syntastic_check_on_open = 0
 let g:syntastic_javascript_checkers = ['eslint']
