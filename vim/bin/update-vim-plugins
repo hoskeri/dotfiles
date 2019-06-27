@@ -1,4 +1,4 @@
-#!/bin/sh -eux
+#!/bin/sh -eu
 BUNDLEDIR="$HOME/.vim/bundle"
 test -d "$BUNDLEDIR"
 vim +PluginInstall +PluginUpdate +PluginClean +qall

@@ -29,3 +29,5 @@
   denyNonFastForwards = true
   hideRefs = true
   updateServerInfo = true
+[log]
+	mailmap = true
