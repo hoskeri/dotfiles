@@ -108,8 +108,9 @@ autocmd FileType python set ts=2 sts=2 sw=2 expandtab
 
 set grepprg=ag\ --vimgrep\ $*
 set grepformat=%f:%l:%c:%m
+set completeopt-=preview
 
-let g:go_auto_type_info = 0
+let g:go_auto_type_info = 1
 let g:go_gocode_propose_source = 0
 let g:go_fmt_autosave = 1
 let g:go_highlight_functions = 1
