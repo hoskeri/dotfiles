@@ -1,7 +1,2 @@
 #!/bin/sh -eu
-if [ $# -gt 0 ]
-then
-  exec go doc "$@"
-else
-  exec /usr/bin/godoc
-fi
+exec go doc -all "$@"|less -F -X

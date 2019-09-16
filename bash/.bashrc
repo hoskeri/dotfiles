@@ -15,9 +15,9 @@ fi
 
 # golang
 
-if [ -d "/usr/lib/go-1.12" ]
+if [ -d "/usr/lib/go-1.13" ]
 then
-  export GOROOT="/usr/lib/go-1.12"
+  export GOROOT="/usr/lib/go-1.13"
   export GOPATH="${HOME}/.gomod"
   export PATH="${GOROOT}/bin:$PATH"
 fi
@@ -167,3 +167,5 @@ fi
 if [ -f "${HOME}/.bashrc.local" ]; then
   source "${HOME}/.bashrc.local"
 fi
+
+complete -C /home/abhijit/bin/mc mc

@@ -2,7 +2,7 @@
 set -eux
 . /etc/environment
 
-export GOROOT=/usr/lib/go-1.12
+export GOROOT=/usr/lib/go-1.13
 export PATH="${GOROOT}/bin:$PATH"
 
 export GOPATH=$HOME/.gotools-install
@@ -17,7 +17,6 @@ echo -e 'export GOPATH=$(pwd)' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
 cat <<- END |xargs go get -u -v
-github.com/stamblerre/gocode
 github.com/rogpeppe/godef
 github.com/lukehoban/go-outline
 sourcegraph.com/sqs/goreturns
@@ -40,8 +39,6 @@ github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
 github.com/alecthomas/gometalinter
 END
-
-ln -sf "${GO_BIN}/gocode" "${GO_BIN}/gocode-gomod"
 
 gometalinter --install
 
