@@ -4,6 +4,7 @@ set -eux
 
 export GOROOT=/usr/lib/go-1.13
 export PATH="${GOROOT}/bin:$PATH"
+export GO111MODULE=on
 
 export GOPATH=$HOME/.gotools-install
 export GO_BIN=$GOPATH/bin
@@ -17,6 +18,7 @@ echo -e 'export GOPATH=$(pwd)' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
 cat <<- END |xargs go get -u -v
+github.com/golangci/golangci-lint/cmd/golangci-lint
 github.com/rogpeppe/godef
 github.com/lukehoban/go-outline
 sourcegraph.com/sqs/goreturns
@@ -32,15 +34,11 @@ github.com/josharian/impl
 golang.org/x/lint/golint
 github.com/ericchiang/pup
 github.com/fatih/gomodifytags
-github.com/dominikh/go-tools/cmd/keyify
 github.com/klauspost/asmfmt/cmd/asmfmt
 github.com/davidrjenni/reftools/cmd/fillstruct
 github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
-github.com/alecthomas/gometalinter
 END
-
-gometalinter --install
 
 strip "$GO_BIN"/*
 

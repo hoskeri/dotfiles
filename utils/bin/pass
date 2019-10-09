@@ -5,6 +5,8 @@ err_exit() {
   exit 1
 }
 
+trap clear EXIT
+
 bin_pass="/usr/bin/pass"
 pass_store="${HOME}/.password-store"
 bin_pass_commands=(init find grep insert edit generate rm mv cp git show)
@@ -19,4 +21,9 @@ test -d "${pass_store}" || err_exit "password store not initialized; run 'pass i
 
 passname="$(find "${pass_store}" -name \*.gpg -type f -name '*.gpg' -printf '%f\n' |sed 's/.gpg$//'|fzf -1 -q "${1:-}")"
 
-"$bin_pass" show "$passname"
+set +x
+
+res="$("$bin_pass" show "$passname")"
+echo "password for $passname: $res"
+
+sleep 5
