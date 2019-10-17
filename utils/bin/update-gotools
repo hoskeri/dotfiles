@@ -39,21 +39,3 @@ github.com/davidrjenni/reftools/cmd/fillstruct
 github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
 END
-
-strip "$GO_BIN"/*
-
-cd "$GOPATH"
-
-if test -d .git
-then
-  git init -q .
-fi
-
-find "$GOPATH/src" -type d -name '.git' -print0 |xargs --null -n1 git-repostat > "$GOPATH/.versions"
-
-if [ "$(git diff)$(git diff --cached)" != "" ]
-then
-  git add .
-  git commit -am "gotools update: $(date -Iseconds)"
-fi
-

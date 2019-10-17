@@ -1,2 +1,5 @@
 #!/bin/sh -eu
-exec go doc -all "$@"|less -F -X
+if [ $# -gt 0 ]
+then
+  exec go doc -all "$@"|less -F -X
+fi

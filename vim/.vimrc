@@ -58,8 +58,7 @@ set guioptions=-M
 set t_Co=256
 colorscheme default
 set bg=dark
-" required by vim-go 'show_type_info'
-set noshowmode
+set smartcase
 
 set spelllang=en_us
 set spellfile=~/.vim/spelling.utf-8.add
@@ -109,6 +108,7 @@ autocmd FileType python set ts=2 sts=2 sw=2 expandtab
 set grepprg=ag\ --vimgrep\ $*
 set grepformat=%f:%l:%c:%m
 set completeopt-=preview
+set switchbuf=useopen
 
 let g:go_auto_type_info = 1
 let g:go_gocode_propose_source = 0
