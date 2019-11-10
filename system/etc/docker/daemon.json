@@ -1,10 +1,12 @@
 {
 	"storage-driver": "devicemapper",
 	"storage-opt": [ "dm.fs=xfs" ],
-	"iptables": false,
+	"iptables": true,
 	"ip-masq": false,
 	"ipv6": false,
 	"ip-forward": false,
 	"dns": [ "172.17.0.1" ],
-	"init": true
+	"init": true,
+	"icc": false,
+	"experimental": true
 }

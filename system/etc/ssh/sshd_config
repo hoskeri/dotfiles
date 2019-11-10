@@ -16,4 +16,4 @@ PasswordAuthentication no
 ClientAliveInterval 30
 
 Match group sudo
-PasswordAuthentication yes
+PasswordAuthentication no
