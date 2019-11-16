@@ -1,0 +1,27 @@
+#!/bin/bash -eu
+
+function _cpuspeed() {
+  sudo -n cpupower --cpu all frequency-set --governor "$1" --min "$2" --max "$3"
+}
+
+case "${1:-show}" in
+  fast)
+    _cpuspeed "performance" "1000MHz" "2000MHz"
+    ;;
+  medium)
+    _cpuspeed "performance" "800MHz" "1500MHz"
+    ;;
+  slow)
+    _cpuspeed "powersave" "500MHz" "800MHz"
+    ;;
+  sleep)
+    _cpuspeed "powersave" "500MHz" "800MHz"
+    ;;
+  show)
+    cpupower frequency-info
+    ;;
+  *)
+    >&2 echo "unknown mode: choose one of slow, medium, fast, sleep"
+    exit 1
+  ;;
+esac

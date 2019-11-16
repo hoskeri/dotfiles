@@ -6,7 +6,7 @@
 	"ipv6": false,
 	"ip-forward": false,
 	"dns": [ "172.17.0.1" ],
-	"init": true,
+	"init": false,
 	"icc": false,
 	"experimental": true
 }
