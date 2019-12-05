@@ -17,7 +17,7 @@ mkdir -p "$GOPATH"
 cd "$GOPATH"
 
 # shellcheck disable=SC2016
-echo -e 'export GOPATH=$(pwd)\nGO111MODULE=on\n' > "$GOPATH/.envrc"
+echo -e 'export GOPATH=$(pwd)\nexport GO111MODULE=on\n' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
 cat <<- END |xargs go get -u -v
@@ -41,6 +41,8 @@ github.com/klauspost/asmfmt/cmd/asmfmt
 github.com/davidrjenni/reftools/cmd/fillstruct
 github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
+github.com/vmware/govmomi/govc
+github.com/cosmos72/gomacro
 END
 
 # install gore in non-module mode.

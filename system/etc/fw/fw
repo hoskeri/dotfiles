@@ -4,7 +4,7 @@
 set -eu
 if [ "$(id -u)" != 0 ]
 then
-  exec sudo "$(readlink -f "$0")"
+  exec sudo -n "$(readlink -f "$0")"
 fi
 
 # reset the iptables state.
