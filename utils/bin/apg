@@ -1,0 +1,2 @@
+#!/bin/sh -eu
+exec /usr/lib/apg/apg -c /dev/urandom -n 32 -m 10 -x 10 -M NCL -t "$@"

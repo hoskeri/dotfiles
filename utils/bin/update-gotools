@@ -28,7 +28,6 @@ sourcegraph.com/sqs/goreturns
 github.com/tpng/gopkgs
 github.com/newhook/go-symbols
 github.com/ddollar/forego
-github.com/motemen/gore
 github.com/github/hub
 github.com/jstemmer/gotags
 github.com/fatih/motion
