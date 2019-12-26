@@ -2,3 +2,5 @@ set echo-control-characters off
 set bell-style none
 set colored-completion-prefix on
 set menu-complete-display-prefix on
+set blink-matching-paren on
+set expand-tilde on

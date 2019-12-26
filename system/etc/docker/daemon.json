@@ -8,5 +8,8 @@
 	"dns": [ "172.17.0.1" ],
 	"init": false,
 	"icc": false,
-	"experimental": true
+	"experimental": true,
+	"features": {
+		"buildkit": true
+	}
 }
