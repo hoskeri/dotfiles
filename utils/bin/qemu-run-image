@@ -43,8 +43,8 @@ monitorsock="${sockdir}/monitor"
 qgasock="${sockdir}/ga"
 
 # identity
-uuid=$(random-uuid "$1")
-macaddr=$(random-mac-address "$1")
+uuid="$(random-uuid "$1")"
+macaddr="$(random-mac-address "$1")"
 
 declare -a qemu_args
 

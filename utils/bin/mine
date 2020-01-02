@@ -1,9 +1,8 @@
 #!/bin/bash -eu
-target="./$1"
-warning="chown recursively ${target}? (type y e s to proceed):"
+warning="chown recursively $* ? (type y e s to proceed):"
 cf=""
 
-test -w "$target"
+test -w "$@"
 
 until [ "${cf}" = "yes" ]
 do
@@ -14,4 +13,4 @@ set -x
 
 sudo chown --changes --recursive  \
            --no-dereference --preserve-root \
-              "$(id -u):$(id -g)" "${target}"
+              "$(id -u):$(id -g)" "$@"
