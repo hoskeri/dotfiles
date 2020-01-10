@@ -9,13 +9,10 @@ case "${1:-show}" in
     _cpuspeed "performance" "1000MHz" "2000MHz"
     ;;
   medium)
-    _cpuspeed "performance" "800MHz" "1500MHz"
+    _cpuspeed "performance" "1000MHz" "1500MHz"
     ;;
   slow)
-    _cpuspeed "powersave" "500MHz" "800MHz"
-    ;;
-  sleep)
-    _cpuspeed "powersave" "500MHz" "800MHz"
+    _cpuspeed "powersave" "800MHz" "1000MHz"
     ;;
   show)
     cpupower frequency-info
