@@ -53,12 +53,15 @@ set mouse=a
 set modeline
 set modelines=0
 set ls=2
+set smartcase
 set hlsearch
 set guioptions=-M
+
 set t_Co=256
+set termguicolors
 colorscheme default
 set bg=dark
-set smartcase
+
 
 set spelllang=en_us
 set spellfile=~/.vim/spelling.utf-8.add

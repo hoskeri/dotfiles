@@ -20,7 +20,7 @@ cd "$GOPATH"
 echo -e 'export GOPATH=$(pwd)\nexport GO111MODULE=on\n' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
-cat <<- END |xargs go get -u -v
+cat <<- END |xargs -n1 -IX go get -v X@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint
 github.com/rogpeppe/godef
 github.com/lukehoban/go-outline
@@ -42,6 +42,7 @@ github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
 github.com/vmware/govmomi/govc
 github.com/cosmos72/gomacro
+cuelang.org/go/cmd/cue
 END
 
 # install gore in non-module mode.

@@ -4,9 +4,9 @@ deb http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-fre
 deb-src http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free
 deb-src http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free
 deb-src http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free
-#deb [arch=amd64] http://download.docker.com/linux/debian stretch stable edge
-deb [arch=amd64] http://dl.google.com/linux/chrome/deb stable main
-deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8
 #deb http://dpvctowv9b08b.cloudfront.net/debian-debug testing-debug main contrib non-free
 #deb http://dpvctowv9b08b.cloudfront.net/debian-debug unstable-debug main contrib non-free
 #deb http://dpvctowv9b08b.cloudfront.net/debian-debug experimental-debug main contrib non-free
+deb [arch=amd64] http://dl.google.com/linux/chrome/deb stable main
+deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8
+deb [arch=amd64] https://packages.cloud.google.com/apt cloud-sdk main
