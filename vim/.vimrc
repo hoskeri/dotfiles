@@ -57,11 +57,9 @@ set smartcase
 set hlsearch
 set guioptions=-M
 
-set t_Co=256
 set termguicolors
 colorscheme default
 set bg=dark
-
 
 set spelllang=en_us
 set spellfile=~/.vim/spelling.utf-8.add

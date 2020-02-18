@@ -34,6 +34,7 @@ github.com/fatih/motion
 github.com/zmb3/gogetdoc
 github.com/josharian/impl
 golang.org/x/lint/golint
+golang.org/x/tools/gopls
 github.com/ericchiang/pup
 github.com/fatih/gomodifytags
 github.com/klauspost/asmfmt/cmd/asmfmt
