@@ -10,8 +10,6 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'jelera/vim-javascript-syntax'
-Plugin 'derekwyatt/vim-scala'
-Plugin 'pearofducks/ansible-vim'
 Plugin 'solarnz/thrift.vim'
 Plugin 'fatih/vim-go'
 if has('python3')

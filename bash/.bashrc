@@ -15,9 +15,9 @@ fi
 
 # golang
 
-if [ -d "/usr/lib/go-1.13" ]
+if [ -d "/usr/lib/go-1.14" ]
 then
-  export GOROOT="/usr/lib/go-1.13"
+  export GOROOT="/usr/lib/go-1.14"
   export GOPATH="${HOME}/.gomod"
   export PATH="${GOROOT}/bin:$PATH"
 fi
