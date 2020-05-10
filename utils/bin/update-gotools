@@ -48,3 +48,5 @@ END
 
 # install gore in non-module mode.
 GO111MODULE=off go get -u github.com/motemen/gore/cmd/gore
+
+echo "*** update-gotools complete"
