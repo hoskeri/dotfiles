@@ -135,5 +135,3 @@ let g:syntastic_scala_checkers = ['fsc']
 
 let g:fzf_buffers_jump = 1
 map <c-p> :FZF<cr>
-
-let g:scala_scaladoc_indent = 1

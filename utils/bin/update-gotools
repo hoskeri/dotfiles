@@ -20,6 +20,19 @@ cd "$GOPATH"
 echo -e 'export GOPATH=$(pwd)\nexport GO111MODULE=on\n' > "$GOPATH/.envrc"
 echo -e '*\n!.envrc\n!.versions' > "$GOPATH/.gitignore"
 
+# record versions
+recordVersions() {
+  find ./bin -type f -perm 0755 -print0|xargs -0 -n1 go version -m > .versions
+
+  git init -q .
+
+  if [ "$(git diff)$(git diff --cached)" != "" ]
+  then
+    git add .
+    git commit -am "gotools update: $(date -Iseconds)"
+  fi
+}
+
 cat <<- END |xargs -n1 -IX go get -v X@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint
 github.com/rogpeppe/godef
@@ -46,7 +59,6 @@ github.com/cosmos72/gomacro
 cuelang.org/go/cmd/cue
 END
 
-# install gore in non-module mode.
-GO111MODULE=off go get -u github.com/motemen/gore/cmd/gore
+recordVersions
 
-echo "*** update-gotools complete"
+printf "***\n*** update-gotools complete\n***\n"

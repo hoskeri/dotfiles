@@ -11,5 +11,6 @@
 	"experimental": true,
 	"features": {
 		"buildkit": true
-	}
+	},
+	"containerd": "/run/containerd/containerd.sock"
 }
