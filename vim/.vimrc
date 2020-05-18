@@ -31,6 +31,7 @@ Plugin 'belltoy/vim-protobuf'
 Plugin 'rust-lang/rust.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'jamessan/vim-gnupg'
+Plugin 'jjo/vim-cue'
 
 " End Vim plugin list
 call vundle#end()

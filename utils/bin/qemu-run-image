@@ -80,7 +80,7 @@ qemu_args=(
   -netdev "bridge,br=natbr0,id=net0"
   -device "virtio-net-pci,netdev=net0,mac=$macaddr"
 
-  -drive "file=$diskname,format=raw,if=virtio,cache=directsync"
+  -drive "file=$diskname,format=raw,if=virtio,locking=on,cache=writeback"
 )
 
 qemu-system-x86_64 "${qemu_args[@]}"

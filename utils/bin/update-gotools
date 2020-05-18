@@ -61,4 +61,6 @@ END
 
 recordVersions
 
+strip ./bin/*
+
 printf "***\n*** update-gotools complete\n***\n"
