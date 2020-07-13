@@ -4,8 +4,8 @@ if [ "$(id -u)" != 0 ]
 then
   exec sudo -n "$(readlink -f "$0")"
 fi
-apt-get update
-apt-get upgrade --with-new-pkgs -y || sudo apt-get upgrade -y
-apt-get upgrade -y -t experimental --with-new-pkgs || sudo apt-get upgrade -y -t experimental
-apt-get autoremove --purge -y
-apt-get clean
+apt update
+apt upgrade --with-new-pkgs -y || apt-get upgrade -y
+apt upgrade -y -t experimental --with-new-pkgs || apt-get upgrade -y -t experimental
+apt autoremove --purge -y
+apt clean
