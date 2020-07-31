@@ -140,9 +140,9 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 alias py='python3 -q'
-alias ffmpeg='ffmpeg -loglevel 8'
-alias ffprobe='ffprobe -loglevel 8'
-alias ffplay='ffplay -loglevel 8'
+alias ffmpeg='ffmpeg -hide_banner'
+alias ffprobe='ffprobe -hide_banner'
+alias ffplay='ffplay -hide_banner'
 
 if [ -e /usr/bin/direnv ]; then
   source <(direnv hook bash)

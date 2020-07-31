@@ -32,6 +32,7 @@ Plugin 'rust-lang/rust.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'jamessan/vim-gnupg'
 Plugin 'jjo/vim-cue'
+Plugin 'ledger/vim-ledger'
 
 " End Vim plugin list
 call vundle#end()
@@ -97,6 +98,7 @@ au BufRead,BufNewFile TODO set ic ts=2 sw=2 sts=2 filetype=yaml
 au BufRead,BufNewFile Makefile set filetype=make ic ts=2 sw=2 sts=2 noexpandtab
 au BufRead,BufNewFile SConstruct set filetype=python
 au BufRead,BufNewFile *.elm set filetype=elm nohlsearch
+
 autocmd BufWritePost *.go silent call go#cmd#Build(1)
 
 " don't leak sensitive data.
