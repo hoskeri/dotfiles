@@ -33,6 +33,7 @@ recordVersions() {
   fi
 }
 
+# golang dev tools
 cat <<- END |xargs -n1 -IX go get -v X@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint
 github.com/rogpeppe/godef
@@ -40,18 +41,23 @@ github.com/lukehoban/go-outline
 sourcegraph.com/sqs/goreturns
 github.com/tpng/gopkgs
 github.com/newhook/go-symbols
-github.com/ddollar/forego
-github.com/github/hub
 github.com/jstemmer/gotags
 github.com/fatih/motion
 github.com/zmb3/gogetdoc
 github.com/josharian/impl
 golang.org/x/lint/golint
 golang.org/x/tools/gopls
-github.com/ericchiang/pup
 github.com/fatih/gomodifytags
 github.com/klauspost/asmfmt/cmd/asmfmt
 github.com/davidrjenni/reftools/cmd/fillstruct
+END
+
+# applications written in golang
+cat <<- END |xargs -n1 -IX go get -v X@latest
+code.gitea.io/tea
+github.com/ddollar/forego
+github.com/github/hub
+github.com/ericchiang/pup
 github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
 github.com/vmware/govmomi/govc
