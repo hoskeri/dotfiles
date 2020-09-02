@@ -6,7 +6,7 @@ err_exit() {
 }
 
 usage() {
-  err_exit "usage: qemu-run-image image "
+  err_exit "usage: qemu-run-image image"
 }
 
 cleanup() {
@@ -75,12 +75,14 @@ qemu_args=(
 
   -accel kvm -cpu host -smp 4
   -smbios "type=11,value=cloud-init:ds=nocloud"
-  -m 2048
+  -m 512
 
   -netdev "bridge,br=natbr0,id=net0"
   -device "virtio-net-pci,netdev=net0,mac=$macaddr"
 
   -drive "file=$diskname,format=raw,if=virtio,cache=writeback"
 )
+
+echo "spice_uri spice+unix://${spicesock}"
 
 qemu-system-x86_64 "${qemu_args[@]}"
