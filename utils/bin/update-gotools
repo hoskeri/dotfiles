@@ -4,7 +4,7 @@ set -eu
 # shellcheck disable=SC1091
 . /etc/environment
 
-export GOROOT="/usr/lib/go-1.14"
+export GOROOT="/usr/lib/go-1.15"
 export PATH="${GOROOT}/bin:$PATH"
 export GO111MODULE=on
 
