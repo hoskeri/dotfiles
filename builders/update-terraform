@@ -1,0 +1,18 @@
+#!/bin/bash -eux
+version="0.13.4"
+tmpfile="$(mktemp /tmp/update-terraform.XXXXXX)"
+terraform_bin="${HOME}/bin/terraform"
+
+builduser="${K8S_BUILDUSER:-k8sbuild}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+trap 'rm -f "$tmpfile"' EXIT
+
+curl -o "${tmpfile}" -sSfL "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_linux_amd64.zip"
+unzip -p -l  "${tmpfile}" terraform > "${terraform_bin}"
+chmod 0755 "${terraform_bin}"

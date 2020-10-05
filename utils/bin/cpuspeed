@@ -6,7 +6,7 @@ function _cpuspeed() {
 
 case "${1:-show}" in
   fast)
-    _cpuspeed "performance" "1000MHz" "2000MHz"
+    _cpuspeed "performance" "1500MHz" "2500MHz"
     ;;
   medium)
     _cpuspeed "performance" "1000MHz" "1500MHz"
@@ -18,7 +18,7 @@ case "${1:-show}" in
     cpupower frequency-info
     ;;
   *)
-    >&2 echo "unknown mode: choose one of slow, medium, fast, sleep"
+    >&2 echo "unknown mode: choose one of slow, medium, fast"
     exit 1
   ;;
 esac

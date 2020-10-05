@@ -39,6 +39,7 @@ call vundle#end()
 
 filetype plugin indent on
 syntax on
+set backspace=eol,indent,start
 set expandtab
 set autoindent
 set shiftwidth=2
