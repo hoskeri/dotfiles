@@ -2,7 +2,12 @@
 warning="chown recursively $* ? (type y e s to proceed):"
 cf=""
 
-test -w "$@"
+fatal() {
+  >&2 echo "fatal: $*"
+  exit 1
+}
+
+test -n "$@" && fatal "file or dir required"
 
 until [ "${cf}" = "yes" ]
 do

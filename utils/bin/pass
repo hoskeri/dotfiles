@@ -7,7 +7,7 @@ err_exit() {
 
 bin_pass="/usr/bin/pass"
 pass_store="${HOME}/.password-store"
-bin_pass_commands=(init find grep insert edit generate rm mv cp git show)
+bin_pass_commands=(init find grep insert edit generate rm mv cp git show otp help)
 
 test -x "$bin_pass" || err_exit "$bin_pass does not exist."
 

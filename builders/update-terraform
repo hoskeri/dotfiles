@@ -1,9 +1,9 @@
 #!/bin/bash -eux
-version="0.13.4"
+version="0.13.5"
 tmpfile="$(mktemp /tmp/update-terraform.XXXXXX)"
 terraform_bin="${HOME}/bin/terraform"
 
-builduser="${K8S_BUILDUSER:-k8sbuild}"
+builduser="${TRFM_BUILDUSER:-terraform-build}"
 self="$(readlink -f "$0")"
 
 if [ "$(id -u "$builduser")" != "$UID" ]
@@ -12,6 +12,8 @@ then
 fi
 
 trap 'rm -f "$tmpfile"' EXIT
+
+mkdir -p "${HOME}/bin"
 
 curl -o "${tmpfile}" -sSfL "https://releases.hashicorp.com/terraform/${version}/terraform_${version}_linux_amd64.zip"
 unzip -p -l  "${tmpfile}" terraform > "${terraform_bin}"

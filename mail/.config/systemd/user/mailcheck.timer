@@ -6,6 +6,7 @@ ConditionPathExists=%h/Maildir
 OnBootSec=5min
 OnUnitActiveSec=15min
 Persistent=true
+Unit=mailcheck.service
 
 [Install]
 WantedBy=timers.target

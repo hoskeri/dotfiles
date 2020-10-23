@@ -1,0 +1,46 @@
+#!/bin/bash -eux
+
+export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
+export PATH="/usr/lib/go-1.15/bin:$PATH"
+
+version="v${1:-1.19.3}"
+builduser="${K8S_BUILDUSER:-k8sbuild}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+trap 'rm -rf ${srcdir}' EXIT
+
+srcdir="/opt/kubernetes/src/kubernetes"
+cd "${srcdir}"
+
+git clean -dfx
+git checkout "${version}"
+
+destdir="/opt/kubernetes/bin"
+mkdir -p "${destdir}"
+
+declare -a go cmds
+
+go=(go build -v -mod=vendor -tags=providerless)
+cmds=(
+  kube-apiserver
+  kube-controller-manager
+  kube-scheduler
+  kube-proxy
+  kubelet
+  kubectl
+  kubeadm
+)
+
+make -C "$srcdir" --no-print-directory generated_files
+
+cd "${srcdir}"
+
+for d in "${cmds[@]}"
+do
+  "${go[@]}" -o "${destdir}/${d}" "./cmd/${d}"
+done

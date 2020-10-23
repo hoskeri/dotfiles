@@ -33,6 +33,7 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'jamessan/vim-gnupg'
 Plugin 'jjo/vim-cue'
 Plugin 'ledger/vim-ledger'
+Plugin 'lifepillar/pgsql.vim'
 
 " End Vim plugin list
 call vundle#end()
