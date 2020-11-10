@@ -54,7 +54,7 @@ set tagrelative
 set mouse=a
 set modeline
 set modelines=0
-set ls=2
+set laststatus=2
 set smartcase
 set hlsearch
 set guioptions=-M

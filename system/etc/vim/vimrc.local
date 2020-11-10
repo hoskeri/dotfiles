@@ -1,0 +1,15 @@
+set ts=2 
+set sw=2 
+set sts=2 
+set sw=2 
+set expandtab
+set nocompatible
+set nobackup
+set nowritebackup
+set noswapfile
+set noundofile
+set smartcase
+set smartindent
+set viminfo=
+set bg=dark
+syntax on

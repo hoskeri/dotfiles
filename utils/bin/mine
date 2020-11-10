@@ -7,7 +7,7 @@ fatal() {
   exit 1
 }
 
-test -n "$@" && fatal "file or dir required"
+test -z "$@" && fatal "file or dir required"
 
 until [ "${cf}" = "yes" ]
 do

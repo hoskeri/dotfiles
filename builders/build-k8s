@@ -3,7 +3,7 @@
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="/usr/lib/go-1.15/bin:$PATH"
 
-version="v${1:-1.19.3}"
+version="v${1:-1.19.4}"
 builduser="${K8S_BUILDUSER:-k8sbuild}"
 self="$(readlink -f "$0")"
 
@@ -12,11 +12,10 @@ then
   exec sudo -H -u "$builduser" "$self"
 fi
 
-trap 'rm -rf ${srcdir}' EXIT
-
 srcdir="/opt/kubernetes/src/kubernetes"
 cd "${srcdir}"
 
+git fetch -a
 git clean -dfx
 git checkout "${version}"
 
@@ -36,7 +35,7 @@ cmds=(
   kubeadm
 )
 
-make -C "$srcdir" --no-print-directory generated_files
+make -C "$srcdir" --no-print-directory gen_openapi
 
 cd "${srcdir}"
 
