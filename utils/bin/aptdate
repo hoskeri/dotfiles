@@ -6,6 +6,5 @@ then
 fi
 apt update
 apt upgrade --with-new-pkgs -y || apt-get upgrade -y
-apt upgrade -y -t experimental --with-new-pkgs || apt-get upgrade -y -t experimental
 apt autoremove --purge -y
 apt clean

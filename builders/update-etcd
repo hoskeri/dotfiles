@@ -1,0 +1,23 @@
+#!/bin/bash -eux
+
+version="3.4.14"
+filename="etcd-v${version}-linux-amd64"
+
+builduser="${ETCD_BUILDUSER:-etcd-build}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/etcd-io/etcd/releases/download/v${version}/${filename}.tar.gz"
+
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-etcd"
+etag="${webdir}/${filename}.etag"
+
+mkdir -p "${bindir}" "${webdir}"
+
+curl -sSfLo "${webdir}/${filename}.tar.gz" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+tar -C "${bindir}" --strip-components=1 -zxf "${webdir}/${filename}.tar.gz" "${filename}/etcd" "${filename}/etcdctl"

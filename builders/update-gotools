@@ -12,7 +12,7 @@ then
   exec sudo -H -u "$builduser" "$self"
 fi
 
-export GOPATH="$HOME"
+export GOPATH="$HOME/.gotools-install"
 export GO_BIN="$GOPATH/bin"
 export GO111MODULE=on
 
