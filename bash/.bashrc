@@ -42,7 +42,7 @@ export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 # xdg
 export BROWSER=firefox
 
-# etcd use v3 api
+# etcdctl use v3 api
 export ETCDCTL_API=3
 
 # libvirt
@@ -57,8 +57,8 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 
 # If not running interactively, don't do anything
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+  *) return;;
 esac
 
 HISTCONTROL=ignoreboth:ignoredups
@@ -68,6 +68,7 @@ HISTFILESIZE=200000
 
 if [ -f /etc/profile.d/vte-2.91.sh ]
 then
+  # shellcheck disable=SC1091
   source /etc/profile.d/vte-2.91.sh
 fi
 
@@ -81,39 +82,39 @@ shopt -s globstar
 
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
+  debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+  xterm-color|*-256color) color_prompt=yes;;
 esac
 
 if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
+  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	  # We have color support; assume it's compliant with Ecma-48
+	  # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	  # a case would tend to support setf rather than setaf.)
+	  color_prompt=yes
+  else
+	  color_prompt=
+  fi
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
+  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+  ;;
 *)
-    ;;
+  ;;
 esac
 
 # enable programmable completion features (you don't need to enable
@@ -121,49 +122,40 @@ esac
 # sources /etc/bash.bashrc).
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
+    # shellcheck disable=SC1091
     . /usr/share/bash-completion/bash_completion
   elif [ -f /etc/bash_completion ]; then
+    # shellcheck disable=SC1091
     . /etc/bash_completion
   fi
 fi
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    alias dir='dir --color=auto'
-    alias vdir='vdir --color=auto'
+  # shellcheck disable=SC1090,SC2015
+  test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+  alias ls='ls --color=auto'
+  alias dir='dir --color=auto'
+  alias vdir='vdir --color=auto'
 
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
 fi
 
-alias py='python3 -q'
 alias ffmpeg='ffmpeg -hide_banner'
 alias ffprobe='ffprobe -hide_banner'
 alias ffplay='ffplay -hide_banner'
 
 if [ -e /usr/bin/direnv ]; then
+  # shellcheck disable=SC1090
   source <(direnv hook bash)
 fi
 
-_append_history_hook() {
-  history -a
-}
-
-if ! [[ "$PROMPT_COMMAND" =~ _append_history_hook ]]; then
-  PROMPT_COMMAND="_append_history_hook;$PROMPT_COMMAND"
-fi
-
-if [ -f "${HOME}/.bash_aliases" ]; then
-  source "${HOME}/.bash_aliases"
-fi
-
-if [ -f "${HOME}/.aliases" ]; then
-  source "${HOME}/.aliases"
-fi
-
-if [ -f "${HOME}/.bashrc.local" ]; then
-  source "${HOME}/.bashrc.local"
-fi
+for f in "${HOME}/.bash_aliases" "${HOME}/.aliases" "${HOME}/.bashrc.local"
+do
+  if [ -f "${f}" ]; then
+    # shellcheck disable=SC1090
+    source "${f}"
+  fi
+done

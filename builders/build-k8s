@@ -3,7 +3,7 @@
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="/usr/lib/go-1.15/bin:$PATH"
 
-version="v${1:-1.19.4}"
+version="v${1:-1.20.1}"
 builduser="${K8S_BUILDUSER:-k8sbuild}"
 self="$(readlink -f "$0")"
 
@@ -24,7 +24,7 @@ mkdir -p "${destdir}"
 
 declare -a go cmds
 
-go=(go build -v -mod=vendor -tags=providerless)
+go=(go build -v -mod=vendor "-tags=providerless,dockerless")
 cmds=(
   kube-apiserver
   kube-controller-manager

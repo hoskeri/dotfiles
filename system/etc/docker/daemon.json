@@ -7,10 +7,5 @@
 	"ip-forward": false,
 	"dns": [ "172.17.0.1" ],
 	"init": false,
-	"icc": false,
-	"experimental": true,
-	"features": {
-		"buildkit": true
-	},
-	"containerd": "/run/containerd/containerd.sock"
+	"icc": false
 }
