@@ -3,7 +3,7 @@
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="/usr/lib/go-1.15/bin:$PATH"
 
-version="v${1:-1.20.1}"
+version="v${1:-1.20.2}"
 builduser="${K8S_BUILDUSER:-k8sbuild}"
 self="$(readlink -f "$0")"
 
@@ -22,9 +22,16 @@ git checkout "${version}"
 destdir="/opt/kubernetes/bin"
 mkdir -p "${destdir}"
 
+cd "${srcdir}"
 declare -a go cmds
 
-go=(go build -v -mod=vendor "-tags=providerless,dockerless")
+export KUBE_ROOT="${srcdir}"
+export KUBE_GO_PACKAGE="k8s.io/kubernetes"
+
+source "${srcdir}/hack/lib/version.sh"
+
+go=( go build -v -mod=vendor "-tags=providerless,dockerless" )
+
 cmds=(
   kube-apiserver
   kube-controller-manager
@@ -37,9 +44,8 @@ cmds=(
 
 make -C "$srcdir" --no-print-directory gen_openapi
 
-cd "${srcdir}"
-
 for d in "${cmds[@]}"
 do
   "${go[@]}" -o "${destdir}/${d}" "./cmd/${d}"
+  strip "${destdir}/${d}"
 done

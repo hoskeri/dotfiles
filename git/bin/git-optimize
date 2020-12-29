@@ -1,8 +1,11 @@
-#!/bin/sh -eu
+#!/bin/bash -eu
 export GIT_DIR="${1:-"$(git rev-parse --absolute-git-dir)"}"
 test -n "$GIT_DIR" || ( echo "usage: $0 path/to/.git" && exit 1 )
 test -d "$GIT_DIR" || ( echo "$GIT_DIR is not a git directory" && exit 1 )
-echo "---"
-echo "dir: $GIT_DIR"
-echo "url: $(git remote get-url origin)"
-echo "head: $(git rev-parse HEAD)"
+echo "cleaning $GIT_DIR"
+
+git gc --aggressive
+git prune
+git repack -a -d
+
+test -d "$GIT_DIR/hooks" && find "$GIT_DIR/hooks" -name '*.sample' -delete
