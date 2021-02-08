@@ -43,7 +43,7 @@ recordVersions() {
 }
 
 # golang dev tools
-cat <<- END |xargs -n1 -IX go get -v X@latest
+cat <<- END |xargs -IX -n1 go get -v X@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint
 github.com/rogpeppe/godef
 github.com/lukehoban/go-outline
@@ -62,7 +62,7 @@ github.com/davidrjenni/reftools/cmd/fillstruct
 END
 
 # applications written in golang
-cat <<- END |xargs -n1 -IX go get -v X@latest
+cat <<- END |xargs -IX -n1 go get -v X@latest
 code.gitea.io/tea
 github.com/ddollar/forego
 github.com/github/hub
