@@ -72,6 +72,7 @@ github.com/hoskeri/liverebuild
 github.com/vmware/govmomi/govc
 github.com/cosmos72/gomacro
 cuelang.org/go/cmd/cue
+github.com/containernetworking/cni/cnitool
 github.com/fullstorydev/grpcurl/cmd/grpcurl
 END
 

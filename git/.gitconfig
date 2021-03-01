@@ -11,6 +11,7 @@
   abbreviateCommands = true
 [init]
   templatedir = /etc/dotfiles/git/.git-templates/base
+	defaultBranch = main
 [http "https://gopkg.in"]
   followRedirects = true
 [http "https://golang.org"]
