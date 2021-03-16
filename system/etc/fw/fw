@@ -28,7 +28,7 @@ iptables -t filter -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT
 iptables -t filter -P FORWARD DROP
 
 # bridges
-for br in docker0 natbr0 zerobr0
+for br in docker0 natbr0
 do
   iptables -t filter -I INPUT -i "${br}" -j ACCEPT
   iptables -t filter -I FORWARD -i "${br}" -j ACCEPT
@@ -45,5 +45,6 @@ ip6tables -t filter -A INPUT -p tcp --dport 443 -j ACCEPT
 
 if [ -r /etc/fw.local ]
 then
+  # shellcheck disable=SC1091
   source /etc/fw.local
 fi

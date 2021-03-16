@@ -59,6 +59,8 @@ golang.org/x/tools/gopls
 github.com/fatih/gomodifytags
 github.com/klauspost/asmfmt/cmd/asmfmt
 github.com/davidrjenni/reftools/cmd/fillstruct
+google.golang.org/grpc/cmd/protoc-gen-go-grpc
+google.golang.org/protobuf/cmd/protoc-gen-go
 END
 
 # applications written in golang
