@@ -1,0 +1,3 @@
+#!/bin/sh -eu
+export LC_ALL=C
+egrep '^[a-z]{5,5}[^eds]$' /usr/share/dict/words|shuf|head -n32
