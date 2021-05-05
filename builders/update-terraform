@@ -1,5 +1,5 @@
 #!/bin/bash -eux
-version="0.14.10"
+version="0.15.0"
 tmpfile="$(mktemp /tmp/update-terraform.XXXXXX)"
 terraform_bin="${HOME}/bin/terraform"
 

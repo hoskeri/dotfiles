@@ -14,7 +14,7 @@ fi
 
 export GOPATH="$HOME/.gotools-install"
 export GO_BIN="$GOPATH/bin"
-export GO111MODULE=on
+#export GO111MODULE=on
 
 if [ "$(id -u "$builduser")" != "$UID" ]
 then
@@ -43,7 +43,7 @@ recordVersions() {
 }
 
 # golang dev tools
-cat <<- END |xargs -IX -n1 go get -v X@latest
+cat <<- END |xargs -IX -n1 go install X@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint
 github.com/rogpeppe/godef
 github.com/lukehoban/go-outline
@@ -64,19 +64,21 @@ google.golang.org/protobuf/cmd/protoc-gen-go
 END
 
 # applications written in golang
-cat <<- END |xargs -IX -n1 go get -v X@latest
-code.gitea.io/tea
+cat <<- END |xargs -IX -n1 go install X@latest
 github.com/ddollar/forego
 github.com/github/hub
 github.com/ericchiang/pup
 github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
-github.com/vmware/govmomi/govc
 github.com/cosmos72/gomacro
 cuelang.org/go/cmd/cue
 github.com/containernetworking/cni/cnitool
 github.com/fullstorydev/grpcurl/cmd/grpcurl
 END
+
+set -x
+
+go get -v github.com/vmware/govmomi/govc@latest
 
 recordVersions
 

@@ -14,7 +14,6 @@ then
 fi
 
 # golang
-
 if [ -d "/usr/lib/go-1.16" ]
 then
   export GOROOT="/usr/lib/go-1.16"

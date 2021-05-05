@@ -4,10 +4,11 @@ then
   >&2 echo "E: no command specified."
   exit 1
 fi
+
 uid="$(id -u)"
 gid="$(id -g)"
 
-exec sudo systemd-run \
+exec sudo -n systemd-run \
   --quiet --pty --pipe --collect --wait \
   --uid "$uid" --gid "$gid" --unit lazy \
   -E "LAZY_UNIT=1" \

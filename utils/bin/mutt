@@ -1,6 +1,6 @@
 #!/bin/sh -eu
 
-test -d "${HOME}/Maildir"
+test -d "${MAILDIR:-${HOME}/Maildir}"
 
 if [ $# -gt 0 ]
 then
