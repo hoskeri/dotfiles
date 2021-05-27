@@ -1,6 +1,7 @@
 ### Setup paths and general variables
 ### in non-interactive shells as well.
 
+
 PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 
 if [ -d "${HOME}/.local/bin" ]

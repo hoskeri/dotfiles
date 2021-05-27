@@ -1,0 +1,23 @@
+#!/bin/bash -eux
+
+version="1.21.0"
+filename="crictl-v${version}-linux-amd64"
+
+builduser="${ETCD_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/kubernetes-sigs/cri-tools/releases/download/v${version}/${filename}.tar.gz"
+
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-crictl"
+etag="${webdir}/${filename}.etag"
+
+mkdir -p "${bindir}" "${webdir}"
+
+curl -sSfLo "${webdir}/${filename}.tar.gz" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+tar -C "${bindir}" --strip-components=0 -axf "${webdir}/${filename}.tar.gz" "crictl"

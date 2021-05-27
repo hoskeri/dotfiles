@@ -3,7 +3,7 @@
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="/usr/lib/go-1.16/bin:$PATH"
 
-version="v${1:-1.21.0}"
+version="v${1:-1.21.1}"
 builduser="${K8S_BUILDUSER:-k8sbuild}"
 self="$(readlink -f "$0")"
 
@@ -26,11 +26,12 @@ cd "${srcdir}"
 declare -a go cmds
 
 export KUBE_ROOT="${srcdir}"
-export KUBE_GO_PACKAGE="k8s.io/kubernetes"
+export KUBE_GO_PACKAGE=""
 
+# shellcheck disable=SC1090
 source "${srcdir}/hack/lib/version.sh"
 
-go=( go build -v -mod=vendor "-tags=providerless,dockerless" )
+go=( go build -v -mod=vendor "-tags=providerless,dockerless" -ldflags "$(kube::version::ldflags|sed 's^/vendor/^^g')" )
 
 cmds=(
   kube-apiserver

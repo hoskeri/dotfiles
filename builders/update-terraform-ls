@@ -1,0 +1,24 @@
+#!/bin/bash -eux
+
+version="0.17.1"
+filename="terraform-ls_${version}_linux_amd64"
+
+builduser="${TRFM_LS_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/hashicorp/terraform-ls/releases/download/v${version}/${filename}.zip"
+
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-terraform-ls"
+etag="${webdir}/${filename}.etag"
+archive="${webdir}/${filename}.zip"
+
+mkdir -p "${bindir}" "${webdir}"
+
+curl -sSfLo "${archive}" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+unzip -o "${archive}" -d "${bindir}" "terraform-ls"

@@ -26,14 +26,13 @@ Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'Shougo/vimproc'
-Plugin 'ElmCast/elm-vim'
 Plugin 'belltoy/vim-protobuf'
 Plugin 'rust-lang/rust.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'jamessan/vim-gnupg'
 Plugin 'jjo/vim-cue'
 Plugin 'ledger/vim-ledger'
-Plugin 'lifepillar/pgsql.vim'
+Plugin 'prabirshrestha/vim-lsp'
 
 " End Vim plugin list
 call vundle#end()
@@ -132,6 +131,14 @@ if has('python3')
 else
   let g:neocomplete#enable_at_startup = 1
 end
+
+if executable('terraform-ls')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'terraform-ls',
+    \ 'cmd': {server_info->['terraform-ls', 'serve']},
+    \ 'whitelist': ['terraform'],
+    \ })
+endif
 
 let g:syntastic_check_on_open = 0
 let g:syntastic_javascript_checkers = ['eslint']
