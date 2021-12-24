@@ -26,4 +26,4 @@ set +x
 res="$("$bin_pass" show "$passname")"
 echo "password for $passname: $res"
 
-sleep 5
+sleep 30

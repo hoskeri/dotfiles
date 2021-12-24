@@ -1,0 +1,23 @@
+#!/bin/bash -eux
+
+version="0.11.1"
+filename="nerdctl-${version}-linux-amd64"
+
+builduser="${NERDCTL_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/containerd/nerdctl/releases/download/v${version}/nerdctl-${version}-linux-amd64.tar.gz"
+
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-nerdctl"
+etag="${webdir}/${filename}.etag"
+
+mkdir -p "${bindir}" "${webdir}"
+
+curl -sSfLo "${webdir}/${filename}.tar.gz" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+tar -C "${bindir}" --strip-components=0 -axf "${webdir}/${filename}.tar.gz" "nerdctl"

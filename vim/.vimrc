@@ -11,29 +11,23 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'solarnz/thrift.vim'
-Plugin 'fatih/vim-go'
-if has('python3')
-  Plugin 'Shougo/deoplete.nvim'
-  Plugin 'roxma/nvim-yarp'
-  Plugin 'roxma/vim-hug-neovim-rpc'
-else
-  Plugin 'Shougo/neocomplete.vim'
-end
+Plugin 'hashivim/vim-terraform'
+Plugin 'prabirshrestha/async.vim'
+Plugin 'prabirshrestha/vim-lsp'
+Plugin 'prabirshrestha/asyncomplete.vim'
+Plugin 'prabirshrestha/asyncomplete-lsp.vim'
+Plugin 'mattn/vim-lsp-settings'
 Plugin 'kovisoft/paredit'
 Plugin 'guns/vim-clojure-static'
-Plugin 'Shougo/neocomplete'
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 Plugin 'scrooloose/syntastic'
-Plugin 'Shougo/vimproc'
 Plugin 'belltoy/vim-protobuf'
 Plugin 'rust-lang/rust.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'jamessan/vim-gnupg'
 Plugin 'jjo/vim-cue'
 Plugin 'ledger/vim-ledger'
-Plugin 'prabirshrestha/vim-lsp'
-
 " End Vim plugin list
 call vundle#end()
 
@@ -100,8 +94,6 @@ au BufRead,BufNewFile Makefile set filetype=make ic ts=2 sw=2 sts=2 noexpandtab
 au BufRead,BufNewFile SConstruct set filetype=python
 au BufRead,BufNewFile *.elm set filetype=elm nohlsearch
 
-autocmd BufWritePost *.go silent call go#cmd#Build(1)
-
 " don't leak sensitive data.
 au BufRead,BufNewFile /dev/shm/* set nobackup nowritebackup noswapfile noundofile viminfo=
 
@@ -112,25 +104,6 @@ set grepprg=ag\ --vimgrep\ $*
 set grepformat=%f:%l:%c:%m
 set completeopt-=preview
 set switchbuf=useopen
-
-let g:go_auto_type_info = 1
-let g:go_gocode_propose_source = 0
-let g:go_fmt_autosave = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
-let g:go_def_mode='gopls'
-let g:go_info_mode='gopls'
-
-" deoplete
-if has('python3')
-  call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })
-  let g:deoplete#enable_at_startup = 1
-else
-  let g:neocomplete#enable_at_startup = 1
-end
 
 if executable('terraform-ls')
   au User lsp_setup call lsp#register_server({
@@ -145,5 +118,9 @@ let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_python_checkers = ['pyflakes']
 let g:syntastic_scala_checkers = ['fsc']
 
+let g:lsp_auto_enable = 1
+let g:cue_fmt_on_save = 1
 let g:fzf_buffers_jump = 1
+
 map <c-p> :FZF<cr>
+
