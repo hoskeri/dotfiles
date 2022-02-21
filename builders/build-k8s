@@ -3,7 +3,7 @@
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="/usr/lib/go-1.17/bin:$PATH"
 
-version="v${1:-1.23.1}"
+version="v${1:-1.23.4}"
 builduser="${K8S_BUILDUSER:-k8sbuild}"
 self="$(readlink -f "$0")"
 
