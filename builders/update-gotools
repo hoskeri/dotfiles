@@ -2,7 +2,7 @@
 set -eu
 
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.16/bin:$PATH"
+export PATH="/usr/lib/go-1.18/bin:$PATH"
 
 builduser="${GOTOOLS_BUILDUSER:-gotoolsbuild}"
 self="$(readlink -f "$0")"
@@ -78,7 +78,7 @@ END
 
 set -x
 
-go get -v github.com/vmware/govmomi/govc@latest
+go install -v github.com/vmware/govmomi/govc@latest
 
 recordVersions
 
