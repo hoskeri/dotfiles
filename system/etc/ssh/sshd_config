@@ -17,3 +17,7 @@ ClientAliveInterval 30
 
 Match group sudo
 PasswordAuthentication no
+
+# compatibility with a passforios
+Match user git
+PubkeyAcceptedAlgorithms +ssh-rsa

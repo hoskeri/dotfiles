@@ -2,9 +2,9 @@
 set -eu
 
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.18/bin:$PATH"
+export PATH="/usr/lib/go-1.19/bin:$PATH"
 
-builduser="${GOTOOLS_BUILDUSER:-gotoolsbuild}"
+builduser="${GOTOOLS_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"
 
 if [ "$(id -u "$builduser")" != "$UID" ]
@@ -14,7 +14,6 @@ fi
 
 export GOPATH="$HOME/.gotools-install"
 export GO_BIN="$GOPATH/bin"
-#export GO111MODULE=on
 
 if [ "$(id -u "$builduser")" != "$UID" ]
 then
@@ -45,20 +44,7 @@ recordVersions() {
 # golang dev tools
 cat <<- END |xargs -IX -n1 go install X@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint
-github.com/rogpeppe/godef
-github.com/lukehoban/go-outline
-sourcegraph.com/sqs/goreturns
-github.com/tpng/gopkgs
-github.com/newhook/go-symbols
-github.com/jstemmer/gotags
-github.com/fatih/motion
-github.com/zmb3/gogetdoc
-github.com/josharian/impl
-golang.org/x/lint/golint
 golang.org/x/tools/gopls
-github.com/fatih/gomodifytags
-github.com/klauspost/asmfmt/cmd/asmfmt
-github.com/davidrjenni/reftools/cmd/fillstruct
 google.golang.org/grpc/cmd/protoc-gen-go-grpc
 google.golang.org/protobuf/cmd/protoc-gen-go
 END
@@ -66,7 +52,6 @@ END
 # applications written in golang
 cat <<- END |xargs -IX -n1 go install X@latest
 github.com/ddollar/forego
-github.com/github/hub
 github.com/ericchiang/pup
 github.com/junegunn/fzf
 github.com/hoskeri/liverebuild
