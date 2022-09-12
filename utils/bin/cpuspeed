@@ -6,10 +6,10 @@ function _cpuspeed() {
 
 case "${1:-show}" in
   fast)
-    _cpuspeed "performance" "1500MHz" "2500MHz"
+    _cpuspeed "performance" "3000MHz" "4800MHz"
     ;;
   medium)
-    _cpuspeed "performance" "1000MHz" "1500MHz"
+    _cpuspeed "performance" "1500MHz" "3000MHz"
     ;;
   slow)
     _cpuspeed "powersave" "800MHz" "1000MHz"
