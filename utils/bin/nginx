@@ -24,7 +24,7 @@ http {
 	types_hash_max_size 2048;
 
   include /etc/nginx/mime.types;
-	default_type application/octet-stream;
+	default_type application/json;
 
 	access_log /proc/self/fd/1 combined;
 	error_log /proc/self/fd/3;
@@ -36,13 +36,14 @@ http {
 	  server_name _;
 
 	  root "${servedir}";
-  	index index.html;
+  	index index.json;
 
     location ~ /\. {
       deny all;
       access_log off;
       log_not_found off;
     }
+    add_header "Accept" "application/json";
 
 	  location / {
 		  try_files \$uri \$uri/ =404;
@@ -51,5 +52,5 @@ http {
 }
 END
 
-exec 3>&2 2>/dev/null
+exec 3>&2 > /dev/null
 /usr/sbin/nginx -g 'error_log /proc/self/fd/3;' -c "${workdir}/nginx.conf" "$@"

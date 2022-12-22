@@ -1,0 +1,23 @@
+#!/bin/bash -eux
+
+version="0.2.34"
+filename="act_Linux_x86_64.tar.gz"
+
+builduser="${ACT_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/nektos/act/releases/download/v${version}/${filename}"
+
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-act"
+etag="${webdir}/${filename}.etag"
+
+mkdir -p "${bindir}" "${webdir}"
+
+curl -sSfLo "${webdir}/${filename}" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+tar -C "${bindir}" --strip-components=0 -axf "${webdir}/${filename}" "act"

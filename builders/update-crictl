@@ -1,9 +1,9 @@
 #!/bin/bash -eux
 
-version="1.21.0"
+version="1.26.0"
 filename="crictl-v${version}-linux-amd64"
 
-builduser="${ETCD_BUILDUSER:-$USER}"
+builduser="${CRICTL_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"
 
 if [ "$(id -u "$builduser")" != "$UID" ]
