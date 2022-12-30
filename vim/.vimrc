@@ -28,6 +28,9 @@ Plugin 'flazz/vim-colorschemes'
 Plugin 'jamessan/vim-gnupg'
 Plugin 'jjo/vim-cue'
 Plugin 'ledger/vim-ledger'
+Plugin 'SirVer/ultisnips'
+Plugin 'thomasfaingnaert/vim-lsp-snippets'
+Plugin 'thomasfaingnaert/vim-lsp-ultisnips'
 " End Vim plugin list
 call vundle#end()
 
