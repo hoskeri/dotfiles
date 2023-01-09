@@ -17,7 +17,7 @@ done
 
 test -d "${pass_store}" || err_exit "password store not initialized; run 'pass init' first."
 
-passname="$(find "${pass_store}" -name \*.gpg -type f -name '*.gpg' -printf '%f\n' |sed 's/.gpg$//'|fzf -1 -q "${1:-}")"
+passname="$(find "${pass_store}" -name \*.gpg -type f -name '*.gpg' -printf '%P\n' |sed 's/.gpg$//'|fzf -1 -q "${1:-}")"
 
 trap clear EXIT
 
