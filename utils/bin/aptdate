@@ -2,9 +2,10 @@
 set -eu
 if [ "$(id -u)" != 0 ]
 then
-  exec sudo -n "$(readlink -f "$0")"
+  exec sudo -n "$(readlink -f "$0")" "${@}"
 fi
+
 apt update
-apt upgrade --with-new-pkgs -y || apt-get upgrade -y
+apt upgrade "$@" --with-new-pkgs -y || apt-get upgrade -y "$@"
 apt autoremove --purge -y
 apt clean
