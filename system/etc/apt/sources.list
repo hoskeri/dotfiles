@@ -1,11 +1,11 @@
 deb http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free non-free-firmware
 deb http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free non-free-firmware
-deb http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free non-free-firmware
-deb-src http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free
-deb-src http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free
-deb-src http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free
-#deb http://dpvctowv9b08b.cloudfront.net/debian-debug testing-debug main contrib non-free
-#deb http://dpvctowv9b08b.cloudfront.net/debian-debug unstable-debug main contrib non-free
-#deb http://dpvctowv9b08b.cloudfront.net/debian-debug experimental-debug main contrib non-free
+deb http://dpvctowv9b08b.cloudfront.net/debian rc-buggy main contrib non-free non-free-firmware
+deb-src http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free non-free-firmware
+deb-src http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free non-free-firmware
+deb-src http://dpvctowv9b08b.cloudfront.net/debian rc-buggy main contrib non-free non-free-firmware
+#deb http://dpvctowv9b08b.cloudfront.net/debian-debug testing-debug main contrib non-free non-free-firmware
+#deb http://dpvctowv9b08b.cloudfront.net/debian-debug unstable-debug main contrib non-free non-free-firmware
+#deb http://dpvctowv9b08b.cloudfront.net/debian-debug rc-buggy-debug main contrib non-free non-free-firmware
 deb [arch=amd64] https://storage.googleapis.com/bazel-apt stable jdk1.8
 deb [arch=amd64] https://packages.cloud.google.com/apt cloud-sdk main
