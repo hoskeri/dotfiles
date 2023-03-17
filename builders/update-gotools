@@ -2,7 +2,7 @@
 set -eu
 
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.19/bin:$PATH"
+export PATH="/usr/lib/go-1.20/bin:$PATH"
 
 builduser="${GOTOOLS_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"
@@ -42,7 +42,7 @@ recordVersions() {
 }
 
 # golang dev tools
-cat <<- END |xargs -IX -n1 go install X@latest
+cat <<- END |xargs -t -IX go install X@latest
 github.com/golangci/golangci-lint/cmd/golangci-lint
 golang.org/x/lint/golint
 golang.org/x/tools/gopls
@@ -51,7 +51,7 @@ google.golang.org/protobuf/cmd/protoc-gen-go
 END
 
 # applications written in golang
-cat <<- END |xargs -IX -n1 go install X@latest
+cat <<- END |xargs -t -IX go install X@latest
 github.com/ddollar/forego
 github.com/ericchiang/pup
 github.com/junegunn/fzf
@@ -60,11 +60,10 @@ github.com/cosmos72/gomacro
 cuelang.org/go/cmd/cue
 github.com/containernetworking/cni/cnitool
 github.com/fullstorydev/grpcurl/cmd/grpcurl
+sigs.k8s.io/kind
+github.com/itchyny/gojq/cmd/gojq
+github.com/vmware/govmomi/govc
 END
-
-set -x
-
-go install -v github.com/vmware/govmomi/govc@latest
 
 recordVersions
 

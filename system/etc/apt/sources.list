@@ -1,6 +1,6 @@
-deb http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free
-deb http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free
-deb http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free
+deb http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free non-free-firmware
+deb http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free non-free-firmware
+deb http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free non-free-firmware
 deb-src http://dpvctowv9b08b.cloudfront.net/debian testing main contrib non-free
 deb-src http://dpvctowv9b08b.cloudfront.net/debian unstable main contrib non-free
 deb-src http://dpvctowv9b08b.cloudfront.net/debian experimental main contrib non-free
