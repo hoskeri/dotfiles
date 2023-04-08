@@ -6,7 +6,6 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " Being Vundle Plugin list.
-
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'jelera/vim-javascript-syntax'
@@ -115,6 +114,12 @@ if executable('terraform-ls')
     \ 'whitelist': ['terraform'],
     \ })
 endif
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
 
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
