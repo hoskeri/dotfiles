@@ -7,5 +7,5 @@ fi
 
 apt update
 apt upgrade "$@" --with-new-pkgs -y || apt-get upgrade -y "$@"
-apt autoremove --purge -y
-apt clean
+apt autoremove --purge -y "$@"
+apt autoclean "$@"
