@@ -6,26 +6,44 @@ err_exit() {
 }
 
 usage() {
-  err_exit "usage: qemu-run-image image"
+  err_exit "usage: $0 vm_dir cmd"
 }
 
 cleanup() {
-  :
+  trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 }
 
 trap cleanup EXIT
 
-script="$(readlink -f "${0}")"
-dir="$(dirname "${script}")"
-filename="$(basename "${script}")"
-name="${filename%\.vm}"
+script="$(readlink -f "$0")"
 
-swtpm_sock="${dir}/${filename}-vtpm.sock"
-swtpm_state="${dir}/${filename}-vtpm.state"
+[ $# -lt 2 ] && usage
 
+# input
+dir="$(readlink -f "${1:-}")"
+shift
+cmd="${1:-}"
+shift
+conf="$(readlink -f "${dir}/vm.envrc")"
+
+# validate
+test -d "${dir}"
+test -f "${conf}" || err_exit "${conf} not found"
+
+# load conf
+source "${conf}"
+
+# setup
+name="${VM_NAME}"
+uuid="${VM_UUID}"
+macaddr="${VM_MACADDR}"
+ciuserdata="${VM_USERDATA}"
+
+# swtpm refs
+swtpm_sock="${name}-vtpm.sock"
+swtpm_state="${dir}/${name}-vtpm.state"
 
 declare -a swtpm_args=(
-  socket
   --tpm2
   --flags not-need-init
   --ctrl type=unixio,path="${swtpm_sock}"
@@ -37,6 +55,7 @@ declare -a swtpm_setup_args=(
   --tpm-state "file://${swtpm_state}"
   --create-ek-cert
   --create-platform-cert
+  --create-spk
   --lock-nvram
   --not-overwrite
   --vmid "${name}-vm"
@@ -57,30 +76,51 @@ declare -a qemu_args=(
   -m 2048
 
   -netdev "bridge,br=natbr0,id=net0"
-  -device "virtio-net-pci,netdev=net0"
+  -device "virtio-net-pci,netdev=net0,mac=${macaddr}"
 
-  -chardev socket,id=chrtpm,path="$swtpm_sock"
+  -chardev socket,id=chrtpm,path="${swtpm_sock}"
   -tpmdev emulator,id=tpm0,chardev=chrtpm
   -device tpm-tis,tpmdev=tpm0
 
   -drive if=virtio,format=raw,readonly=on,file="${name}.cidata.iso"
-
-  -drive if=virtio,format=qcow2,snapshot=on,file="${name}.cloudimg.qcow2"
+  -drive if=virtio,format=qcow2,file="${name}.cloudimg.qcow2"
   -drive if=virtio,format=raw,file="${name}.datadisk.raw"
 )
 
-cmd="${1:-}"
-shift
+cd "${dir}"
+
 case "${cmd}" in
   vm)
+    "${script}" "${dir}" vtpm &
+    sleep 2
     qemu-system-x86_64 "${qemu_args[@]}" "$@"
     ;;
   vtpm)
     test -f "${swtpm_state}" || err_exit "${swtpm_state} does not exist"
-    swtpm "${swtpm_args[@]}" "$@"
+    swtpm socket "${swtpm_args[@]}" "$@"
+    ;;
+  vtpm_chardev)
+    test -f "${swtpm_state}" || err_exit "${swtpm_state} does not exist"
+    swtpm chardev "${swtpm_args[@]}" "$@"
     ;;
   vtpm_setup)
     swtpm_setup "${swtpm_setup_args[@]}" "$@"
+    ;;
+  cloudinit)
+    cloud-localds -v "${name}.cidata.iso" "${ciuserdata}" "$@"
+    ;;
+  datadisk)
+    test -f "${name}.datadisk.raw" && err_exit "datadisk already exists"
+    truncate -s 10g "${name}.datadisk.raw"
+    mke2fs -t ext4 -L data-disk "${name}.datadisk.raw"
+    ;;
+  setup)
+    "${script}" "${dir}" vtpm_setup
+    "${script}" "${dir}" cloudinit
+    "${script}" "${dir}" datadisk
+    ;;
+  clean)
+    rm -v -f "${name}.datadisk.raw" "${name}.cidata.iso" "${name}.cloudimg.qcow2" "${swtpm_state}"
     ;;
   *)
     err_exit "unknown command ${cmd}"

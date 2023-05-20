@@ -41,6 +41,7 @@ cmds=(
   kubelet
   kubectl
   kubeadm
+  cloud-controller-manager
 )
 
 for d in "${cmds[@]}"
