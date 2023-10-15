@@ -6,3 +6,6 @@ iface natbr0 inet static
     bridge_stp off
     bridge_maxwait 0
     bridge_fd 0
+
+iface natbr0 inet6 static
+    address fda6:8f0c:b640:1::1/64
