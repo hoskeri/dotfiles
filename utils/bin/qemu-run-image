@@ -43,11 +43,16 @@ ciuserdata="${VM_USERDATA}"
 swtpm_sock="${name}-vtpm.sock"
 swtpm_state="${dir}/${name}-vtpm.state"
 
+ovmf_code="/usr/share/OVMF/OVMF_CODE_4M.secboot.fd"
+ovmf_vars="${dir}/${name}-ovmf_vars.fd"
+
 declare -a swtpm_args=(
   --tpm2
+  --terminate
   --flags not-need-init
   --ctrl type=unixio,path="${swtpm_sock}"
   --tpmstate backend-uri="file://${swtpm_state}"
+  --log file=${name}-vtpm.log,level=4,prefix=vtpm
 )
 
 declare -a swtpm_setup_args=(
@@ -55,25 +60,31 @@ declare -a swtpm_setup_args=(
   --tpm-state "file://${swtpm_state}"
   --create-ek-cert
   --create-platform-cert
+  --allow-signing
   --create-spk
   --lock-nvram
   --not-overwrite
-  --vmid "${name}-vm"
+  --vmid "${name}"
 )
 
 declare -a qemu_args=(
   -display none
-  -serial stdio
 
-  -name "$name-vm"
-  -uuid "$name"
+  -name "$name"
+  -uuid "$uuid"
+  -smbios "type=1,serial=ds=nocloud;h=${name};i=${name}"
 
-  -L . -bios /usr/share/qemu/OVMF.fd
   -machine q35
-
   -accel kvm -cpu host -smp 4
-  -smbios "type=1,serial=ds=nocloud;h=${name};i=i-${name}"
+
   -m 2048
+
+  -chardev file,id=tty0,path=${dir}/${name}.log
+  -serial chardev:tty0
+
+  -global driver=cfi.pflash01,property=secure,value=on
+  -drive if=pflash,format=raw,unit=0,file="${ovmf_code}",readonly=on
+  -drive if=pflash,format=raw,unit=1,file="${ovmf_vars}"
 
   -netdev "bridge,br=natbr0,id=net0"
   -device "virtio-net-pci,netdev=net0,mac=${macaddr}"
@@ -91,8 +102,6 @@ cd "${dir}"
 
 case "${cmd}" in
   vm)
-    "${script}" "${dir}" vtpm &
-    sleep 2
     qemu-system-x86_64 "${qemu_args[@]}" "$@"
     ;;
   vtpm)
@@ -121,6 +130,9 @@ case "${cmd}" in
     ;;
   clean)
     rm -v -f "${name}.datadisk.raw" "${name}.cidata.iso" "${name}.cloudimg.qcow2" "${swtpm_state}"
+    ;;
+  log)
+    tail -f "${dir}/${name}.log"
     ;;
   *)
     err_exit "unknown command ${cmd}"
