@@ -1,7 +1,9 @@
 #!/bin/bash -eux
 
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.20/bin:$PATH"
+export PATH="/usr/lib/go-1.21/bin:$PATH"
+
+unset GOROOT GOPATH
 
 version="${1:-1.26.2}"
 builduser="${K8S_BUILDUSER:-$USER}"

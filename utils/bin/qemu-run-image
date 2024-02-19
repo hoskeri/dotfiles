@@ -65,6 +65,7 @@ declare -a swtpm_setup_args=(
   --lock-nvram
   --not-overwrite
   --vmid "${name}"
+  --logfile /dev/null
 )
 
 declare -a qemu_args=(
