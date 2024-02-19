@@ -15,9 +15,9 @@ then
 fi
 
 # golang
-if [ -d "/usr/lib/go-1.21" ]
+if [ -d "/usr/lib/go-1.22" ]
 then
-  export GOROOT="/usr/lib/go-1.21"
+  export GOROOT="/usr/lib/go-1.22"
   export GOPATH="${HOME}/.gomod"
   export PATH="${GOROOT}/bin:$PATH"
 fi
@@ -152,10 +152,11 @@ if [ -e /usr/bin/direnv ]; then
   source <(direnv hook bash)
 fi
 
-for f in "${HOME}/.bash_aliases" "${HOME}/.aliases" "${HOME}/.bashrc.local"
+for f in "${HOME}/.bash_aliases" "${HOME}/.aliases" "${HOME}/.bashrc.local" "${HOME}/.kubectl-aliases"
 do
   if [ -f "${f}" ]; then
     # shellcheck disable=SC1090
     source "${f}"
   fi
 done
+

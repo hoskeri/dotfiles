@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-version="1.27.0"
+version="1.29.0"
 filename="crictl-v${version}-linux-amd64"
 
 builduser="${CRICTL_BUILDUSER:-$USER}"
