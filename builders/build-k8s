@@ -1,11 +1,10 @@
 #!/bin/bash -eux
 
-export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.21/bin:$PATH"
-
 unset GOROOT GOPATH
+export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
+export PATH="/usr/lib/go-1.22/bin:$PATH"
 
-version="${1:-1.26.2}"
+version="${1:-1.29.0}"
 builduser="${K8S_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"
 
@@ -29,6 +28,7 @@ declare -a go cmds
 
 export KUBE_ROOT="${srcdir}"
 export KUBE_GO_PACKAGE=""
+export CGO_ENABLED=0
 
 # shellcheck disable=SC1090
 source "${srcdir}/hack/lib/version.sh"

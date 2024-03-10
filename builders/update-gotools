@@ -1,10 +1,9 @@
 #!/bin/bash
 set -eux
 
-export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.21/bin:$PATH"
-
 unset GOPATH GOROOT
+export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
+export PATH="/usr/lib/go-1.22/bin:$PATH"
 
 builduser="${GOTOOLS_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"
@@ -14,6 +13,7 @@ then
   exec sudo -H -u "$builduser" "$self"
 fi
 
+export CGO_ENABLED=0
 export GOPATH="$HOME/.gotools-install"
 export GO_BIN="$GOPATH/bin"
 
@@ -65,6 +65,7 @@ github.com/fullstorydev/grpcurl/cmd/grpcurl
 sigs.k8s.io/kind
 github.com/itchyny/gojq/cmd/gojq
 github.com/vmware/govmomi/govc
+github.com/google/ko
 END
 
 recordVersions

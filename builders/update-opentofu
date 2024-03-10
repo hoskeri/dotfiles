@@ -1,0 +1,20 @@
+#!/bin/bash -eux
+version="1.6.1"
+tmpfile="$(mktemp /tmp/update-opentofu.XXXXXX)"
+opentofu_bin="${HOME}/bin/tofu"
+
+builduser="${TOFU_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+trap 'rm -f "$tmpfile"' EXIT
+
+mkdir -p "${HOME}/bin"
+
+curl -o "${tmpfile}" -sSfL "https://github.com/opentofu/opentofu/releases/download/v${version}/tofu_${version}_linux_amd64.zip"
+unzip -p -l  "${tmpfile}" tofu > "${opentofu_bin}"
+chmod 0755 "${opentofu_bin}"
