@@ -155,3 +155,4 @@ let g:fzf_buffers_jump = 1
 let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
 
 map <c-p> :FZF<cr>
+map <c-h> :History<cr>

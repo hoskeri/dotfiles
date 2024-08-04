@@ -4,7 +4,7 @@ unset GOROOT GOPATH
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="/usr/lib/go-1.22/bin:$PATH"
 
-version="${1:-1.29.0}"
+version="${1:-origin/master}"
 builduser="${K8S_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"
 

@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-version="3.5.11"
+version="3.5.15"
 filename="etcd-v${version}-linux-amd64"
 
 builduser="${ETCD_BUILDUSER:-$USER}"
@@ -20,4 +20,4 @@ etag="${webdir}/${filename}.etag"
 mkdir -p "${bindir}" "${webdir}"
 
 curl -sSfLo "${webdir}/${filename}.tar.gz" --etag-save "${etag}" --etag-compare "${etag}" "$url"
-tar -C "${bindir}" --strip-components=1 -axf "${webdir}/${filename}.tar.gz" "${filename}/etcd" "${filename}/etcdctl"
+tar -C "${bindir}" --strip-components=1 -axf "${webdir}/${filename}.tar.gz" "${filename}/etcd" "${filename}/etcdctl" "${filename}/etcdutl"
