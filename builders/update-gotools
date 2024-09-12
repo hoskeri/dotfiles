@@ -3,7 +3,7 @@ set -eux
 
 unset GOPATH GOROOT
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.22/bin:$PATH"
+export PATH="/usr/lib/go-1.23/bin:$PATH"
 
 builduser="${GOTOOLS_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"

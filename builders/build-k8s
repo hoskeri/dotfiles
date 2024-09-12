@@ -2,7 +2,7 @@
 
 unset GOROOT GOPATH
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.22/bin:$PATH"
+export PATH="/usr/lib/go-1.23/bin:$PATH"
 
 version="${1:-origin/master}"
 builduser="${K8S_BUILDUSER:-$USER}"
@@ -33,7 +33,7 @@ export CGO_ENABLED=0
 # shellcheck disable=SC1090
 source "${srcdir}/hack/lib/version.sh"
 
-go=(go build -v -mod=vendor "-tags=providerless,dockerless" -ldflags "$(kube::version::ldflags|sed 's^/vendor/^^g')" )
+go=(go build -gcflags=-trimpath=${srcdir} -v -mod=vendor "-tags=providerless,dockerless" -ldflags "$(kube::version::ldflags|sed 's^/vendor/^^g')" )
 
 cmds=(
   kube-apiserver
