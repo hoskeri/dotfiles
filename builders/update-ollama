@@ -1,0 +1,24 @@
+#!/bin/bash -eux
+
+version="v0.3.13"
+filename="ollama-linux-amd64"
+
+builduser="${OLLAMA_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/ollama/ollama/releases/download/${version}/ollama-linux-amd64.tgz"
+
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-ollama"
+installdir="${HOME}/.cache/update-ollama/install"
+etag="${webdir}/${filename}.etag"
+
+mkdir -p "${bindir}" "${webdir}" "${installdir}"
+
+curl -v -fLo "${webdir}/${filename}.tgz" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+tar -C "${installdir}" -zxvf "${webdir}/${filename}.tgz"
