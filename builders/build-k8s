@@ -4,7 +4,7 @@ unset GOROOT GOPATH
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 export PATH="/usr/lib/go-1.24/bin:$PATH"
 
-version="${1:-origin/master}"
+version="${1:-}"
 builduser="${K8S_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"
 
@@ -16,9 +16,12 @@ fi
 srcdir="/opt/kubernetes/src/kubernetes"
 cd "${srcdir}"
 
-git fetch -a
-git clean -dfx
-git checkout "${version}"
+if [ -n "${version}" ]
+then
+  git fetch -a
+  git clean -dfx
+  git checkout "${version}"
+fi
 
 destdir="/opt/kubernetes/bin"
 mkdir -p "${destdir}"

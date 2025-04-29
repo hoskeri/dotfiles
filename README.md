@@ -5,9 +5,9 @@
 `stow` of the 'system' package links to files in /etc,
 this can break if the /home/ is on a separate directory.
 
-To fix that, we now assume that `dotfiles` lives in /etc/
+To fix that, we now assume that `dotfiles` lives in /etc/.
 
-To migrate the config,
+To migrate config from $HOME,
 
 1. Unlink all packages by adding -D to stow command line in the Makefile
 2. move `.dotfiles` to `/etc/dotfiles`
