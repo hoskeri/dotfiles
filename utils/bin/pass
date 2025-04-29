@@ -10,12 +10,11 @@ pass_store="${HOME}/.password-store"
 bin_pass_commands=(init find grep insert edit generate rm mv cp git show otp help tree ls)
 
 test -x "$bin_pass" || err_exit "$bin_pass does not exist."
+test -d "${pass_store}" || err_exit "password store not initialized; run 'pass init' first."
 
 for x in ${bin_pass_commands[*]}; do
   [ "${x}" = "${1:-}" ] && exec "$bin_pass" "$@"
 done
-
-test -d "${pass_store}" || err_exit "password store not initialized; run 'pass init' first."
 
 passname="$(find "${pass_store}" -name \*.gpg -type f -name '*.gpg' -printf '%P\n' |sed 's/.gpg$//'|fzf -1 -q "${1:-}")"
 
