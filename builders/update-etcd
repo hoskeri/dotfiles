@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-version="3.5.15"
+version="3.6.0"
 filename="etcd-v${version}-linux-amd64"
 
 builduser="${ETCD_BUILDUSER:-$USER}"

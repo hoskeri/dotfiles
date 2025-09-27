@@ -16,6 +16,11 @@ fi
 srcdir="/opt/kubernetes/src/kubernetes"
 cd "${srcdir}"
 
+if [ -d "${srcdir}/_output" ]
+then
+  chmod u+w -R  "${srcdir}/_output"
+fi
+
 if [ -n "${version}" ]
 then
   git fetch -a
