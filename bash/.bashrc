@@ -14,10 +14,21 @@ then
   export PATH="$HOME/bin:$PATH"
 fi
 
-# golang
-if [ -d "/usr/lib/go-1.24" ]
+if [ -d "${HOME}/.cargo/bin" ]
 then
-  export GOROOT="/usr/lib/go-1.24"
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
+if [ -d "${HOME}/.bun/bin" ]
+then
+  export PATH="$HOME/.bun/bin:$PATH"
+fi
+
+
+# golang
+if [ -d "/usr/lib/go-1.26" ]
+then
+  export GOROOT="/usr/lib/go-1.26"
   export GOPATH="${HOME}/.gomod"
   export PATH="${GOROOT}/bin:$PATH"
 fi
@@ -159,4 +170,3 @@ do
     source "${f}"
   fi
 done
-

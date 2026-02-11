@@ -1,0 +1,29 @@
+#!/bin/bash -eux
+
+version="${LLAMA_VERSION:-b10453}"
+filename="llama-${version}-bin-ubuntu-vulkan-x64"
+
+builduser="${LLAMA_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/ggml-org/llama.cpp/releases/download/${version}/${filename}.tar.gz"
+
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-llama.cpp"
+installdir="${webdir}/install/${version}"
+latest="${webdir}/install/latest"
+etag="${webdir}/${filename}.etag"
+
+mkdir -p "${bindir}" "${webdir}"
+
+curl -sSfLo "${webdir}/${filename}.tar.gz" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+rm -rf "${installdir}"
+mkdir -p "${installdir}"
+tar -C "${installdir}" --strip-components=1 -axf "${webdir}/${filename}.tar.gz"
+
+ln -sfn "${version}" "${latest}"

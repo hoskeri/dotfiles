@@ -1,0 +1,31 @@
+#!/bin/bash -eu
+cd "/home/abhijit/.cache/update-llama.cpp/install/latest" || exit 1
+
+case "${1:-}" in
+  "serve")
+    shift
+    declare -a la=(
+      -lv 4
+      --host ::1
+      --port 9931
+      --cors-origins "localhost"
+      --no-cors-credentials
+
+      --no-models-autoload
+      --jinja
+
+      --spec-default
+      -fa on
+      -np 1
+      -c 65536
+      --spec-type draft-mtp
+      --spec-draft-n-max 4
+      -ngl 999
+    )
+
+    exec ./llama serve "${la[@]}" "$@"
+    ;;
+  *)
+    exec ./llama "$@"
+    ;;
+esac

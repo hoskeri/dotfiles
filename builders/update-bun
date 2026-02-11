@@ -1,0 +1,23 @@
+#!/bin/bash -eux
+
+version="1.3.14"
+filename="bun-v${version}-linux-amd64"
+
+builduser="${BUN_BUILDUSER:-$USER}"
+self="$(readlink -f "$0")"
+
+if [ "$(id -u "$builduser")" != "$UID" ]
+then
+  exec sudo -H -u "$builduser" "$self"
+fi
+
+url="https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-x64.zip"
+bindir="${HOME}/bin"
+webdir="${HOME}/.cache/update-bun"
+etag="${webdir}/${filename}.etag"
+
+mkdir -p "${bindir}" "${webdir}"
+curl -sSfLo "${webdir}/${filename}.zip" --etag-save "${etag}" --etag-compare "${etag}" "$url"
+unzip -p "${webdir}/${filename}.zip" "bun-linux-x64/bun" > "${webdir}/${filename}.tmp"
+chmod 0755 "${webdir}/${filename}.tmp"
+mv "${webdir}/${filename}.tmp" "${bindir}/bun"
