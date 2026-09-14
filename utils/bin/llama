@@ -2,7 +2,7 @@
 cd "/home/abhijit/.cache/update-llama.cpp/install/latest" || exit 1
 
 case "${1:-}" in
-  "serve")
+  "serve"|"server")
     shift
     declare -a la=(
       -lv 4
