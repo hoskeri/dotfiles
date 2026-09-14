@@ -3,7 +3,16 @@ set -eux
 
 unset GOPATH GOROOT
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
-export PATH="/usr/lib/go-1.26/bin:$PATH"
+
+# Go version: $GO_VERSION > ./.go-version (walk-up) > ~/.config/go-version
+govers="$("${HOME}/bin/go-version")"
+if [ -z "${govers}" ] || [ ! -x "/usr/lib/go-${govers}/bin/go" ]
+then
+  echo "update-gotools: no Go toolchain for version '${govers:-}' (set GO_VERSION, add a .go-version, or write ~/.config/go-version)" >&2
+  exit 1
+fi
+export PATH="/usr/lib/go-${govers}/bin:$PATH"
+unset govers
 
 builduser="${GOTOOLS_BUILDUSER:-$USER}"
 self="$(readlink -f "$0")"

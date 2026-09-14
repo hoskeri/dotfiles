@@ -26,12 +26,19 @@ fi
 
 
 # golang
-if [ -d "/usr/lib/go-1.26" ]
+# version: $GO_VERSION > ./.go-version (walk-up) > ~/.config/go-version
+go_version=
+if [ -x "${HOME}/bin/go-version" ]
 then
-  export GOROOT="/usr/lib/go-1.26"
+  go_version="$("${HOME}/bin/go-version")"
+fi
+if [ -n "${go_version}" ] && [ -d "/usr/lib/go-${go_version}" ]
+then
+  export GOROOT="/usr/lib/go-${go_version}"
   export GOPATH="${HOME}/.gomod"
   export PATH="${GOROOT}/bin:$PATH"
 fi
+unset go_version
 
 if [ -d "$HOME/.gotools-install/bin" ]
 then
