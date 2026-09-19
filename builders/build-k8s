@@ -3,15 +3,20 @@
 unset GOROOT GOPATH
 export PATH="/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games"
 
-# Go version: $GO_VERSION > ./.go-version (walk-up) > ~/.config/go-version
-govers="$("${HOME}/bin/go-version")"
-if [ -z "${govers}" ] || [ ! -x "/usr/lib/go-${govers}/bin/go" ]
+# Go version: local override below, else ~/.config/go-version, else 1.26
+go_version=""
+if [ -z "${go_version}" ] && [ -r "${HOME}/.config/go-version" ]
 then
-  echo "build-k8s: no Go toolchain for version '${govers:-}' (set GO_VERSION, add a .go-version, or write ~/.config/go-version)" >&2
+  go_version="$(cat "${HOME}/.config/go-version")"
+fi
+[ -z "${go_version}" ] && go_version="1.26"
+if [ ! -x "/usr/lib/go-${go_version}/bin/go" ]
+then
+  echo "build-k8s: no Go toolchain at /usr/lib/go-${go_version}" >&2
   exit 1
 fi
-export PATH="/usr/lib/go-${govers}/bin:$PATH"
-unset govers
+export PATH="/usr/lib/go-${go_version}/bin:$PATH"
+unset go_version
 
 version="${1:-}"
 builduser="${K8S_BUILDUSER:-$USER}"

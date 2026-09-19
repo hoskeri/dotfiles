@@ -23,11 +23,11 @@ To migrate config from $HOME,
 ## Go version
 
 The Go toolchain version used by `.bashrc`, `build-k8s` and `update-gotools`
-is resolved by `go-version` (in `~/bin`), in this order (first hit wins):
+is resolved per script from (first hit wins):
 
-1. `$GO_VERSION` - per-invocation override, e.g. `GO_VERSION=1.25 build-k8s`
-2. `.go-version` in the current directory or any parent - per-project pin
-3. `~/.config/go-version` - the machine default (stowed from `config/`)
+1. a locally hardcoded override variable at the top of the script (empty by default)
+2. `~/.config/go-version` if it exists (stowed from `config/`)
+3. a built-in fallback of `1.26`
 
 The version is the bare directory suffix, e.g. `1.26` for `/usr/lib/go-1.26`.
-To bump the default, edit `config/go-version`, run `make`, and commit.
+To bump the default, edit `config/.config/go-version`, run `make`, and commit.

@@ -26,13 +26,14 @@ fi
 
 
 # golang
-# version: $GO_VERSION > ./.go-version (walk-up) > ~/.config/go-version
-go_version=
-if [ -x "${HOME}/bin/go-version" ]
+# version: local override below, else ~/.config/go-version, else 1.26
+go_version=""
+if [ -z "${go_version}" ] && [ -r "${HOME}/.config/go-version" ]
 then
-  go_version="$("${HOME}/bin/go-version")"
+  go_version="$(cat "${HOME}/.config/go-version")"
 fi
-if [ -n "${go_version}" ] && [ -d "/usr/lib/go-${go_version}" ]
+[ -z "${go_version}" ] && go_version="1.26"
+if [ -d "/usr/lib/go-${go_version}" ]
 then
   export GOROOT="/usr/lib/go-${go_version}"
   export GOPATH="${HOME}/.gomod"
