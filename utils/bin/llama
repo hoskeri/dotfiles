@@ -13,16 +13,31 @@ case "${1:-}" in
 
       --no-models-autoload
       --jinja
+      --reasoning-format deepseek
 
       --spec-default
+      --reasoning-budget 4096
       -fa on
       -np 1
-      -c 65536
-      --spec-type draft-mtp
-      --spec-draft-n-max 4
-      -ngl 999
+      -c 32768
+      #--spec-type draft-mtp
+      #--spec-draft-n-max 4
+      #--spec-default
     )
 
+    exec ./llama serve "${la[@]}" "$@"
+    ;;
+  fim)
+    shift
+    declare -a la=(
+      -lv 4
+      --host ::1
+      --port 8012
+
+      --cors-origins "localhost"
+      --no-cors-credentials
+      --fim-qwen-7b-spec
+    )
     exec ./llama serve "${la[@]}" "$@"
     ;;
   *)

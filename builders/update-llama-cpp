@@ -1,6 +1,6 @@
 #!/bin/bash -eux
 
-version="${LLAMA_VERSION:-b10964}"
+version="${LLAMA_VERSION:-b11379}"
 filename="llama-${version}-bin-ubuntu-vulkan-x64"
 
 builduser="${LLAMA_BUILDUSER:-$USER}"

@@ -7,6 +7,7 @@ call vundle#begin()
 
 " Being Vundle Plugin list.
 Plugin 'VundleVim/Vundle.vim'
+Plugin 'llama.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'solarnz/thrift.vim'
@@ -153,6 +154,12 @@ let g:lsp_auto_enable = 1
 let g:cue_fmt_on_save = 1
 let g:fzf_buffers_jump = 1
 let g:lsp_diagnostics_highlights_insert_mode_enabled = 0
+
+let g:llama_config = {
+      \ 'show_info': 0,
+      \ 'endpoint_inst': 'http://[::1]:8012/v1/chat/completions',
+      \ 'endpoint_fim': 'http://[::1]:8012/infill',
+      \ }
 
 map <c-p> :FZF<cr>
 map <c-h> :History<cr>
